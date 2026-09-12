@@ -1,0 +1,563 @@
+/* Estilos exclusivos de la página principal.
+
+   Regla que se repite en todas las rejillas de este archivo: align-items y
+   justify-items centrados, y las tarjetas a altura completa. Así ninguna
+   rejilla queda descolgada cuando un texto es más corto que el de al lado. */
+
+/* ==================================================== 1. PORTADA ========= */
+
+.portada {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-block: 7rem 3rem;
+  overflow: hidden;
+  /* Un halo cian muy tenue detrás del titular, para que el bloque no sea un
+     rectángulo negro plano. */
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 38%, rgba(56, 225, 208, 0.07), transparent 70%),
+    var(--fondo);
+}
+
+.portadaContenido {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* --- sigla --- */
+
+.sigla {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.1rem, 1vw, 0.5rem);
+  font-size: clamp(4.5rem, 19vw, 13rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  margin-bottom: 1.25rem;
+}
+
+/* Las letras entran una a una al cargar. Es lo único animado de la portada
+   aparte del lienzo, y dura menos de medio segundo. */
+.letra {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.22em);
+  animation: entrar 0.85s var(--curva) forwards;
+  background: linear-gradient(180deg, var(--texto) 30%, var(--texto-debil) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes entrar {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letra {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+.nombreCompleto {
+  font-family: var(--fuente-display), sans-serif;
+  font-size: clamp(1rem, 2.6vw, 1.5rem);
+  color: var(--cian);
+  letter-spacing: 0.01em;
+  max-width: 24ch;
+  margin-bottom: 1.25rem;
+}
+
+.proposito {
+  color: var(--texto-tenue);
+  font-size: clamp(0.9375rem, 1.6vw, 1.0625rem);
+  max-width: 58ch;
+}
+
+.portadaAcciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem 1.75rem;
+  margin-top: 2.25rem;
+}
+
+/* --- barra de cifras --- */
+
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  width: 100%;
+  max-width: 800px;
+  margin: clamp(3rem, 7vw, 4.5rem) 0 0;
+  background: var(--linea);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.cifra {
+  display: flex;
+  flex-direction: column-reverse; /* el valor arriba, la etiqueta debajo */
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.25rem 0.75rem;
+  background: rgba(17, 24, 35, 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.cifraValor {
+  font-family: var(--fuente-display), sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  color: var(--texto);
+}
+
+.cifraEtiqueta {
+  font-size: 0.625rem;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* En el flujo normal y no anclada al fondo con position: absolute. Anclada
+   chocaba con la barra de cifras en cuanto la pantalla era algo baja. */
+.universidad {
+  position: relative;
+  z-index: 1;
+  margin-top: 2rem;
+  text-align: center;
+  padding-inline: var(--gutter);
+}
+
+.universidad span {
+  font-size: 0.625rem;
+  opacity: 0.7;
+}
+
+/* ============================================ 2. PRÓXIMA REUNIÓN ========= */
+
+.seccionReunion {
+  /* Este bloque es un anuncio, no una sección larga: respira menos. */
+  padding-block: clamp(3rem, 5vw, 4.5rem);
+}
+
+.reunion {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 1.75rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--superficie);
+  border: 1px solid var(--linea-viva);
+  border-radius: var(--r);
+  /* Resplandor cian muy leve: es el bloque más importante de la portada. */
+  box-shadow: 0 0 0 1px rgba(56, 225, 208, 0.04), 0 24px 60px -40px rgba(56, 225, 208, 0.5);
+}
+
+/* --- taco de fecha --- */
+
+.reunionFecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-width: 118px;
+  padding: 1.1rem 1.35rem;
+  background: var(--fondo-2);
+  border: 1px solid var(--linea);
+  border-radius: var(--r-sm);
+}
+
+.reunionMes {
+  font-size: 0.75rem;
+  color: var(--cian);
+}
+
+.reunionDia {
+  font-family: var(--fuente-display), sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.reunionAnio {
+  font-size: 0.625rem;
+}
+
+/* --- cuerpo --- */
+
+.reunionCuerpo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.reunionEtiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.reunionAviso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.625rem;
+  color: var(--cian);
+}
+
+.reunionTitulo {
+  font-size: clamp(1.35rem, 3vw, 1.875rem);
+}
+
+.reunionResumen {
+  color: var(--texto-tenue);
+  font-size: 0.9375rem;
+  max-width: 60ch;
+}
+
+.reunionDatos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem 1.5rem;
+  color: var(--texto-tenue);
+  font-size: 0.875rem;
+}
+
+.reunionDatos li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reunionDatos svg {
+  color: var(--cian);
+  flex-shrink: 0;
+}
+
+/* ========================================= 3. EL GRUPO Y OBJETIVOS ======= */
+
+.sobre {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.indice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--cian);
+  margin-bottom: 1.1rem;
+}
+
+.raya {
+  width: 2.25rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.sobreTitular {
+  font-size: clamp(1.9rem, 4.2vw, 2.875rem);
+  margin-bottom: 1.5rem;
+}
+
+.sobreParrafo {
+  color: var(--texto-tenue);
+  font-size: 1.0625rem;
+  max-width: 54ch;
+}
+
+.sobreParrafo + .sobreParrafo {
+  margin-top: 1.1rem;
+}
+
+.objetivos {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--linea);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.objetivo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.1rem;
+  padding: 1.5rem;
+  background: var(--superficie);
+  height: 100%;
+  transition: background 0.3s var(--curva);
+}
+
+.objetivo:hover {
+  background: var(--superficie-2);
+}
+
+.objetivoNumero {
+  color: var(--cian);
+  font-size: 0.75rem;
+  padding-top: 0.35rem;
+  flex-shrink: 0;
+}
+
+.objetivoTitulo {
+  font-size: 1.0625rem;
+  margin-bottom: 0.4rem;
+}
+
+.objetivoTexto {
+  color: var(--texto-tenue);
+  font-size: 0.9375rem;
+}
+
+/* ==================================================== 4. LÍNEAS ========== */
+
+.lineas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.lineas > * {
+  flex: 1 1 270px;
+  max-width: 380px;
+}
+
+.linea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.85rem;
+  height: 100%;
+  padding: 2rem 1.5rem;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  transition:
+    border-color 0.3s var(--curva),
+    transform 0.3s var(--curva);
+}
+
+.linea:hover {
+  border-color: var(--linea-viva);
+  transform: translateY(-3px);
+}
+
+.lineaIcono {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  color: var(--cian);
+  background: var(--cian-vel);
+  border: 1px solid var(--linea-viva);
+  margin-bottom: 0.35rem;
+}
+
+.lineaTitulo {
+  font-size: 1.0625rem;
+  line-height: 1.3;
+}
+
+.lineaTexto {
+  color: var(--texto-tenue);
+  font-size: 0.9375rem;
+}
+
+/* ================================================= 5. PROYECTOS ========== */
+
+/* Flex con justify-content centrado en vez de grid: cuando la última fila
+   queda incompleta (siete integrantes en filas de cinco, por ejemplo), una
+   rejilla dejaría los sobrantes pegados a la izquierda. Así se centran. */
+.proyectos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.proyectos > * {
+  flex: 1 1 320px;
+  max-width: 420px;
+}
+
+/* Revelar envuelve cada tarjeta, así que necesita estirarse para que todas
+   las tarjetas de una fila queden a la misma altura. */
+.proyectos > *,
+.novedades > *,
+.integrantes > *,
+.lineas > * {
+  height: auto;
+}
+
+/* ================================================= 6. NOVEDADES ========== */
+
+.novedades {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.novedades > * {
+  flex: 1 1 290px;
+  max-width: 400px;
+}
+
+/* =============================================== 7. INTEGRANTES ========== */
+
+.integrantes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.integrantes > * {
+  flex: 1 1 190px;
+  max-width: 240px;
+}
+
+/* ===================================================== 8. ÚNETE ========== */
+
+.unete {
+  position: relative;
+  padding-block: var(--aire);
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 50%, rgba(56, 225, 208, 0.06), transparent 70%),
+    var(--fondo);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.uneteCaja {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.1rem;
+  max-width: 640px;
+  margin-inline: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.uneteAviso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.625rem;
+  color: var(--ambar);
+  padding: 0.35rem 0.8rem;
+  border: 1px solid rgba(232, 176, 75, 0.35);
+  background: var(--ambar-vel);
+  border-radius: 999px;
+}
+
+.uneteTitulo {
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+}
+
+.uneteTexto {
+  color: var(--texto-tenue);
+  font-size: 1.0625rem;
+}
+
+.uneteAcciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem 1.75rem;
+  margin-top: 0.85rem;
+}
+
+.uneteCorreo {
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.875rem;
+  color: var(--texto-tenue);
+  border-bottom: 1px solid var(--linea);
+  padding-bottom: 0.2rem;
+  transition:
+    color 0.25s var(--curva),
+    border-color 0.25s var(--curva);
+}
+
+.uneteCorreo:hover {
+  color: var(--cian);
+  border-color: var(--cian);
+}
+
+/* ================================================ PUNTOS DE CORTE ======== */
+
+@media (min-width: 560px) {
+  .cifras {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 860px) {
+  /* La tarjeta de reunión pasa a una sola fila: fecha, cuerpo y acción. */
+  .reunion {
+    grid-template-columns: auto 1fr auto;
+    text-align: left;
+    justify-items: start;
+    gap: 2.25rem;
+  }
+
+  .reunionCuerpo {
+    align-items: flex-start;
+  }
+
+  .reunionEtiquetas,
+  .reunionDatos {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 960px) {
+  .sobre {
+    /* El texto algo más estrecho que los objetivos: en 2x2 las tarjetas
+       quedaban a unos 180px de texto útil y las frases se partían en ocho
+       líneas. Apiladas en una columna se leen de un vistazo. */
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: center;
+  }
+}

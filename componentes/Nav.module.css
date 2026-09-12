@@ -1,0 +1,209 @@
+/* Barra de navegación fija y menú móvil. */
+
+.barra {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  transition:
+    background 0.3s var(--curva),
+    border-color 0.3s var(--curva),
+    backdrop-filter 0.3s var(--curva);
+  border-bottom: 1px solid transparent;
+}
+
+/* Al bajar, la barra se apoya sobre un cristal oscuro. */
+.posada {
+  background: rgba(7, 10, 14, 0.82);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom-color: var(--linea);
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 68px;
+}
+
+/* ------------------------------------------------------------------- marca */
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.monograma {
+  color: var(--cian);
+  transition: transform 0.5s var(--curva);
+}
+
+.marca:hover .monograma {
+  transform: rotate(120deg);
+}
+
+.sigla {
+  font-family: var(--fuente-display), sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+/* ----------------------------------------------------------------- enlaces */
+
+.enlaces {
+  display: none;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.enlace {
+  position: relative;
+  font-size: 0.9rem;
+  color: var(--texto-tenue);
+  transition: color 0.2s var(--curva);
+  padding-block: 0.5rem;
+}
+
+.enlace::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--cian);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--curva);
+}
+
+.enlace:hover {
+  color: var(--texto);
+}
+
+.enlace:hover::after,
+.enlace.activo::after {
+  transform: scaleX(1);
+}
+
+.enlace.activo {
+  color: var(--cian);
+}
+
+/* ---------------------------------------------------------------- acciones */
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* CTA de línea fina, igual que el resto de botones del sitio. */
+.cta {
+  display: none;
+  font-size: 0.875rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--linea-viva);
+  border-radius: 999px;
+  color: var(--cian);
+  transition:
+    background 0.25s var(--curva),
+    color 0.25s var(--curva);
+}
+
+.cta:hover {
+  background: var(--cian);
+  color: var(--fondo);
+}
+
+.hamburguesa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--linea);
+  border-radius: var(--r-sm);
+  color: var(--texto);
+}
+
+/* ------------------------------------------------------------- menú móvil */
+
+.panel {
+  position: fixed;
+  inset: 68px 0 0 0;
+  z-index: 99;
+  background: var(--fondo);
+  padding: 2rem var(--gutter) 3rem;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.25s var(--curva);
+}
+
+.panelAbierto {
+  opacity: 1;
+}
+
+.panelEnlaces {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--linea);
+}
+
+.panelEnlace {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.15rem 0.25rem;
+  border-bottom: 1px solid var(--linea);
+  font-family: var(--fuente-display), sans-serif;
+  font-size: 1.375rem;
+  color: var(--texto);
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.4s var(--curva),
+    transform 0.4s var(--curva);
+}
+
+.panelAbierto .panelEnlace {
+  opacity: 1;
+  transform: none;
+}
+
+.panelEnlace.activo {
+  color: var(--cian);
+}
+
+.panelCta {
+  color: var(--cian);
+}
+
+/* -------------------------------------------------------------- escritorio */
+
+@media (min-width: 1000px) {
+  .enlaces,
+  .cta {
+    display: flex;
+  }
+
+  .hamburguesa {
+    display: none;
+  }
+}
+
+/* En pantallas intermedias los enlaces no caben todos: se deja el menú. */
+@media (min-width: 1000px) and (max-width: 1180px) {
+  .enlaces {
+    gap: 1.15rem;
+  }
+
+  .enlace {
+    font-size: 0.85rem;
+  }
+}

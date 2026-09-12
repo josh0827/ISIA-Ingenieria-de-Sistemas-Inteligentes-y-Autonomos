@@ -1,0 +1,88 @@
+/* Marcador de sección en construcción. Borde discontinuo y acento ámbar para
+   que se distinga de un bloque terminado a primera vista. */
+
+.caja {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.35rem;
+  max-width: 680px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--superficie);
+  border: 1px dashed rgba(232, 176, 75, 0.4);
+  border-radius: var(--r);
+}
+
+.aviso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.625rem;
+  color: var(--ambar);
+  padding: 0.35rem 0.8rem;
+  border: 1px solid rgba(232, 176, 75, 0.35);
+  background: var(--ambar-vel);
+  border-radius: 999px;
+}
+
+.descripcion {
+  color: var(--texto);
+  font-size: 1.0625rem;
+}
+
+.bloque {
+  width: 100%;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--linea);
+}
+
+.tituloBloque {
+  font-size: 0.625rem;
+  color: var(--cian);
+  margin-bottom: 0.9rem;
+  font-weight: 400;
+}
+
+.pasos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.pasos li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  color: var(--texto-tenue);
+  font-size: 0.9375rem;
+}
+
+.numero {
+  color: var(--cian);
+  font-size: 0.6875rem;
+  padding-top: 0.28rem;
+  flex-shrink: 0;
+}
+
+.codigo,
+.nota code {
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.8125rem;
+  color: var(--cian);
+  background: var(--fondo-2);
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  padding: 0.2em 0.45em;
+}
+
+.codigo {
+  display: block;
+  padding: 0.75rem 0.9rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.nota {
+  color: var(--texto-debil);
+  font-size: 0.875rem;
+}

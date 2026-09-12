@@ -1,0 +1,118 @@
+/* Pie del sitio.
+
+   Ojo: el pie NO lleva margen superior ni fondo distinto del body. El color de
+   fondo del sitio vive en el body, así que aunque la página sea corta no puede
+   aparecer una franja clara entre el último bloque y el pie. */
+
+.pie {
+  border-top: 1px solid var(--linea);
+  padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
+  background: var(--fondo);
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* ---------------------------------------------------------------- identidad */
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.1rem;
+}
+
+.monograma {
+  color: var(--cian);
+}
+
+.sigla {
+  font-family: var(--fuente-display), sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.nombre {
+  font-family: var(--fuente-display), sans-serif;
+  font-size: 1rem;
+  color: var(--texto);
+  margin-bottom: 0.75rem;
+}
+
+.descripcion {
+  color: var(--texto-tenue);
+  font-size: 0.9375rem;
+  max-width: 46ch;
+}
+
+/* ----------------------------------------------------------------- columnas */
+
+.tituloColumna {
+  font-size: 0.6875rem;
+  color: var(--cian);
+  margin-bottom: 1.1rem;
+  font-weight: 400;
+}
+
+.columna ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.enlace,
+.enlaceIcono {
+  color: var(--texto-tenue);
+  font-size: 0.9375rem;
+  transition: color 0.2s var(--curva);
+}
+
+.enlaceIcono {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  line-height: 1.4;
+}
+
+.enlaceIcono svg {
+  flex-shrink: 0;
+  color: var(--texto-debil);
+}
+
+a.enlace:hover,
+a.enlaceIcono:hover {
+  color: var(--cian);
+}
+
+a.enlaceIcono:hover svg {
+  color: var(--cian);
+}
+
+/* ------------------------------------------------------------------ cierre */
+
+.cierre {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--linea-suave);
+}
+
+.cierre p {
+  font-size: 0.6875rem;
+}
+
+@media (min-width: 760px) {
+  .rejilla {
+    grid-template-columns: 1.6fr 1fr 1.2fr;
+    gap: 3rem;
+  }
+}

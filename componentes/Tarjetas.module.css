@@ -1,0 +1,230 @@
+/* Tarjetas compartidas.
+
+   Todas siguen el mismo patrón: superficie oscura, borde de un píxel que se
+   enciende en cian al pasar el cursor, y un enlace invisible estirado por
+   encima para que se pueda pulsar la tarjeta entera (y no solo el titular)
+   sin anidar enlaces dentro de enlaces. */
+
+.enlaceCompleto {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------------- Novedad */
+
+.novedad {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.6rem;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  height: 100%;
+  transition:
+    border-color 0.3s var(--curva),
+    background 0.3s var(--curva),
+    transform 0.3s var(--curva);
+}
+
+.novedad:hover,
+.proyecto:hover {
+  border-color: var(--linea-viva);
+  background: var(--superficie-2);
+  transform: translateY(-3px);
+}
+
+.novedadCabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.fecha {
+  font-size: 0.6875rem;
+}
+
+.novedadTitulo {
+  font-size: 1.1875rem;
+  line-height: 1.3;
+}
+
+.resumen {
+  color: var(--texto-tenue);
+  font-size: 0.9375rem;
+  /* Recorta a tres líneas para que una rejilla de tarjetas no se desalinee
+     cuando alguien escribe un resumen mucho más largo que los demás. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pieTarjeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-family: var(--fuente-display), sans-serif;
+  font-size: 0.875rem;
+  color: var(--cian);
+  transition: gap 0.25s var(--curva);
+}
+
+.novedad:hover .pieTarjeta,
+.proyecto:hover .pieTarjeta {
+  gap: 0.75rem;
+}
+
+/* --------------------------------------------------------------- Proyecto */
+
+.proyecto {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  overflow: hidden;
+  height: 100%;
+  transition:
+    border-color 0.3s var(--curva),
+    background 0.3s var(--curva),
+    transform 0.3s var(--curva);
+}
+
+.portada {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  max-width: 100%;
+  background: var(--fondo-2);
+  overflow: hidden;
+  border-bottom: 1px solid var(--linea);
+}
+
+.portadaImagen {
+  object-fit: cover;
+  transition: transform 0.6s var(--curva);
+}
+
+.proyecto:hover .portadaImagen {
+  transform: scale(1.04);
+}
+
+/* Marcador de posición cuando el proyecto aún no tiene foto. */
+.portadaVacia {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(56, 225, 208, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 225, 208, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.portadaEtiqueta {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  z-index: 1;
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+}
+
+.proyectoCuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.5rem;
+  flex: 1;
+}
+
+.linea {
+  font-size: 0.6875rem;
+  color: var(--cian);
+}
+
+.proyectoTitulo {
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+/* ------------------------------------------------------------- Integrante */
+
+.integrante {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  gap: 0.4rem;
+  padding: 1.75rem 1.25rem;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  height: 100%;
+  transition:
+    border-color 0.3s var(--curva),
+    transform 0.3s var(--curva);
+}
+
+.integrante:hover {
+  border-color: var(--linea-viva);
+  transform: translateY(-3px);
+}
+
+.retrato {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  max-width: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--superficie-2);
+  border: 1px solid var(--linea);
+  display: grid;
+  place-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.retratoImagen {
+  object-fit: cover;
+}
+
+.retratoVacio {
+  color: var(--texto-debil);
+}
+
+.integranteNombre {
+  font-size: 1.0625rem;
+}
+
+.rol {
+  font-size: 0.625rem;
+  color: var(--cian);
+}
+
+.area {
+  color: var(--texto-tenue);
+  font-size: 0.875rem;
+}
+
+.integranteEnlaces {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 0.75rem;
+  color: var(--texto-debil);
+}
+
+.integranteEnlaces a {
+  transition: color 0.2s var(--curva);
+}
+
+.integranteEnlaces a:hover {
+  color: var(--cian);
+}

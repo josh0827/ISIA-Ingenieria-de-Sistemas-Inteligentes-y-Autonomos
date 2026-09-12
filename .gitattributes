@@ -1,0 +1,15 @@
+# Normaliza los finales de línea. Sin esto, quien trabaje en Mac o en Linux
+# vería el repositorio entero como modificado aunque no haya tocado nada,
+# porque Windows guarda los saltos de línea de otra forma.
+* text=auto eol=lf
+
+# Binarios: que git no intente tocarlos.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary

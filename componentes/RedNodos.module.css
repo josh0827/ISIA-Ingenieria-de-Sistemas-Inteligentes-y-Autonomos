@@ -1,0 +1,11 @@
+/* Lienzo de la red de nodos. Ocupa toda la portada por detrás del texto y se
+   desvanece hacia abajo para que el titular siempre tenga contraste. */
+
+.lienzo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+}

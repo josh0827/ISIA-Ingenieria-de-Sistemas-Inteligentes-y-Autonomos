@@ -1,0 +1,51 @@
+/* Estilos compartidos por las páginas de listado (novedades, proyectos y las
+   que monte el resto del equipo). Se importan con ../listados.module.css.
+
+   Si tu sección necesita algo distinto, créate tu propio .module.css dentro de
+   tu carpeta en vez de tocar este, que lo usa todo el mundo. */
+
+/* La barra de navegación es fija y mide 68px: la primera sección de cualquier
+   página interior necesita ese hueco extra para no quedar por debajo. */
+.primeraSeccion {
+  padding-top: calc(68px + var(--aire));
+}
+
+/* Flex con justify-content centrado en vez de grid, a propósito: cuando la
+   última fila queda incompleta (cuatro proyectos en filas de tres), una
+   rejilla dejaría el sobrante pegado a la izquierda. Aquí se centra. */
+.rejilla {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.rejilla > * {
+  flex: 1 1 290px;
+  max-width: 400px;
+}
+
+/* Igual pero con tarjetas más anchas, para proyectos. */
+.rejillaAncha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.rejillaAncha > * {
+  flex: 1 1 320px;
+  max-width: 420px;
+}
+
+/* Mensaje cuando todavía no hay contenido escrito en esa sección. */
+.vacio {
+  text-align: center;
+  color: var(--texto-tenue);
+  padding: 3rem 1rem;
+  border: 1px dashed var(--linea);
+  border-radius: var(--r);
+  background: var(--superficie);
+}
