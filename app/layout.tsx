@@ -4,28 +4,27 @@
 // app/tu-seccion/page.tsx y ya hereda la barra, el pie y los estilos.
 
 import type { Metadata } from 'next'
-import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import Nav from '@/componentes/Nav'
 import Pie from '@/componentes/Pie'
 import { SITIO } from '@/lib/sitio'
 import './globals.css'
 
-// Tres fuentes con papeles bien separados: display para titulares, Inter para
-// leer, y la monoespaciada para fechas, cifras y etiquetas, que es lo que le
-// da al sitio el aire de laboratorio.
-const display = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--fuente-display',
-  display: 'swap',
-})
-
-const texto = Inter({
+// Una sola familia para todo el sitio, en varios pesos.
+//
+// Es lo que hace que un diseno se sienta ordenado sin esfuerzo: los titulares
+// se distinguen del texto por tamano y peso, no por cambiar de tipografia.
+// Geist se eligio por ser un grotesco neutro y muy legible. Inter se descarto
+// a proposito: esta en todas partes y delata al sitio generado.
+//
+// La monoespaciada queda para lo que de verdad son datos, y se usa poco.
+const texto = Geist({
   subsets: ['latin'],
   variable: '--fuente-texto',
   display: 'swap',
 })
 
-const mono = JetBrains_Mono({
+const mono = Geist_Mono({
   subsets: ['latin'],
   variable: '--fuente-mono',
   display: 'swap',
@@ -66,7 +65,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport = {
-  themeColor: '#070a0e',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 }
@@ -95,7 +94,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es-CO" className={`${display.variable} ${texto.variable} ${mono.variable}`}>
+    <html lang="es-CO" className={`${texto.variable} ${mono.variable}`}>
       <body>
         <script
           type="application/ld+json"

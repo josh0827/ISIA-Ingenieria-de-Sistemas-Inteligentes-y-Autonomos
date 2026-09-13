@@ -96,7 +96,7 @@ De `@/componentes/Base`:
 
 | Pieza | Para qué |
 |---|---|
-| `<Seccion>` | Envuelve la sección con el ancho y el espaciado del sitio. `alterna` cambia el fondo, `reticula` dibuja la cuadrícula técnica |
+| `<Seccion>` | Envuelve la sección con el ancho y el espaciado del sitio. `alterna` la pinta sobre el gris claro |
 | `<TituloSeccion>` | Encabezado de sección, con `indice`, `titulo`, `descripcion` y `centrado` |
 | `<Boton href variante>` | Enlace de acción. `principal` o `sutil` |
 | `<Etiqueta valor>` | Pinta un estado, tipo o modalidad con su color fijo |
@@ -111,6 +111,9 @@ hermanos, escalona el retardo: `<Revelar retardo={i * 70}>`.
 De `@/componentes/Iconos`: los iconos SVG. **En este sitio no se usan emojis.** Si necesitas uno
 nuevo, añádelo ahí siguiendo el mismo patrón.
 
+De `@/componentes/Escudo`: el escudo institucional. `<Escudo alto={32} />`, y `placa` le pone un
+fondo claro detrás para cuando va sobre un fondo oscuro.
+
 De `@/lib/contenido`:
 
 ```ts
@@ -123,7 +126,12 @@ markdownAHtml(texto)
 
 ### Reglas de estilo
 
-- Colores y espaciados **siempre desde los tokens** (`var(--cian)`, `var(--aire)`), nunca valores sueltos
+- Colores y espaciados **siempre desde los tokens** (`var(--verde)`, `var(--aire)`), nunca valores sueltos
+- **Un solo acento**: el verde `--verde`, y con cuentagotas. El rojo `--rojo` solo para una
+  convocatoria abierta. Si el rojo aparece en tres sitios, deja de significar nada
+- Separa con **aire y líneas de un píxel**, no metiendo todo en tarjetas con borde
+- Todo lo que se pueda pulsar necesita un estado al pasar el cursor. Desplazamientos de 2 a 4
+  píxeles con `var(--curva)`, nunca saltos bruscos
 - Toda rejilla va centrada, horizontal y verticalmente
 - Revisa tu sección a **390 px de ancho** antes de abrir el pull request
 - Nada de librerías nuevas sin hablarlo antes: el sitio no usa ninguna y así se queda ligero

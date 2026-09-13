@@ -1,7 +1,7 @@
 // PÁGINA PRINCIPAL
 //
-// Nueve bloques en este orden:
-//   1. Portada con la red de nodos y las cifras del grupo
+// Ocho bloques en este orden:
+//   1. Portada: escudo institucional y nombre del grupo, en asimétrico
 //   2. Próxima reunión (sale sola de contenido/reuniones)
 //   3. Qué es ISIA y objetivos
 //   4. Líneas de investigación
@@ -17,10 +17,10 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { Boton, Etiqueta, Seccion, TituloSeccion, VerTodo, partesFecha } from '@/componentes/Base'
-import RedNodos from '@/componentes/RedNodos'
+import Escudo from '@/componentes/Escudo'
 import Revelar from '@/componentes/Revelar'
 import { TarjetaIntegrante, TarjetaNovedad, TarjetaProyecto } from '@/componentes/Tarjetas'
-import { Antena, Brazo, Brujula, Calendario, Ojo, Onda, Persona, Pin, Red, Reloj } from '@/componentes/Iconos'
+import { Antena, Brazo, Brujula, Ojo, Onda, Persona, Pin, Red, Reloj } from '@/componentes/Iconos'
 import { listarIntegrantes, listarNovedades, listarProyectos, proximaReunion } from '@/lib/contenido'
 import { CIFRAS, LINEAS, OBJETIVOS, PRESENTACION, SITIO } from '@/lib/sitio'
 import estilos from './pagina.module.css'
@@ -44,42 +44,44 @@ export default function Inicio() {
   return (
     <>
       {/* ------------------------------------------------ 1. PORTADA ------ */}
+      {/* Composición asimétrica: el escudo a un lado y el texto al otro. Sin
+          fondo animado ni degradados: el peso lo lleva el aire. */}
       <section className={estilos.portada}>
-        <RedNodos />
-
-        <div className={`contenedor ${estilos.portadaContenido}`}>
-          <h1 className={estilos.sigla}>
-            {SITIO.sigla.split('').map((letra, i) => (
-              <span key={i} className={estilos.letra} style={{ animationDelay: `${i * 90}ms` }}>
-                {letra}
-              </span>
-            ))}
-          </h1>
-
-          <p className={estilos.nombreCompleto}>{SITIO.nombre}</p>
-          <p className={estilos.proposito}>{SITIO.descripcion}</p>
-
-          <div className={estilos.portadaAcciones}>
-            <Boton href="/proyectos">Ver los proyectos</Boton>
-            <Boton href="/unete" variante="sutil">
-              Únete al grupo
-            </Boton>
+        <div className={`contenedor ${estilos.portadaRejilla}`}>
+          <div className={estilos.portadaEscudo}>
+            <Escudo alto={250} />
           </div>
 
+          <div className={estilos.portadaTexto}>
+            {/* El titular va en dos tonos: la parte generica en gris y la que
+                identifica al grupo en negro. Un nombre tan largo en un solo
+                tono se lee como un parrafo, no como un titulo. */}
+            <h1 className={estilos.titulo}>
+              <span className={estilos.tituloTenue}>{SITIO.nombreLineas[0]}</span>
+              <span className={estilos.tituloFuerte}>{SITIO.nombreLineas[1]}</span>
+            </h1>
+
+            <p className={estilos.proposito}>{SITIO.descripcion}</p>
+
+            <div className={estilos.portadaAcciones}>
+              <Boton href="/proyectos">Ver los proyectos</Boton>
+              <Boton href="/unete" variante="sutil">
+                Únete al grupo
+              </Boton>
+            </div>
+          </div>
+        </div>
+
+        {/* Cifras del grupo. Sin cajas: solo números separados por una línea. */}
+        <div className={`contenedor ${estilos.cifrasCaja}`}>
           <dl className={estilos.cifras}>
             {CIFRAS.map((cifra) => (
               <div key={cifra.etiqueta} className={estilos.cifra}>
-                <dt className={`mono ${estilos.cifraEtiqueta}`}>{cifra.etiqueta}</dt>
                 <dd className={estilos.cifraValor}>{cifra.valor}</dd>
+                <dt className={estilos.cifraEtiqueta}>{cifra.etiqueta}</dt>
               </div>
             ))}
           </dl>
-        </div>
-
-        <div className={estilos.universidad}>
-          <span className="mono">
-            {SITIO.universidad} · {SITIO.sede}
-          </span>
         </div>
       </section>
 
@@ -91,17 +93,15 @@ export default function Inicio() {
           <Revelar>
             <article className={estilos.reunion}>
               <div className={estilos.reunionFecha}>
-                <span className={`mono ${estilos.reunionMes}`}>{partesFecha(reunion.fecha).mesCorto}</span>
                 <span className={estilos.reunionDia}>{partesFecha(reunion.fecha).dia}</span>
-                <span className={`mono ${estilos.reunionAnio}`}>{partesFecha(reunion.fecha).anio}</span>
+                <span className={estilos.reunionMes}>
+                  {partesFecha(reunion.fecha).nombreMes} {partesFecha(reunion.fecha).anio}
+                </span>
               </div>
 
               <div className={estilos.reunionCuerpo}>
                 <div className={estilos.reunionEtiquetas}>
-                  <span className={`mono ${estilos.reunionAviso}`}>
-                    <Calendario size={14} />
-                    Próxima reunión
-                  </span>
+                  <span className={`mono ${estilos.reunionAviso}`}>Próxima reunión</span>
                   <Etiqueta valor={reunion.modalidad} />
                 </div>
 
@@ -143,55 +143,56 @@ export default function Inicio() {
       {/* ----------------------------------- 3. QUÉ ES ISIA Y OBJETIVOS --- */}
       <Seccion id="sobre-el-grupo">
         <div className={estilos.sobre}>
-          <Revelar className={estilos.sobreTexto}>
-            <span className={`mono ${estilos.indice}`}>
-              <span className={estilos.raya} aria-hidden />
-              01 · El grupo
-            </span>
+          <Revelar>
             <h2 className={estilos.sobreTitular}>{PRESENTACION.titular}</h2>
-            {PRESENTACION.parrafos.map((parrafo) => (
-              <p key={parrafo.slice(0, 24)} className={estilos.sobreParrafo}>
-                {parrafo}
-              </p>
-            ))}
           </Revelar>
 
-          <ol className={estilos.objetivos}>
-            {OBJETIVOS.map((objetivo, i) => (
-              <Revelar key={objetivo.titulo} retardo={i * 80}>
-                <li className={estilos.objetivo}>
-                  <span className={`mono ${estilos.objetivoNumero}`}>{String(i + 1).padStart(2, '0')}</span>
-                  <div>
-                    <h3 className={estilos.objetivoTitulo}>{objetivo.titulo}</h3>
-                    <p className={estilos.objetivoTexto}>{objetivo.texto}</p>
-                  </div>
-                </li>
-              </Revelar>
-            ))}
-          </ol>
+          <Revelar retardo={80}>
+            <div className={estilos.sobreTexto}>
+              {PRESENTACION.parrafos.map((parrafo) => (
+                <p key={parrafo.slice(0, 24)} className={estilos.sobreParrafo}>
+                  {parrafo}
+                </p>
+              ))}
+            </div>
+          </Revelar>
         </div>
+
+        {/* Los objetivos van en lista separada por líneas, no en tarjetas.
+            Cuatro cajas seguidas pesan mucho más de lo que aportan. */}
+        <ol className={estilos.objetivos}>
+          {OBJETIVOS.map((objetivo, i) => (
+            <Revelar key={objetivo.titulo} retardo={i * 70}>
+              <li className={estilos.objetivo}>
+                <span className={`mono ${estilos.objetivoNumero}`}>{String(i + 1).padStart(2, '0')}</span>
+                <h3 className={estilos.objetivoTitulo}>{objetivo.titulo}</h3>
+                <p className={estilos.objetivoTexto}>{objetivo.texto}</p>
+              </li>
+            </Revelar>
+          ))}
+        </ol>
       </Seccion>
 
       {/* ------------------------------------------------ 4. LÍNEAS ------- */}
-      <Seccion alterna reticula id="lineas">
+      <Seccion alterna id="lineas">
         <TituloSeccion
-          indice="02"
           titulo="Líneas de investigación"
           descripcion="Seis frentes de trabajo que se cruzan constantemente. Casi todos nuestros proyectos viven en la frontera entre dos de ellos."
-          centrado
         />
 
         <div className={estilos.lineas}>
           {LINEAS.map((linea, i) => {
             const Icono = ICONOS[linea.icono] ?? Red
             return (
-              <Revelar key={linea.titulo} retardo={i * 70}>
+              <Revelar key={linea.titulo} retardo={i * 60}>
                 <article className={estilos.linea}>
                   <span className={estilos.lineaIcono}>
-                    <Icono size={22} />
+                    <Icono size={21} />
                   </span>
-                  <h3 className={estilos.lineaTitulo}>{linea.titulo}</h3>
-                  <p className={estilos.lineaTexto}>{linea.texto}</p>
+                  <div>
+                    <h3 className={estilos.lineaTitulo}>{linea.titulo}</h3>
+                    <p className={estilos.lineaTexto}>{linea.texto}</p>
+                  </div>
                 </article>
               </Revelar>
             )
@@ -205,14 +206,13 @@ export default function Inicio() {
       {proyectos.length > 0 && (
         <Seccion id="proyectos">
           <TituloSeccion
-            indice="03"
             titulo="Proyectos destacados"
             descripcion="Lo que hay montado ahora mismo sobre la mesa del laboratorio."
           />
 
           <div className={estilos.proyectos}>
             {proyectos.map((proyecto, i) => (
-              <Revelar key={proyecto.slug} retardo={i * 90}>
+              <Revelar key={proyecto.slug} retardo={i * 80}>
                 <TarjetaProyecto proyecto={proyecto} />
               </Revelar>
             ))}
@@ -223,17 +223,18 @@ export default function Inicio() {
       )}
 
       {/* -------------------------------------------- 6. NOVEDADES -------- */}
+      {/* En lista y no en tarjetas: una novedad es una línea de titular con su
+          fecha, y así se leen las tres de un vistazo. */}
       {novedades.length > 0 && (
         <Seccion alterna id="novedades">
           <TituloSeccion
-            indice="04"
             titulo="Novedades"
             descripcion="Convocatorias, resultados y todo lo que pasa dentro del grupo."
           />
 
           <div className={estilos.novedades}>
             {novedades.map((novedad, i) => (
-              <Revelar key={novedad.slug} retardo={i * 90}>
+              <Revelar key={novedad.slug} retardo={i * 70}>
                 <TarjetaNovedad novedad={novedad} />
               </Revelar>
             ))}
@@ -247,14 +248,13 @@ export default function Inicio() {
       {integrantes.length > 0 && (
         <Seccion id="integrantes">
           <TituloSeccion
-            indice="05"
             titulo="Quiénes somos"
             descripcion="Docentes y estudiantes de distintos semestres trabajando en el mismo laboratorio."
           />
 
           <div className={estilos.integrantes}>
             {integrantes.slice(0, 8).map((integrante, i) => (
-              <Revelar key={integrante.slug} retardo={i * 60}>
+              <Revelar key={integrante.slug} retardo={i * 50}>
                 <TarjetaIntegrante integrante={integrante} />
               </Revelar>
             ))}
@@ -265,11 +265,11 @@ export default function Inicio() {
       )}
 
       {/* ------------------------------------------------ 8. ÚNETE -------- */}
-      <section className={`${estilos.unete} reticula`}>
+      <section className={estilos.unete}>
         <div className="contenedor">
           <Revelar>
             <div className={estilos.uneteCaja}>
-              <span className={`mono ${estilos.uneteAviso}`}>Convocatoria abierta</span>
+              <span className={estilos.uneteAviso}>Convocatoria abierta</span>
               <h2 className={estilos.uneteTitulo}>¿Te interesa investigar con nosotros?</h2>
               <p className={estilos.uneteTexto}>
                 Buscamos estudiantes con ganas de montar cosas y de sostenerlas hasta que funcionen. No hace

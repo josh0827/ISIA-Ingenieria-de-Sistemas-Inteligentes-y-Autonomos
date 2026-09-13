@@ -1,9 +1,12 @@
 /* Tarjetas compartidas.
 
-   Todas siguen el mismo patrón: superficie oscura, borde de un píxel que se
-   enciende en cian al pasar el cursor, y un enlace invisible estirado por
-   encima para que se pueda pulsar la tarjeta entera (y no solo el titular)
-   sin anidar enlaces dentro de enlaces. */
+   Casi ninguna es una "tarjeta" de verdad: no llevan borde ni fondo. Lo que
+   las separa es el aire y, en el caso de las novedades, una línea de un píxel.
+   Las cajas con borde redondeado en todas partes eran lo que más ensuciaba el
+   diseño anterior.
+
+   Todas llevan un enlace invisible estirado por encima para que se pueda
+   pulsar la pieza entera y no solo el titular, sin anidar enlaces. */
 
 .enlaceCompleto {
   position: absolute;
@@ -13,54 +16,54 @@
 
 /* ---------------------------------------------------------------- Novedad */
 
+/* Fila de lista, no tarjeta: fecha y categoría arriba, titular grande debajo. */
 .novedad {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  padding: 1.6rem;
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: var(--r);
-  height: 100%;
-  transition:
-    border-color 0.3s var(--curva),
-    background 0.3s var(--curva),
-    transform 0.3s var(--curva);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  padding-block: 1.9rem;
+  border-top: 1px solid var(--linea-suave);
+  transition: opacity 0.25s var(--curva);
 }
 
-.novedad:hover,
-.proyecto:hover {
-  border-color: var(--linea-viva);
-  background: var(--superficie-2);
-  transform: translateY(-3px);
+.novedad:last-of-type {
+  border-bottom: 1px solid var(--linea-suave);
 }
 
 .novedadCabecera {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
 .fecha {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
 }
 
 .novedadTitulo {
-  font-size: 1.1875rem;
-  line-height: 1.3;
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  transition: color 0.2s var(--curva);
+}
+
+.novedad:hover .novedadTitulo {
+  color: var(--verde);
 }
 
 .resumen {
   color: var(--texto-tenue);
-  font-size: 0.9375rem;
-  /* Recorta a tres líneas para que una rejilla de tarjetas no se desalinee
-     cuando alguien escribe un resumen mucho más largo que los demás. */
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 68ch;
+  /* Recorta a dos líneas para que una lista no se descuadre cuando alguien
+     escribe un resumen mucho más largo que los demás. */
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -68,90 +71,89 @@
 .pieTarjeta {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  margin-top: auto;
-  padding-top: 0.5rem;
-  font-family: var(--fuente-display), sans-serif;
-  font-size: 0.875rem;
-  color: var(--cian);
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--verde);
   transition: gap 0.25s var(--curva);
 }
 
 .novedad:hover .pieTarjeta,
 .proyecto:hover .pieTarjeta {
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 /* --------------------------------------------------------------- Proyecto */
 
+/* Imagen arriba y texto debajo, sin caja alrededor. */
 .proyecto {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: var(--r);
-  overflow: hidden;
   height: 100%;
-  transition:
-    border-color 0.3s var(--curva),
-    background 0.3s var(--curva),
-    transform 0.3s var(--curva);
 }
 
 .portada {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   max-width: 100%;
   background: var(--fondo-2);
   overflow: hidden;
-  border-bottom: 1px solid var(--linea);
+  border-radius: var(--r);
+  margin-bottom: 1.15rem;
 }
 
 .portadaImagen {
   object-fit: cover;
-  transition: transform 0.6s var(--curva);
+  transition: transform 0.7s var(--curva);
 }
 
 .proyecto:hover .portadaImagen {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
 
-/* Marcador de posición cuando el proyecto aún no tiene foto. */
+/* Marcador de posición cuando el proyecto aún no tiene foto: un degradado
+   muy suave, nada de retículas técnicas. */
 .portadaVacia {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(56, 225, 208, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 225, 208, 0.07) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background: linear-gradient(160deg, #eeeef1 0%, #e3e3e8 100%);
 }
 
 .portadaEtiqueta {
   position: absolute;
-  top: 0.85rem;
-  left: 0.85rem;
+  bottom: 0.85rem;
+  left: 0.95rem;
   z-index: 1;
-  backdrop-filter: blur(8px);
+  padding: 0.35rem 0.7rem;
   border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
 }
 
 .proyectoCuerpo {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  padding: 1.5rem;
+  gap: 0.5rem;
   flex: 1;
 }
 
 .linea {
-  font-size: 0.6875rem;
-  color: var(--cian);
+  font-size: 0.75rem;
+  color: var(--texto-debil);
 }
 
 .proyectoTitulo {
   font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1.25;
+  transition: color 0.2s var(--curva);
+}
+
+.proyecto:hover .proyectoTitulo {
+  color: var(--verde);
 }
 
 /* ------------------------------------------------------------- Integrante */
@@ -162,62 +164,59 @@
   align-items: center;
   justify-content: flex-start;
   text-align: center;
-  gap: 0.4rem;
-  padding: 1.75rem 1.25rem;
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: var(--r);
+  gap: 0.25rem;
   height: 100%;
-  transition:
-    border-color 0.3s var(--curva),
-    transform 0.3s var(--curva);
-}
-
-.integrante:hover {
-  border-color: var(--linea-viva);
-  transform: translateY(-3px);
 }
 
 .retrato {
   position: relative;
-  width: 96px;
-  height: 96px;
+  width: 104px;
+  height: 104px;
   max-width: 100%;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--superficie-2);
-  border: 1px solid var(--linea);
+  background: var(--fondo-2);
   display: grid;
   place-items: center;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.9rem;
 }
 
 .retratoImagen {
   object-fit: cover;
 }
 
-.retratoVacio {
+/* Sin foto se ponen las iniciales, no un monigote genérico. Un icono de
+   persona repetido ocho veces es de las cosas que más delatan una plantilla. */
+.iniciales {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
   color: var(--texto-debil);
+  user-select: none;
 }
 
 .integranteNombre {
-  font-size: 1.0625rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .rol {
-  font-size: 0.625rem;
-  color: var(--cian);
+  font-size: 0.75rem;
+  color: var(--texto-debil);
 }
 
 .area {
   color: var(--texto-tenue);
   font-size: 0.875rem;
+  line-height: 1.45;
+  margin-top: 0.2rem;
 }
 
 .integranteEnlaces {
   display: flex;
-  gap: 0.9rem;
-  margin-top: 0.75rem;
+  gap: 0.85rem;
+  margin-top: 0.8rem;
   color: var(--texto-debil);
 }
 
@@ -226,5 +225,82 @@
 }
 
 .integranteEnlaces a:hover {
-  color: var(--cian);
+  color: var(--texto);
+}
+
+/* El enlace del proyecto se ancla abajo para que los tres de una fila queden
+   a la misma altura aunque los titulares ocupen distinto número de líneas. */
+.proyectoCuerpo .pieTarjeta {
+  margin-top: auto;
+  padding-top: 0.65rem;
+}
+
+/* ========================= ESTADOS AL PASAR EL CURSOR ==================== */
+
+/* Novedad: la fila se aclara y el texto se desplaza un poco a la derecha, como
+   si la fila entrara hacia el lector. */
+.novedad {
+  border-radius: var(--r-sm);
+  padding-inline: 0;
+  transition:
+    background 0.25s var(--curva),
+    padding-inline 0.25s var(--curva);
+}
+
+.novedad:hover {
+  background: var(--superficie);
+  padding-inline: 1.1rem;
+}
+
+/* Proyecto: la pieza entera se eleva y la imagen se acerca. */
+.proyecto {
+  transition: transform 0.3s var(--curva);
+}
+
+.proyecto:hover {
+  transform: translateY(-4px);
+}
+
+.portada {
+  transition: box-shadow 0.3s var(--curva);
+}
+
+.proyecto:hover .portada {
+  box-shadow: 0 20px 40px -26px rgba(0, 0, 0, 0.35);
+}
+
+/* Integrante: el retrato crece y el nombre se tiñe. */
+.integrante {
+  transition: transform 0.3s var(--curva);
+}
+
+.integrante:hover {
+  transform: translateY(-4px);
+}
+
+.retrato {
+  transition:
+    background 0.3s var(--curva),
+    transform 0.3s var(--curva);
+}
+
+.integrante:hover .retrato {
+  background: var(--verde-vel);
+  transform: scale(1.05);
+}
+
+.iniciales {
+  transition: color 0.3s var(--curva);
+}
+
+.integrante:hover .iniciales {
+  color: var(--verde);
+}
+
+.integranteNombre {
+  transition: color 0.2s var(--curva);
+}
+
+.integrante:hover .integranteNombre {
+  color: var(--verde);
 }

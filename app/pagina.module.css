@@ -1,90 +1,52 @@
 /* Estilos exclusivos de la página principal.
 
-   Regla que se repite en todas las rejillas de este archivo: align-items y
-   justify-items centrados, y las tarjetas a altura completa. Así ninguna
-   rejilla queda descolgada cuando un texto es más corto que el de al lado. */
+   Criterios que se repiten en todo el archivo:
+     - Se separa con aire y con líneas de un píxel, no con cajas.
+     - Las rejillas van centradas, también cuando la última fila va incompleta.
+     - Nada de sombras de color, degradados en el texto ni fondos animados. */
 
 /* ==================================================== 1. PORTADA ========= */
 
 .portada {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-block: 7rem 3rem;
-  overflow: hidden;
-  /* Un halo cian muy tenue detrás del titular, para que el bloque no sea un
-     rectángulo negro plano. */
-  background:
-    radial-gradient(ellipse 70% 50% at 50% 38%, rgba(56, 225, 208, 0.07), transparent 70%),
-    var(--fondo);
+  padding-block: 9.5rem 3rem;
 }
 
-.portadaContenido {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
+/* Asimétrica: escudo a un lado, texto al otro. En móvil se apila y el escudo
+   se encoge, porque a tamaño grande se comería la pantalla. */
+.portadaRejilla {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
   align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
   text-align: center;
+  flex: 1;
 }
 
-/* --- sigla --- */
-
-.sigla {
-  display: flex;
-  justify-content: center;
-  gap: clamp(0.1rem, 1vw, 0.5rem);
-  font-size: clamp(4.5rem, 19vw, 13rem);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 0.9;
-  margin-bottom: 1.25rem;
+.portadaEscudo > span {
+  --alto-escudo: clamp(120px, 26vw, 250px) !important;
 }
 
-/* Las letras entran una a una al cargar. Es lo único animado de la portada
-   aparte del lienzo, y dura menos de medio segundo. */
-.letra {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.22em);
-  animation: entrar 0.85s var(--curva) forwards;
-  background: linear-gradient(180deg, var(--texto) 30%, var(--texto-debil) 130%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.portadaTexto {
+  max-width: 34rem;
 }
 
-@keyframes entrar {
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .letra {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
-}
-
-.nombreCompleto {
-  font-family: var(--fuente-display), sans-serif;
-  font-size: clamp(1rem, 2.6vw, 1.5rem);
-  color: var(--cian);
-  letter-spacing: 0.01em;
-  max-width: 24ch;
-  margin-bottom: 1.25rem;
+.titulo {
+  font-size: clamp(2.25rem, 5.4vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
 }
 
 .proposito {
   color: var(--texto-tenue);
-  font-size: clamp(0.9375rem, 1.6vw, 1.0625rem);
-  max-width: 58ch;
+  font-size: clamp(1.0625rem, 1.7vw, 1.25rem);
+  line-height: 1.5;
 }
 
 .portadaAcciones {
@@ -92,73 +54,55 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem 1.75rem;
+  gap: 1rem 1.75rem;
   margin-top: 2.25rem;
 }
 
-/* --- barra de cifras --- */
+/* --- cifras: sin cajas, solo números y una línea de separación --- */
+
+.cifrasCaja {
+  margin-top: clamp(3.5rem, 8vw, 6rem);
+}
 
 .cifras {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  width: 100%;
-  max-width: 800px;
-  margin: clamp(3rem, 7vw, 4.5rem) 0 0;
-  background: var(--linea);
-  border: 1px solid var(--linea);
-  border-radius: var(--r);
-  overflow: hidden;
+  gap: 2rem 1rem;
+  margin: 0;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--linea-suave);
 }
 
 .cifra {
   display: flex;
-  flex-direction: column-reverse; /* el valor arriba, la etiqueta debajo */
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 1.25rem 0.75rem;
-  background: rgba(17, 24, 35, 0.6);
-  backdrop-filter: blur(6px);
+  gap: 0.35rem;
+  text-align: center;
 }
 
 .cifraValor {
-  font-family: var(--fuente-display), sans-serif;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 700;
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
   line-height: 1;
   margin: 0;
-  color: var(--texto);
 }
 
 .cifraEtiqueta {
-  font-size: 0.625rem;
-  text-align: center;
-  line-height: 1.3;
-}
-
-/* En el flujo normal y no anclada al fondo con position: absolute. Anclada
-   chocaba con la barra de cifras en cuanto la pantalla era algo baja. */
-.universidad {
-  position: relative;
-  z-index: 1;
-  margin-top: 2rem;
-  text-align: center;
-  padding-inline: var(--gutter);
-}
-
-.universidad span {
-  font-size: 0.625rem;
-  opacity: 0.7;
+  font-size: 0.8125rem;
+  color: var(--texto-tenue);
+  line-height: 1.35;
 }
 
 /* ============================================ 2. PRÓXIMA REUNIÓN ========= */
 
 .seccionReunion {
-  /* Este bloque es un anuncio, no una sección larga: respira menos. */
-  padding-block: clamp(3rem, 5vw, 4.5rem);
+  padding-block: clamp(3.5rem, 6vw, 5rem);
 }
 
+/* Única caja con fondo propio de toda la portada, y se lo gana por ser el
+   aviso más importante de la página. Sin borde ni sombra de color. */
 .reunion {
   display: grid;
   grid-template-columns: 1fr;
@@ -166,15 +110,10 @@
   justify-items: center;
   text-align: center;
   gap: 1.75rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1.75rem, 4vw, 2.75rem);
   background: var(--superficie);
-  border: 1px solid var(--linea-viva);
   border-radius: var(--r);
-  /* Resplandor cian muy leve: es el bloque más importante de la portada. */
-  box-shadow: 0 0 0 1px rgba(56, 225, 208, 0.04), 0 24px 60px -40px rgba(56, 225, 208, 0.5);
 }
-
-/* --- taco de fecha --- */
 
 .reunionFecha {
   display: flex;
@@ -182,36 +121,27 @@
   align-items: center;
   justify-content: center;
   gap: 0.15rem;
-  min-width: 118px;
-  padding: 1.1rem 1.35rem;
-  background: var(--fondo-2);
-  border: 1px solid var(--linea);
-  border-radius: var(--r-sm);
-}
-
-.reunionMes {
-  font-size: 0.75rem;
-  color: var(--cian);
+  padding-right: clamp(0rem, 3vw, 2.25rem);
 }
 
 .reunionDia {
-  font-family: var(--fuente-display), sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 3.25rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
   line-height: 1;
 }
 
-.reunionAnio {
-  font-size: 0.625rem;
+.reunionMes {
+  font-size: 0.875rem;
+  color: var(--texto-tenue);
+  text-transform: capitalize;
 }
-
-/* --- cuerpo --- */
 
 .reunionCuerpo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .reunionEtiquetas {
@@ -219,25 +149,22 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
 }
 
 .reunionAviso {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.625rem;
-  color: var(--cian);
+  color: var(--verde);
 }
 
 .reunionTitulo {
-  font-size: clamp(1.35rem, 3vw, 1.875rem);
+  font-size: clamp(1.375rem, 2.8vw, 1.75rem);
+  font-weight: 600;
 }
 
 .reunionResumen {
   color: var(--texto-tenue);
   font-size: 0.9375rem;
-  max-width: 60ch;
+  max-width: 56ch;
 }
 
 .reunionDatos {
@@ -245,9 +172,10 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem 1.5rem;
+  gap: 0.5rem 1.5rem;
   color: var(--texto-tenue);
   font-size: 0.875rem;
+  margin-top: 0.35rem;
 }
 
 .reunionDatos li {
@@ -257,7 +185,7 @@
 }
 
 .reunionDatos svg {
-  color: var(--cian);
+  color: var(--texto-debil);
   flex-shrink: 0;
 }
 
@@ -266,179 +194,125 @@
 .sobre {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(2.5rem, 5vw, 4rem);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
   align-items: start;
-}
-
-.indice {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--cian);
-  margin-bottom: 1.1rem;
-}
-
-.raya {
-  width: 2.25rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.5;
+  margin-bottom: clamp(3.5rem, 7vw, 5.5rem);
 }
 
 .sobreTitular {
-  font-size: clamp(1.9rem, 4.2vw, 2.875rem);
-  margin-bottom: 1.5rem;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  max-width: 16ch;
 }
 
 .sobreParrafo {
   color: var(--texto-tenue);
   font-size: 1.0625rem;
-  max-width: 54ch;
+  line-height: 1.7;
+  max-width: 56ch;
 }
 
 .sobreParrafo + .sobreParrafo {
-  margin-top: 1.1rem;
+  margin-top: 1.35rem;
 }
 
+/* Objetivos en lista separada por líneas, no en tarjetas. */
 .objetivos {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  background: var(--linea);
-  border: 1px solid var(--linea);
-  border-radius: var(--r);
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 .objetivo {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.1rem;
-  padding: 1.5rem;
-  background: var(--superficie);
-  height: 100%;
-  transition: background 0.3s var(--curva);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+  padding-block: 1.75rem;
+  border-top: 1px solid var(--linea-suave);
 }
 
-.objetivo:hover {
-  background: var(--superficie-2);
+.objetivos > *:last-child .objetivo {
+  border-bottom: 1px solid var(--linea-suave);
 }
 
 .objetivoNumero {
-  color: var(--cian);
-  font-size: 0.75rem;
-  padding-top: 0.35rem;
-  flex-shrink: 0;
+  color: var(--texto-debil);
 }
 
 .objetivoTitulo {
-  font-size: 1.0625rem;
-  margin-bottom: 0.4rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .objetivoTexto {
   color: var(--texto-tenue);
-  font-size: 0.9375rem;
+  font-size: 1rem;
+  max-width: 62ch;
 }
 
 /* ==================================================== 4. LÍNEAS ========== */
 
+/* Dos columnas de filas separadas por línea, en lugar de seis tarjetas. */
 .lineas {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 1.25rem;
-}
-
-.lineas > * {
-  flex: 1 1 270px;
-  max-width: 380px;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 3rem;
 }
 
 .linea {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.85rem;
+  align-items: flex-start;
+  gap: 1.1rem;
+  padding-block: 1.6rem;
+  border-top: 1px solid var(--linea-suave);
   height: 100%;
-  padding: 2rem 1.5rem;
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  border-radius: var(--r);
-  transition:
-    border-color 0.3s var(--curva),
-    transform 0.3s var(--curva);
-}
-
-.linea:hover {
-  border-color: var(--linea-viva);
-  transform: translateY(-3px);
 }
 
 .lineaIcono {
   display: grid;
   place-items: center;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
   border-radius: 50%;
-  color: var(--cian);
-  background: var(--cian-vel);
-  border: 1px solid var(--linea-viva);
-  margin-bottom: 0.35rem;
+  color: var(--verde);
+  background: var(--verde-vel);
 }
 
 .lineaTitulo {
   font-size: 1.0625rem;
-  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
 }
 
 .lineaTexto {
   color: var(--texto-tenue);
   font-size: 0.9375rem;
+  line-height: 1.55;
 }
 
 /* ================================================= 5. PROYECTOS ========== */
 
-/* Flex con justify-content centrado en vez de grid: cuando la última fila
-   queda incompleta (siete integrantes en filas de cinco, por ejemplo), una
-   rejilla dejaría los sobrantes pegados a la izquierda. Así se centran. */
 .proyectos {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 2.5rem 2rem;
 }
 
 .proyectos > * {
-  flex: 1 1 320px;
-  max-width: 420px;
-}
-
-/* Revelar envuelve cada tarjeta, así que necesita estirarse para que todas
-   las tarjetas de una fila queden a la misma altura. */
-.proyectos > *,
-.novedades > *,
-.integrantes > *,
-.lineas > * {
-  height: auto;
+  flex: 1 1 280px;
+  max-width: 360px;
 }
 
 /* ================================================= 6. NOVEDADES ========== */
 
 .novedades {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 1.25rem;
-}
-
-.novedades > * {
-  flex: 1 1 290px;
-  max-width: 400px;
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 /* =============================================== 7. INTEGRANTES ========== */
@@ -448,23 +322,19 @@
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 2.5rem 1.5rem;
 }
 
 .integrantes > * {
-  flex: 1 1 190px;
-  max-width: 240px;
+  flex: 1 1 150px;
+  max-width: 190px;
 }
 
 /* ===================================================== 8. ÚNETE ========== */
 
 .unete {
-  position: relative;
   padding-block: var(--aire);
-  background:
-    radial-gradient(ellipse 60% 70% at 50% 50%, rgba(56, 225, 208, 0.06), transparent 70%),
-    var(--fondo);
-  border-top: 1px solid var(--linea-suave);
+  background: var(--fondo-2);
 }
 
 .uneteCaja {
@@ -473,31 +343,26 @@
   align-items: center;
   text-align: center;
   gap: 1.1rem;
-  max-width: 640px;
+  max-width: 38rem;
   margin-inline: auto;
-  position: relative;
-  z-index: 1;
 }
 
 .uneteAviso {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.625rem;
-  color: var(--ambar);
-  padding: 0.35rem 0.8rem;
-  border: 1px solid rgba(232, 176, 75, 0.35);
-  background: var(--ambar-vel);
-  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--rojo);
 }
 
 .uneteTitulo {
-  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-size: clamp(1.875rem, 4.4vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
 }
 
 .uneteTexto {
   color: var(--texto-tenue);
   font-size: 1.0625rem;
+  line-height: 1.6;
 }
 
 .uneteAcciones {
@@ -505,41 +370,34 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem 1.75rem;
-  margin-top: 0.85rem;
+  gap: 1rem 1.75rem;
+  margin-top: 1rem;
 }
 
 .uneteCorreo {
-  font-family: var(--fuente-mono), monospace;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--texto-tenue);
-  border-bottom: 1px solid var(--linea);
-  padding-bottom: 0.2rem;
-  transition:
-    color 0.25s var(--curva),
-    border-color 0.25s var(--curva);
+  transition: color 0.25s var(--curva);
 }
 
 .uneteCorreo:hover {
-  color: var(--cian);
-  border-color: var(--cian);
+  color: var(--verde);
 }
 
 /* ================================================ PUNTOS DE CORTE ======== */
 
-@media (min-width: 560px) {
+@media (min-width: 600px) {
   .cifras {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 860px) {
-  /* La tarjeta de reunión pasa a una sola fila: fecha, cuerpo y acción. */
+@media (min-width: 760px) {
   .reunion {
     grid-template-columns: auto 1fr auto;
     text-align: left;
     justify-items: start;
-    gap: 2.25rem;
+    gap: 2rem;
   }
 
   .reunionCuerpo {
@@ -550,14 +408,182 @@
   .reunionDatos {
     justify-content: flex-start;
   }
+
+  .reunionFecha {
+    border-right: 1px solid var(--linea-suave);
+  }
+
+  .objetivo {
+    grid-template-columns: 4rem 1fr;
+    gap: 0.4rem 1.5rem;
+  }
+
+  .objetivoNumero {
+    grid-row: span 2;
+    padding-top: 0.3rem;
+  }
 }
 
-@media (min-width: 960px) {
-  .sobre {
-    /* El texto algo más estrecho que los objetivos: en 2x2 las tarjetas
-       quedaban a unos 180px de texto útil y las frases se partían en ocho
-       líneas. Apiladas en una columna se leen de un vistazo. */
-    grid-template-columns: 0.9fr 1.1fr;
-    align-items: center;
+@media (min-width: 900px) {
+  .portadaRejilla {
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    text-align: left;
+    gap: clamp(3rem, 6vw, 5.5rem);
   }
+
+  .portadaAcciones {
+    justify-content: flex-start;
+  }
+
+  .sobre {
+    grid-template-columns: 0.85fr 1.15fr;
+  }
+
+  .lineas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================== TITULAR EN DOS TONOS Y ENTRADA =========== */
+
+/* El titular se parte en dos bloques: la parte genérica en gris y la que
+   identifica al grupo en negro. Un nombre tan largo en un solo tono se lee
+   como un párrafo y no como un título. */
+.tituloTenue,
+.tituloFuerte {
+  display: block;
+}
+
+.tituloTenue {
+  color: var(--texto-tenue);
+  font-weight: 500;
+}
+
+.tituloFuerte {
+  color: var(--texto);
+}
+
+/* Entrada escalonada al cargar: escudo, titular, texto y botones aparecen en
+   ese orden. Es medio segundo en total, lo justo para que la página se sienta
+   viva sin hacerse esperar. */
+.portadaEscudo,
+.titulo,
+.proposito,
+.portadaAcciones,
+.cifrasCaja {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: entrada 0.75s var(--curva) forwards;
+}
+
+.portadaEscudo {
+  animation-delay: 0.05s;
+}
+
+.titulo {
+  animation-delay: 0.14s;
+}
+
+.proposito {
+  animation-delay: 0.24s;
+}
+
+.portadaAcciones {
+  animation-delay: 0.32s;
+}
+
+.cifrasCaja {
+  animation-delay: 0.4s;
+}
+
+@keyframes entrada {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Sin animación de entrada para quien pide menos movimiento: se muestra ya
+   colocado en vez de quedarse invisible esperando una animación que no corre. */
+@media (prefers-reduced-motion: reduce) {
+  .portadaEscudo,
+  .titulo,
+  .proposito,
+  .portadaAcciones,
+  .cifrasCaja {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ========================= ESTADOS AL PASAR EL CURSOR ==================== */
+
+/* Cada fila de línea se levanta sobre una placa blanca al pasar por encima.
+   Es el único adorno del bloque y deja claro que la fila es una unidad. */
+.linea {
+  border-radius: var(--r-sm);
+  transition:
+    background 0.25s var(--curva),
+    transform 0.25s var(--curva);
+}
+
+.linea:hover {
+  background: var(--superficie);
+  transform: translateY(-2px);
+}
+
+.lineaIcono {
+  transition:
+    background 0.25s var(--curva),
+    color 0.25s var(--curva),
+    transform 0.3s var(--curva);
+}
+
+.linea:hover .lineaIcono {
+  background: var(--verde);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+/* Los objetivos se aclaran y desplazan un pelo. */
+.objetivo {
+  border-radius: var(--r-sm);
+  transition:
+    background 0.25s var(--curva),
+    padding-left 0.25s var(--curva);
+}
+
+.objetivo:hover {
+  background: var(--fondo-2);
+}
+
+.objetivo:hover .objetivoTitulo {
+  color: var(--verde);
+}
+
+.objetivoTitulo {
+  transition: color 0.2s var(--curva);
+}
+
+/* La tarjeta de reunión se eleva con una sombra muy suave. */
+.reunion {
+  transition:
+    box-shadow 0.3s var(--curva),
+    transform 0.3s var(--curva);
+}
+
+.reunion:hover {
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.22);
+  transform: translateY(-2px);
+}
+
+/* Las cifras crecen ligeramente al pasar por encima. */
+.cifra {
+  transition: transform 0.25s var(--curva);
+}
+
+.cifra:hover {
+  transform: translateY(-3px);
 }

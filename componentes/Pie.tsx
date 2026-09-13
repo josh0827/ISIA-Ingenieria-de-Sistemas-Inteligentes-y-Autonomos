@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { NAVEGACION, SITIO } from '@/lib/sitio'
-import { Monograma, Correo, Github, Pin } from './Iconos'
+import { Correo, Github, Pin } from './Iconos'
+import Escudo from './Escudo'
 import estilos from './Pie.module.css'
 
 export default function Pie() {
@@ -12,7 +13,7 @@ export default function Pie() {
         <div className={estilos.rejilla}>
           <div className={estilos.identidad}>
             <Link href="/" className={estilos.marca}>
-              <Monograma size={34} className={estilos.monograma} />
+              <Escudo alto={48} />
               <span className={estilos.sigla}>{SITIO.sigla}</span>
             </Link>
             <p className={estilos.nombre}>{SITIO.nombre}</p>

@@ -6,17 +6,16 @@
   z-index: 100;
   transition:
     background 0.3s var(--curva),
-    border-color 0.3s var(--curva),
-    backdrop-filter 0.3s var(--curva);
+    border-color 0.3s var(--curva);
   border-bottom: 1px solid transparent;
 }
 
-/* Al bajar, la barra se apoya sobre un cristal oscuro. */
+/* Al bajar, la barra se apoya sobre un cristal claro. */
 .posada {
-  background: rgba(7, 10, 14, 0.82);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border-bottom-color: var(--linea);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border-bottom-color: var(--linea-suave);
 }
 
 .fila {
@@ -24,7 +23,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  height: 68px;
+  height: 82px;
 }
 
 /* ------------------------------------------------------------------- marca */
@@ -32,24 +31,45 @@
 .marca {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.8rem;
   flex-shrink: 0;
 }
 
-.monograma {
-  color: var(--cian);
-  transition: transform 0.5s var(--curva);
+.marca img {
+  transition: transform 0.4s var(--curva);
 }
 
-.marca:hover .monograma {
-  transform: rotate(120deg);
+.marca:hover img {
+  transform: scale(1.08);
+}
+
+.separador {
+  width: 1px;
+  height: 32px;
+  background: var(--linea);
+  flex-shrink: 0;
+}
+
+.identidad {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.2;
 }
 
 .sigla {
-  font-family: var(--fuente-display), sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* El nombre de la universidad bajo la sigla. Se oculta en móvil, donde no
+   cabe sin apretar el resto de la barra. */
+.institucion {
+  font-size: 0.5625rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  display: none;
 }
 
 /* ----------------------------------------------------------------- enlaces */
@@ -57,27 +77,28 @@
 .enlaces {
   display: none;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1.6rem;
 }
 
 .enlace {
   position: relative;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--texto-tenue);
+  padding-block: 0.35rem;
   transition: color 0.2s var(--curva);
-  padding-block: 0.5rem;
 }
 
+/* Subrayado que crece desde el centro al pasar el cursor. */
 .enlace::after {
   content: '';
   position: absolute;
   left: 0;
+  right: 0;
   bottom: 0;
-  height: 1px;
-  width: 100%;
-  background: var(--cian);
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--texto);
   transform: scaleX(0);
-  transform-origin: left;
   transition: transform 0.3s var(--curva);
 }
 
@@ -85,13 +106,18 @@
   color: var(--texto);
 }
 
-.enlace:hover::after,
-.enlace.activo::after {
+.enlace:hover::after {
   transform: scaleX(1);
 }
 
+.enlace.activo::after {
+  transform: scaleX(1);
+  background: var(--verde);
+}
+
 .enlace.activo {
-  color: var(--cian);
+  color: var(--texto);
+  font-weight: 500;
 }
 
 /* ---------------------------------------------------------------- acciones */
@@ -103,43 +129,51 @@
   flex-shrink: 0;
 }
 
-/* CTA de línea fina, igual que el resto de botones del sitio. */
 .cta {
   display: none;
   font-size: 0.875rem;
-  padding: 0.55rem 1.1rem;
-  border: 1px solid var(--linea-viva);
+  font-weight: 500;
+  padding: 0.45rem 1rem;
   border-radius: 999px;
-  color: var(--cian);
+  background: var(--texto);
+  color: #fff;
   transition:
     background 0.25s var(--curva),
-    color 0.25s var(--curva);
+    transform 0.2s var(--curva);
 }
 
 .cta:hover {
-  background: var(--cian);
-  color: var(--fondo);
+  background: #000;
+  transform: translateY(-1px);
+}
+
+.cta:active {
+  transform: scale(0.97);
 }
 
 .hamburguesa {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--linea);
-  border-radius: var(--r-sm);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   color: var(--texto);
+  transition: background 0.2s var(--curva);
+}
+
+.hamburguesa:hover {
+  background: var(--fondo-2);
 }
 
 /* ------------------------------------------------------------- menú móvil */
 
 .panel {
   position: fixed;
-  inset: 68px 0 0 0;
+  inset: 82px 0 0 0;
   z-index: 99;
   background: var(--fondo);
-  padding: 2rem var(--gutter) 3rem;
+  padding: 1.5rem var(--gutter) 3rem;
   overflow-y: auto;
   opacity: 0;
   transition: opacity 0.25s var(--curva);
@@ -152,20 +186,20 @@
 .panelEnlaces {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--linea);
 }
 
 .panelEnlace {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1rem;
-  padding: 1.15rem 0.25rem;
-  border-bottom: 1px solid var(--linea);
-  font-family: var(--fuente-display), sans-serif;
+  padding: 1.05rem 0.25rem;
+  border-bottom: 1px solid var(--linea-suave);
   font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
   color: var(--texto);
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(10px);
   transition:
     opacity 0.4s var(--curva),
     transform 0.4s var(--curva);
@@ -177,14 +211,20 @@
 }
 
 .panelEnlace.activo {
-  color: var(--cian);
+  color: var(--verde);
 }
 
 .panelCta {
-  color: var(--cian);
+  color: var(--verde);
 }
 
 /* -------------------------------------------------------------- escritorio */
+
+@media (min-width: 560px) {
+  .institucion {
+    display: block;
+  }
+}
 
 @media (min-width: 1000px) {
   .enlaces,
@@ -197,13 +237,12 @@
   }
 }
 
-/* En pantallas intermedias los enlaces no caben todos: se deja el menú. */
 @media (min-width: 1000px) and (max-width: 1180px) {
   .enlaces {
-    gap: 1.15rem;
+    gap: 1.1rem;
   }
 
   .enlace {
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
   }
 }

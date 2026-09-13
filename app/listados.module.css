@@ -4,48 +4,39 @@
    Si tu sección necesita algo distinto, créate tu propio .module.css dentro de
    tu carpeta en vez de tocar este, que lo usa todo el mundo. */
 
-/* La barra de navegación es fija y mide 68px: la primera sección de cualquier
+/* La barra de navegación es fija y mide 66px: la primera sección de cualquier
    página interior necesita ese hueco extra para no quedar por debajo. */
 .primeraSeccion {
-  padding-top: calc(68px + var(--aire));
+  padding-top: calc(82px + var(--aire));
 }
 
-/* Flex con justify-content centrado en vez de grid, a propósito: cuando la
-   última fila queda incompleta (cuatro proyectos en filas de tres), una
-   rejilla dejaría el sobrante pegado a la izquierda. Aquí se centra. */
+/* Lista separada por líneas, para novedades. */
 .rejilla {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
-.rejilla > * {
-  flex: 1 1 290px;
-  max-width: 400px;
-}
-
-/* Igual pero con tarjetas más anchas, para proyectos. */
+/* Rejilla centrada para proyectos e integrantes. Se usa flex y no grid a
+   propósito: cuando la última fila queda incompleta, una rejilla dejaría los
+   sobrantes pegados a la izquierda y aquí se centran. */
 .rejillaAncha {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 2.5rem 2rem;
 }
 
 .rejillaAncha > * {
-  flex: 1 1 320px;
-  max-width: 420px;
+  flex: 1 1 280px;
+  max-width: 360px;
 }
 
 /* Mensaje cuando todavía no hay contenido escrito en esa sección. */
 .vacio {
   text-align: center;
   color: var(--texto-tenue);
-  padding: 3rem 1rem;
-  border: 1px dashed var(--linea);
+  padding: 3.5rem 1rem;
+  background: var(--fondo-2);
   border-radius: var(--r);
-  background: var(--superficie);
 }

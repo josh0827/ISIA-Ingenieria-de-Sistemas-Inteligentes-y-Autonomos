@@ -22,16 +22,14 @@ import estilos from './Base.module.css'
 type SeccionProps = {
   children: ReactNode
   id?: string
-  /** Alterna al fondo secundario, para separar visualmente bloques seguidos. */
+  /** Alterna al fondo gris claro, para separar visualmente bloques seguidos.
+   *  Es la única forma de separar secciones en este diseño: no hay bordes. */
   alterna?: boolean
-  /** Dibuja la retícula técnica de fondo. Úsalo con moderación: pierde fuerza
-   *  si aparece en todos los bloques. */
-  reticula?: boolean
   className?: string
 }
 
-export function Seccion({ children, id, alterna, reticula, className }: SeccionProps) {
-  const clases = [estilos.seccion, alterna ? estilos.alterna : '', reticula ? 'reticula' : '', className ?? '']
+export function Seccion({ children, id, alterna, className }: SeccionProps) {
+  const clases = [estilos.seccion, alterna ? estilos.alterna : '', className ?? '']
     .filter(Boolean)
     .join(' ')
 
@@ -73,8 +71,8 @@ export function TituloSeccion({ indice, titulo, descripcion, centrado }: TituloS
 type BotonProps = {
   href: string
   children: ReactNode
-  /** "principal" lleva el acento cian; "sutil" es solo texto con subrayado.
-   *  Ambos son de línea fina: en este sitio no hay botones de caja rellena. */
+  /** "principal" es la píldora negra rellena; "sutil" es solo texto en verde.
+   *  Un solo botón principal por bloque: con dos, ninguno destaca. */
   variante?: 'principal' | 'sutil'
   /** Añade la flecha a la derecha. Encendido por defecto. */
   flecha?: boolean
@@ -109,23 +107,24 @@ export function Boton({ href, children, variante = 'principal', flecha = true, c
 /* ----------------------------------------------------------------- Etiqueta */
 
 // Cada valor tiene su color fijo en todo el sitio: un proyecto "activo" se ve
-// igual en la portada que en su ficha. Si añades un estado nuevo al contenido,
-// añádelo también aquí y en Base.module.css.
+// igual en la portada que en su ficha. Solo hay tres colores posibles, y el
+// rojo se reserva para lo que reclama atención. Si añades un estado nuevo al
+// contenido, añádelo también aquí y en Base.module.css.
 const COLOR_ETIQUETA: Record<string, string> = {
   // estados de proyecto
-  activo: 'cian',
-  'en-curso': 'cian',
-  pausado: 'ambar',
+  activo: 'verde',
+  'en-curso': 'verde',
+  pausado: 'rojo',
   completado: 'neutro',
   // tipos de novedad
-  convocatoria: 'ambar',
-  evento: 'cian',
-  logro: 'ambar',
+  convocatoria: 'rojo',
+  evento: 'verde',
+  logro: 'rojo',
   publicacion: 'neutro',
   // modalidades de reunión
-  presencial: 'cian',
+  presencial: 'verde',
   virtual: 'neutro',
-  hibrida: 'ambar',
+  hibrida: 'rojo',
 }
 
 const TEXTO_ETIQUETA: Record<string, string> = {

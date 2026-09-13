@@ -2,7 +2,7 @@
    Se importan con ../../detalle.module.css desde una carpeta [slug]. */
 
 .primeraSeccion {
-  padding-top: calc(68px + var(--aire));
+  padding-top: calc(82px + var(--aire));
 }
 
 /* Medida de lectura cómoda: un texto largo a todo el ancho no se lee. */
@@ -83,7 +83,7 @@
 
 .fichaEtiqueta {
   font-size: 0.625rem;
-  color: var(--cian);
+  color: var(--verde);
 }
 
 .fichaValor {

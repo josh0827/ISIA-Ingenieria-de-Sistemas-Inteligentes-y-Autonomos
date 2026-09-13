@@ -1,0 +1,26 @@
+/* Escudo institucional. */
+
+.marco {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.escudo {
+  height: var(--alto-escudo);
+  width: auto;
+  display: block;
+}
+
+/* Placa clara para fondos oscuros.
+
+   El cóndor del escudo es negro con detalle en blanco. Sobre el fondo casi
+   negro del sitio se pierde entero y solo se ven el verde y el rojo. La placa
+   lo devuelve a su contraste original, que además es como las instituciones
+   colocan un escudo a todo color sobre una barra oscura. */
+.placa {
+  background: #f4f2ed;
+  border-radius: 6px;
+  padding: 5px 7px;
+}

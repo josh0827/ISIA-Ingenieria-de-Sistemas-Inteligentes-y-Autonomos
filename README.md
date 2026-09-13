@@ -66,6 +66,11 @@ contenido/        AQUÍ escribe el grupo. Sin tocar código
 public/imagenes/  fotos
 ```
 
+**Dirección visual**: minimalista y clara. Blanco y gris muy claro, una sola tipografía en varios
+pesos y un único color de acento, el verde del escudo institucional. Las secciones se separan con
+aire y líneas de un píxel, no con cajas. La regla práctica: si dudas entre añadir algo o quitarlo,
+quítalo.
+
 **Si quieres cambiar un dato del grupo** (el correo, los objetivos, las cifras de la portada, las
 líneas de investigación), está todo en `lib/sitio.ts`. Es un archivo de texto normal y es el único
 sitio donde hay que tocarlo: el cambio se propaga a la portada, al pie y a las metaetiquetas a la vez.
@@ -114,5 +119,7 @@ El sitio se publica en Vercel conectado a este repositorio:
 - [ ] Sustituir objetivos y líneas de ejemplo por los oficiales
 - [ ] Cambiar las cifras de la portada por las reales
 - [ ] Sustituir los `.md` de ejemplo de `contenido/` por contenido real
-- [ ] Reemplazar el monograma de `componentes/Iconos.tsx` si el grupo aprueba un logo
+- [ ] Pedir al director el escudo oficial del manual de identidad de la UNAL. El que hay en
+      `public/imagenes/escudo-unal.svg` viene de Wikimedia Commons con licencia de atribución
+      (autor: César Puertas Céspedes); es sustituir el archivo y ya
 - [ ] Montar las seis secciones pendientes
