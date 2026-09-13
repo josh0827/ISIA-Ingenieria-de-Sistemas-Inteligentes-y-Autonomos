@@ -1,0 +1,6 @@
+# Quien revisa por defecto.
+#
+# GitHub pide revision a estas personas automaticamente en cada pull request,
+# asi nadie tiene que acordarse de asignar revisor.
+
+* @josh0827

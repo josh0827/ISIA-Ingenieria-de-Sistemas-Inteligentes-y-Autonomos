@@ -1,0 +1,32 @@
+# Comprobacion automatica de cada cambio.
+#
+# Compila el sitio entero en cada pull request. Si alguien sube algo que no
+# compila, GitHub lo marca en rojo antes de que nadie lo revise, y no hay que
+# fiarse de que cada uno se acuerde de pasar "npm run build" en su equipo.
+#
+# Funciona en cualquier plan de GitHub y no necesita configurar nada.
+
+name: Compilar
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  compilar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # npm ci en vez de npm install: instala exactamente lo que dice
+      # package-lock.json, sin actualizar nada por su cuenta.
+      - run: npm ci
+
+      - run: npm run build
