@@ -48,12 +48,12 @@ export default function RootLayout({
         <a href="#contenido" className="saltar">
           Saltar al contenido
         </a>
-        <div className="demo-bar">
+        <aside className="demo-bar" aria-label="Estado de la demo">
           <div className="contenedor">
             <span>DEMO ACADÉMICA</span>
             <p>Contenido ilustrativo · Pendiente de validación</p>
           </div>
-        </div>
+        </aside>
         <Nav />
         <main id="contenido" tabIndex={-1}>
           {children}
