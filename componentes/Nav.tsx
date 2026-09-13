@@ -40,7 +40,7 @@ export default function Nav() {
         >
           <Escudo alto={55} />
           <span className={estilos.identidad}>
-            <strong>ISIA</strong>
+            <strong>{SITIO.nombre}</strong>
             <span>Semillero de investigación</span>
           </span>
         </Link>

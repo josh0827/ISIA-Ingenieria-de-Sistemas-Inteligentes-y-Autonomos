@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import Nav from '@/componentes/Nav'
 import Pie from '@/componentes/Pie'
+import Transicion from '@/componentes/Transicion'
 import { SITIO } from '@/lib/sitio'
 import './globals.css'
 
@@ -56,7 +57,7 @@ export default function RootLayout({
         </aside>
         <Nav />
         <main id="contenido" tabIndex={-1}>
-          {children}
+          <Transicion>{children}</Transicion>
         </main>
         <Pie />
       </body>

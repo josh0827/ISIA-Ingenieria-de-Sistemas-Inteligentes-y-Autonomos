@@ -21,10 +21,12 @@
   padding-left: 1.15rem;
 }
 .identidad strong {
-  font-size: 1.65rem;
-  letter-spacing: 0.02em;
+  font-size: clamp(0.92rem, 1.35vw, 1.15rem);
+  letter-spacing: 0.01em;
   font-weight: 650;
-  line-height: 1.15;
+  line-height: 1.25;
+  max-width: 15rem;
+  display: block;
 }
 .identidad > span {
   font-size: 0.68rem;
@@ -47,6 +49,7 @@
   background: var(--verde);
   color: white;
   font-size: 0.8rem;
+  font-weight: 700;
   border-radius: var(--r-sm);
   display: flex;
   gap: 1.3rem;
@@ -58,6 +61,7 @@
   background: var(--verde-oscuro);
 }
 .navBorde {
+  background: var(--gris-nav);
   border-top: 1px solid var(--linea-suave);
 }
 .enlaces {
@@ -69,6 +73,7 @@
   display: block;
   padding: 0.85rem 0;
   font-size: 0.8rem;
+  font-weight: 700;
   color: var(--texto-tenue);
   border-bottom: 2px solid transparent;
 }
@@ -76,9 +81,9 @@
   color: var(--verde);
 }
 .enlace[aria-current='page'] {
-  color: var(--verde);
-  border-color: var(--verde);
-  font-weight: 650;
+  color: var(--verde-oscuro);
+  border-color: var(--verde-oscuro);
+  font-weight: 700;
 }
 .hamburguesa {
   display: none;
@@ -106,8 +111,8 @@
   font-size: 0.95rem;
 }
 .panel a[aria-current='page'] {
-  color: var(--verde);
-  font-weight: 650;
+  color: var(--verde-oscuro);
+  font-weight: 700;
 }
 .panel span {
   color: var(--verde);
