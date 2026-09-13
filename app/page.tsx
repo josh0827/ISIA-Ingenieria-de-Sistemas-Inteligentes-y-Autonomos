@@ -122,6 +122,7 @@ export default function Inicio() {
               href={`/lineas#linea-${i + 1}`}
               key={linea.titulo}
               className={estilos.linea}
+              data-linea={i + 1}
             >
               <span className={estilos.numero}>
                 {String(i + 1).padStart(2, '0')}

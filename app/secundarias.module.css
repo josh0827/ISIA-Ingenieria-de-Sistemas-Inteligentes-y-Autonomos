@@ -33,6 +33,24 @@
   padding-block: 2.75rem;
   border-top: 1px solid var(--linea);
   scroll-margin-top: 2rem;
+  position: relative;
+  transition: background-color 0.22s var(--curva), border-color 0.22s var(--curva), transform 0.22s var(--curva);
+}
+.linea:nth-child(3n + 1) {
+  border-left: 4px solid var(--verde);
+  padding-left: 1rem;
+}
+.linea:nth-child(3n + 2) {
+  border-left: 4px solid var(--rojo);
+  padding-left: 1rem;
+}
+.linea:nth-child(3n) {
+  border-left: 4px solid #8d7a38;
+  padding-left: 1rem;
+}
+.linea:hover {
+  background: color-mix(in srgb, var(--superficie-2) 55%, transparent);
+  transform: translateX(0.3rem);
 }
 
 .numeroLinea {
@@ -179,4 +197,12 @@
   .resumenReunion::after { grid-column: 2; grid-row: 2; }
   .contenidoReunion { padding: 0 0 1.75rem; }
   .datosReunion { grid-template-columns: 1fr; padding: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .linea:hover {
+    transform: none;
+  }
+  .linea {
+    transition: none;
+  }
 }

@@ -3,6 +3,11 @@
   flex-direction: column;
   height: 100%;
   border-bottom: 1px solid var(--linea);
+  transition: transform 0.22s var(--curva), border-color 0.22s var(--curva);
+}
+.proyecto:hover {
+  transform: translateY(-0.35rem);
+  border-color: var(--verde);
 }
 .portada {
   display: block;
@@ -10,6 +15,10 @@
   aspect-ratio: 1.65;
   background: var(--verde-vel);
   overflow: hidden;
+  transition: box-shadow 0.22s var(--curva);
+}
+.proyecto:hover .portada {
+  box-shadow: 0 0.8rem 1.8rem rgba(53, 82, 47, 0.16);
 }
 .portadaImagen {
   object-fit: cover;
@@ -105,6 +114,11 @@
   align-items: start;
   padding: 1.8rem 0;
   border-top: 1px solid var(--linea);
+  transition: border-color 0.2s var(--curva), transform 0.2s var(--curva);
+}
+.novedad:hover {
+  border-color: var(--verde);
+  transform: translateX(0.25rem);
 }
 .novedad:last-child {
   border-bottom: 1px solid var(--linea);
@@ -155,6 +169,7 @@
 }
 .flechaEnlace:hover {
   background: var(--verde-vel);
+  transform: translateX(0.2rem);
 }
 .integrante {
   display: flex;
@@ -214,5 +229,18 @@
   }
   .pieProyecto {
     flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proyecto,
+  .novedad,
+  .portada,
+  .flechaEnlace {
+    transition: none;
+  }
+  .proyecto:hover,
+  .novedad:hover,
+  .flechaEnlace:hover {
+    transform: none;
   }
 }

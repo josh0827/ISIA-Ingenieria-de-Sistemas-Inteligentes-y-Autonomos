@@ -1,5 +1,24 @@
 .portada {
-  padding-block: clamp(3rem, 5vw, 5rem);
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(4rem, 7vw, 7rem);
+  overflow: hidden;
+  background: linear-gradient(120deg, rgba(69, 106, 62, 0.09), transparent 45%, rgba(148, 52, 69, 0.09));
+}
+.portada::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 58vw;
+  height: 22rem;
+  right: -18vw;
+  top: 15%;
+  background: linear-gradient(135deg, rgba(69, 106, 62, 0.16), rgba(148, 52, 69, 0.13));
+  clip-path: polygon(15% 0, 100% 20%, 82% 78%, 0 100%);
+  transform: rotate(-8deg);
+}
+.portada > div {
+  position: relative;
 }
 .portadaRejilla {
   display: grid;
@@ -21,7 +40,8 @@
   letter-spacing: -0.06em;
   line-height: 1;
   font-weight: 580;
-  color: var(--verde);
+  color: var(--verde-oscuro);
+  text-shadow: 0.08em 0.06em 0 rgba(148, 52, 69, 0.12);
 }
 .nombre {
   display: block;
@@ -54,7 +74,7 @@
   color: var(--linea-fuerte);
 }
 .figura {
-  background: var(--verde-vel);
+  background: var(--superficie);
   border: 1px solid var(--linea);
   padding: 1.4rem;
 }
@@ -178,6 +198,7 @@
   gap: 1.2rem;
   padding-block: 1.6rem;
   border-top: 1px solid var(--linea);
+  transition: color 0.2s var(--curva), transform 0.2s var(--curva), border-color 0.2s var(--curva);
 }
 .linea > .numero {
   margin-top: 0.2rem;
@@ -198,6 +219,10 @@
 .linea:hover h3 {
   color: var(--verde);
 }
+.linea:hover {
+  transform: translateX(0.35rem);
+  border-color: var(--verde);
+}
 .linea p {
   color: var(--texto-tenue);
   font-size: 0.83rem;
@@ -215,7 +240,7 @@
 }
 .unete {
   border-top: 1px solid var(--linea);
-  background: var(--verde-vel);
+  background: linear-gradient(115deg, var(--verde-vel), rgba(148, 52, 69, 0.1));
   padding-block: 4rem;
 }
 .uneteInterior {
@@ -314,5 +339,10 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 0.3rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .linea:hover {
+    transform: none;
   }
 }
