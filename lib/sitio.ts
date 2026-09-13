@@ -10,8 +10,10 @@ export const SITIO = {
   nombreCorto: 'Grupo ISIA',
   descripcion:
     'Grupo de investigación dedicado al diseño de sistemas que perciben, deciden y actúan por sí mismos, desde el sensor embebido hasta la política de control.',
-  // TODO: cambiar por el dominio definitivo cuando se conecte a Vercel.
-  url: 'https://isia.vercel.app',
+  // Dominio real del despliegue. De aquí salen las etiquetas canónicas, el
+  // sitemap.xml y el robots.txt, así que si algún día el grupo consigue un
+  // dominio propio hay que cambiarlo AQUÍ y en ningún otro sitio.
+  url: 'https://isia-ingenieria-de-sistemas-intelig.vercel.app',
   correo: 'isia@universidad.edu.co', // TODO: correo real del grupo
   universidad: 'Universidad Nacional de Colombia',
   sede: 'Sede Manizales',
