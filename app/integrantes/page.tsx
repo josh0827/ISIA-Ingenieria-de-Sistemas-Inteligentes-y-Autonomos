@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: 'Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.',
 }
 
+export const dynamic = 'force-dynamic'
+
 const ROLES: { valor: Integrante['rol']; titulo: string; descripcion: string }[] = [
   { valor: 'director', titulo: 'Coordinación académica', descripcion: 'Información de la persona responsable pendiente de confirmar.' },
   { valor: 'investigador', titulo: 'Docentes e investigadores', descripcion: 'Perfiles de acompañamiento e investigación pendientes de confirmar.' },
@@ -16,8 +18,8 @@ const ROLES: { valor: Integrante['rol']; titulo: string; descripcion: string }[]
   { valor: 'egresado', titulo: 'Egresados', descripcion: 'Información de egresados vinculados pendiente de confirmar.' },
 ]
 
-export default function PaginaIntegrantes() {
-  const integrantes = listarIntegrantes()
+export default async function PaginaIntegrantes() {
+  const integrantes = await listarIntegrantes()
 
   return (
     <>

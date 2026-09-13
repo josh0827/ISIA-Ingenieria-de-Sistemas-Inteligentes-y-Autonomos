@@ -139,6 +139,35 @@ Los enlaces de contenido admiten HTTPS, páginas internas existentes y archivos 
 
 Esta validación comprueba el formato y la existencia local; no garantiza que un destino externo siga disponible. Compruébalo manualmente antes de confirmar la ficha.
 
+## Panel de administración (/admin)
+
+Además de editar los archivos Markdown, el sitio incluye un panel protegido en `/admin` para crear, editar y eliminar proyectos, novedades, reuniones, integrantes, publicaciones y galería desde el navegador, con inicio de sesión mediante GitHub.
+
+### Cómo funciona
+
+- El contenido se guarda en **Firestore** (una colección por tipo de contenido, con el mismo `slug` como ID de documento). Las validaciones de `lib/contenido.ts` (fechas, enlaces, imágenes locales, etc.) se aplican igual que con Markdown.
+- Si el entorno **no** tiene configuradas las credenciales de Firebase, el sitio sigue funcionando leyendo `contenido/*.md` como hasta ahora, y `/admin` muestra un aviso de configuración pendiente en vez de fallar.
+- Iniciar sesión con GitHub no basta para editar: el UID de la cuenta debe estar en la colección `editores` de Firestore (documento `editores/<uid>` con, por ejemplo, `{ activo: true }`). Esa colección se administra a mano desde la consola de Firebase, nunca desde el sitio, para controlar quién puede publicar.
+- Las páginas que muestran contenido (`/`, `/proyectos`, `/novedades`, `/lineas`, `/integrantes`, `/publicaciones`, `/galeria`, `/reuniones` y sus fichas) se renderizan de forma dinámica (`export const dynamic = 'force-dynamic'`) para que lo publicado desde `/admin` aparezca de inmediato, sin necesidad de un nuevo despliegue.
+
+### Puesta en marcha (una sola vez por entorno)
+
+1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com/) y habilita **Firestore** (modo nativo).
+2. En **Authentication → Sign-in method**, habilita el proveedor **GitHub**. Necesitas una GitHub OAuth App (Settings → Developer settings → OAuth Apps) con el *Authorization callback URL* que Firebase indica en esa misma pantalla; pega ahí el *Client ID* y *Client secret* de esa OAuth App.
+3. En **Configuración del proyecto → Tus apps**, registra una Web app para obtener la configuración pública (`apiKey`, `authDomain`, etc.).
+4. En **Configuración del proyecto → Cuentas de servicio**, genera una clave privada nueva para el Admin SDK.
+5. Copia [.env.local.example](.env.local.example) a `.env.local` y completa ambos bloques de variables. `.env.local` ya está excluido por `.gitignore`: nunca lo subas al repositorio.
+6. Añade manualmente en Firestore, colección `editores`, un documento cuyo ID sea el UID de cada persona autorizada a editar (se ve en Authentication tras su primer inicio de sesión), con el campo `activo: true`.
+7. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
+   ```bash
+   npm run migrar-contenido
+   ```
+   Esto importa `contenido/**/*.md` a Firestore tal cual. Vuelve a ejecutarlo si cambias los Markdown y quieres reflejarlos otra vez (sobrescribe por slug).
+8. Reinicia `npm run dev` (o el despliegue) para que las variables de entorno se carguen. Entra a `/admin/iniciar-sesion`.
+
+La subida de imágenes no está incluida en esta primera versión: los campos de imagen siguen esperando una ruta ya existente en `public/imagenes/` (súbela por Git como hasta ahora). El panel valida que el archivo exista antes de guardar.
+
+
 El cuerpo Markdown pasa por saneamiento HTML y un filtro de recursos. No añadas HTML interactivo, scripts, iframes, formularios ni instrucciones internas de desarrollo a los archivos publicados.
 
 El canal de contacto permanece como **Canal de contacto pendiente de confirmar**. El enlace al repositorio debe identificarse como **Repositorio del sitio**, sin atribuirle un carácter institucional no verificado.

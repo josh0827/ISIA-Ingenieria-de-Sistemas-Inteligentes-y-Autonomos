@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas. Demo sin reuniones ficticias anunciadas como actividades reales.',
 }
 
+export const dynamic = 'force-dynamic'
+
 type ReunionConHtml = Reunion & { html: string }
 
 function FichaReunion({ reunion }: { reunion: ReunionConHtml }) {
@@ -52,7 +54,8 @@ function FichaReunion({ reunion }: { reunion: ReunionConHtml }) {
 }
 
 export default async function PaginaReuniones() {
-  const reuniones = await Promise.all(listarReuniones().map(async (reunion) => ({
+  const listado = await listarReuniones()
+  const reuniones = await Promise.all(listado.map(async (reunion) => ({
     ...reunion,
     html: await markdownAHtml(reunion.cuerpo),
   })))

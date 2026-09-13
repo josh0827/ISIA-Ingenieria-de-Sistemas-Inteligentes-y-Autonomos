@@ -8,8 +8,11 @@ export const metadata: Metadata = {
   description: 'Espacio de publicaciones y recursos académicos de ISIA. Demo con contenido pendiente de validación.',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function PaginaPublicaciones() {
-  const publicaciones = await Promise.all(listarPublicaciones().map(async (publicacion) => ({
+  const listado = await listarPublicaciones()
+  const publicaciones = await Promise.all(listado.map(async (publicacion) => ({
     ...publicacion,
     html: await markdownAHtml(publicacion.cuerpo),
   })))

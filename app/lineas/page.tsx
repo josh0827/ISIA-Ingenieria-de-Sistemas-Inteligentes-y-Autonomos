@@ -13,8 +13,10 @@ export const metadata: Metadata = {
 
 const ICONOS = { ojo: Ojo, brujula: Brujula, antena: Antena, red: Red, brazo: Brazo, onda: Onda }
 
-export default function PaginaLineas() {
-  const proyectos = listarProyectos()
+export const dynamic = 'force-dynamic'
+
+export default async function PaginaLineas() {
+  const proyectos = await listarProyectos()
 
   return (
     <>

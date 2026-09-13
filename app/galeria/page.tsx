@@ -9,8 +9,10 @@ export const metadata: Metadata = {
   description: 'Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.',
 }
 
-export default function PaginaGaleria() {
-  const fotos = listarGaleria()
+export const dynamic = 'force-dynamic'
+
+export default async function PaginaGaleria() {
+  const fotos = await listarGaleria()
 
   return (
     <Seccion className={estilos.primeraSeccion}>

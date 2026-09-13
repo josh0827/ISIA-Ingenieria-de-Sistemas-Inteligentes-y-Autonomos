@@ -3,9 +3,21 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import { db, firebaseListo } from './firebase/admin'
 
 const RAIZ = path.join(process.cwd(), 'contenido')
 const PUBLICO = path.join(process.cwd(), 'public')
+
+/** Nombres de colección de Firestore == nombres de carpeta en contenido/. */
+export const COLECCIONES = [
+  'proyectos',
+  'novedades',
+  'reuniones',
+  'integrantes',
+  'publicaciones',
+  'galeria',
+] as const
+export type NombreColeccion = (typeof COLECCIONES)[number]
 
 /** La ausencia de confirmación siempre significa contenido ilustrativo. */
 type EstadoEditorial = { ilustrativo: boolean }
@@ -76,7 +88,7 @@ export type FotoGaleria = {
   ilustrativo: false
 }
 
-type Crudo = { slug: string; datos: Record<string, unknown>; cuerpo: string }
+export type Crudo = { slug: string; datos: Record<string, unknown>; cuerpo: string }
 
 function avisar(carpeta: string, archivo: string, motivo: string): void {
   console.warn(`[contenido] Se ignoró contenido/${carpeta}/${archivo}: ${motivo}`)
@@ -98,11 +110,30 @@ function leerCarpeta(carpeta: string): Crudo[] {
   return salida
 }
 
-function texto(valor: unknown): string {
+/** Cada documento de Firestore se mapea al mismo formato {slug, datos, cuerpo} que el Markdown. */
+async function leerColeccion(nombre: NombreColeccion): Promise<Crudo[]> {
+  const instantanea = await db().collection(nombre).get()
+  return instantanea.docs.map((doc) => {
+    const { cuerpo, ...datos } = doc.data()
+    return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
+  })
+}
+
+/**
+ * Si hay credenciales de Firebase configuradas, el contenido real vive en
+ * Firestore (editable desde /admin). Si no, se usa el Markdown de contenido/
+ * para que el sitio y el desarrollo local sigan funcionando sin ellas.
+ */
+async function leerFuente(carpeta: NombreColeccion): Promise<Crudo[]> {
+  if (firebaseListo()) return leerColeccion(carpeta)
+  return leerCarpeta(carpeta)
+}
+
+export function texto(valor: unknown): string {
   return typeof valor === 'string' ? valor.trim() : ''
 }
 
-function fechaISO(valor: unknown): string {
+export function fechaISO(valor: unknown): string {
   const s = valor instanceof Date && !Number.isNaN(valor.getTime())
     ? valor.toISOString().slice(0, 10)
     : texto(valor)
@@ -111,18 +142,29 @@ function fechaISO(valor: unknown): string {
   return !Number.isNaN(fecha.getTime()) && fecha.toISOString().slice(0, 10) === s ? s : ''
 }
 
-function unaDeEstas<T extends string>(valor: unknown, permitidos: readonly T[], porDefecto: T): T {
+export function unaDeEstas<T extends string>(valor: unknown, permitidos: readonly T[], porDefecto: T): T {
   const s = texto(valor).toLowerCase()
   return (permitidos as readonly string[]).includes(s) ? (s as T) : porDefecto
 }
 
-function anioValido(valor: unknown): number | undefined {
+/** Identificador de documento/URL: minúsculas, dígitos y guiones simples. */
+export function slugValido(valor: unknown): string | undefined {
+  const s = texto(valor).toLowerCase()
+  return /^[a-z0-9]+(-[a-z0-9]+)*$/.test(s) && s.length <= 80 ? s : undefined
+}
+
+export function anioValido(valor: unknown): number | undefined {
   const anio = Number(valor)
   return Number.isInteger(anio) && anio >= 1900 && anio <= new Date().getFullYear() + 1 ? anio : undefined
 }
 
-/** Se aceptan HTTPS y rutas internas existentes; nunca protocolos ejecutables o dominios de ejemplo. */
-function enlaceSeguro(valor: unknown): string | undefined {
+/**
+ * Se aceptan HTTPS y rutas internas con forma válida; nunca protocolos
+ * ejecutables ni dominios de ejemplo. La existencia del archivo Markdown ya
+ * no se exige aquí porque el contenido puede vivir en Firestore: en el peor
+ * caso un slug inexistente lleva a un 404 dentro del propio sitio.
+ */
+export function enlaceSeguro(valor: unknown): string | undefined {
   const s = texto(valor)
   if (!s || /[\s\\\u0000-\u001f]/.test(s)) return undefined
   if (/^#[a-zA-Z][\w-]*$/.test(s)) return s
@@ -132,7 +174,7 @@ function enlaceSeguro(valor: unknown): string | undefined {
     const segmentos = ruta.split('/').filter(Boolean)
     if (segmentos.length === 0) return s
     if (segmentos.length === 1 && ['lineas', 'proyectos', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'unete'].includes(segmentos[0])) return s
-    if (segmentos.length === 2 && ['proyectos', 'novedades'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1]) && fs.existsSync(path.join(RAIZ, segmentos[0], `${segmentos[1]}.md`))) return s
+    if (segmentos.length === 2 && ['proyectos', 'novedades'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
     if (/^\/recursos\/[a-zA-Z0-9/_-]+\.pdf$/i.test(ruta)) {
       const archivo = path.resolve(PUBLICO, `.${ruta}`)
       if (archivo.startsWith(`${PUBLICO}${path.sep}`) && fs.existsSync(archivo) && fs.statSync(archivo).isFile()) return s
@@ -152,7 +194,7 @@ function enlaceSeguro(valor: unknown): string | undefined {
 }
 
 /** Las fotografías deben existir en el repositorio; no se cargan imágenes remotas. */
-function imagenLocal(valor: unknown): string | undefined {
+export function imagenLocal(valor: unknown): string | undefined {
   const s = texto(valor)
   if (!/^\/imagenes\/[a-zA-Z0-9/_-]+\.(avif|webp|png|jpe?g|svg)$/i.test(s)) return undefined
   const absoluta = path.resolve(PUBLICO, `.${s}`)
@@ -160,7 +202,7 @@ function imagenLocal(valor: unknown): string | undefined {
   return s
 }
 
-function correoSeguro(valor: unknown): string | undefined {
+export function correoSeguro(valor: unknown): string | undefined {
   const s = texto(valor)
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) || /[?&#<>]/.test(s)) return undefined
   const dominio = s.split('@')[1].toLowerCase()
@@ -168,9 +210,9 @@ function correoSeguro(valor: unknown): string | undefined {
   return s
 }
 
-export function listarNovedades(limite?: number): Novedad[] {
+export async function listarNovedades(limite?: number): Promise<Novedad[]> {
   const novedades: Novedad[] = []
-  for (const { slug, datos, cuerpo } of leerCarpeta('novedades')) {
+  for (const { slug, datos, cuerpo } of await leerFuente('novedades')) {
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
     if (!titulo || !fecha) {
@@ -190,13 +232,13 @@ export function listarNovedades(limite?: number): Novedad[] {
   return typeof limite === 'number' ? novedades.slice(0, Math.max(0, limite)) : novedades
 }
 
-export function obtenerNovedad(slug: string): Novedad | undefined {
-  return listarNovedades().find((n) => n.slug === slug)
+export async function obtenerNovedad(slug: string): Promise<Novedad | undefined> {
+  return (await listarNovedades()).find((n) => n.slug === slug)
 }
 
-export function listarReuniones(): Reunion[] {
+export async function listarReuniones(): Promise<Reunion[]> {
   const reuniones: Reunion[] = []
-  for (const { slug, datos, cuerpo } of leerCarpeta('reuniones')) {
+  for (const { slug, datos, cuerpo } of await leerFuente('reuniones')) {
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
     if (!titulo || !fecha) {
@@ -223,22 +265,22 @@ export function hoyColombia(): string {
 }
 
 /** Una fecha de ejemplo nunca se convierte en una convocatoria real. */
-export function proximaReunion(): Reunion | undefined {
+export async function proximaReunion(): Promise<Reunion | undefined> {
   const hoy = hoyColombia()
-  return listarReuniones().find((r) => !r.ilustrativo && r.fecha >= hoy)
+  return (await listarReuniones()).find((r) => !r.ilustrativo && r.fecha >= hoy)
 }
 
-export function reunionesPasadas(): Reunion[] {
+export async function reunionesPasadas(): Promise<Reunion[]> {
   const hoy = hoyColombia()
-  return listarReuniones().filter((r) => !r.ilustrativo && r.fecha < hoy).reverse()
+  return (await listarReuniones()).filter((r) => !r.ilustrativo && r.fecha < hoy).reverse()
 }
 
 const ORDEN_ESTADO = { propuesta: 0, activo: 1, 'en-curso': 2, pausado: 3, completado: 4 } as const
 
-export function listarProyectos(limite?: number): Proyecto[] {
+export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
   const proyectos: Proyecto[] = []
-  const perfilesConfirmados = new Set(listarIntegrantes().filter((i) => !i.ilustrativo).map((i) => i.slug))
-  for (const { slug, datos, cuerpo } of leerCarpeta('proyectos')) {
+  const perfilesConfirmados = new Set((await listarIntegrantes()).filter((i) => !i.ilustrativo).map((i) => i.slug))
+  for (const { slug, datos, cuerpo } of await leerFuente('proyectos')) {
     const titulo = texto(datos.titulo)
     if (!titulo) {
       avisar('proyectos', `${slug}.md`, 'falta "titulo"')
@@ -258,15 +300,15 @@ export function listarProyectos(limite?: number): Proyecto[] {
   return typeof limite === 'number' ? proyectos.slice(0, Math.max(0, limite)) : proyectos
 }
 
-export function obtenerProyecto(slug: string): Proyecto | undefined {
-  return listarProyectos().find((p) => p.slug === slug)
+export async function obtenerProyecto(slug: string): Promise<Proyecto | undefined> {
+  return (await listarProyectos()).find((p) => p.slug === slug)
 }
 
 const ORDEN_ROL = { director: 0, investigador: 1, estudiante: 2, egresado: 3 } as const
 
-export function listarIntegrantes(): Integrante[] {
+export async function listarIntegrantes(): Promise<Integrante[]> {
   const integrantes: Integrante[] = []
-  for (const { slug, datos, cuerpo } of leerCarpeta('integrantes')) {
+  for (const { slug, datos, cuerpo } of await leerFuente('integrantes')) {
     const nombre = texto(datos.nombre)
     if (!nombre) {
       avisar('integrantes', `${slug}.md`, 'falta "nombre"')
@@ -291,9 +333,9 @@ export function listarIntegrantes(): Integrante[] {
 }
 
 /** No se fabrican referencias bibliográficas: los borradores quedan fuera del listado. */
-export function listarPublicaciones(): Publicacion[] {
+export async function listarPublicaciones(): Promise<Publicacion[]> {
   const publicaciones: Publicacion[] = []
-  for (const { slug, datos, cuerpo } of leerCarpeta('publicaciones')) {
+  for (const { slug, datos, cuerpo } of await leerFuente('publicaciones')) {
     if (datos.confirmado !== true) continue
     const titulo = texto(datos.titulo)
     const anio = anioValido(datos.anio)
@@ -309,9 +351,9 @@ export function listarPublicaciones(): Publicacion[] {
 }
 
 /** Solo material real validado, con archivo existente, pie de foto y alternativa textual. */
-export function listarGaleria(): FotoGaleria[] {
+export async function listarGaleria(): Promise<FotoGaleria[]> {
   const fotos: FotoGaleria[] = []
-  for (const { slug, datos } of leerCarpeta('galeria')) {
+  for (const { slug, datos } of await leerFuente('galeria')) {
     if (datos.confirmado !== true) continue
     const titulo = texto(datos.titulo)
     const imagen = imagenLocal(datos.imagen)

@@ -5,18 +5,15 @@ import Image from 'next/image'
 import { AvisoDemo, Boton, Etiqueta, Seccion } from '@/componentes/Base'
 import {
   listarIntegrantes,
-  listarProyectos,
   markdownAHtml,
   obtenerProyecto,
 } from '@/lib/contenido'
 import { LINEAS } from '@/lib/sitio'
 import estilos from '../../detalle.module.css'
 type Props = { params: Promise<{ slug: string }> }
-export function generateStaticParams() {
-  return listarProyectos().map((p) => ({ slug: p.slug }))
-}
+export const dynamic = 'force-dynamic'
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const p = obtenerProyecto((await params).slug)
+  const p = await obtenerProyecto((await params).slug)
   if (!p) return { title: 'Proyecto no encontrado' }
   return {
     title: p.ilustrativo ? 'Ficha de proyecto ilustrativo' : p.titulo,
@@ -26,10 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 export default async function PaginaProyecto({ params }: Props) {
-  const proyecto = obtenerProyecto((await params).slug)
+  const proyecto = await obtenerProyecto((await params).slug)
   if (!proyecto) notFound()
   const cuerpo = await markdownAHtml(proyecto.cuerpo)
-  const equipo = listarIntegrantes().filter(
+  const equipo = (await listarIntegrantes()).filter(
     (i) => !i.ilustrativo && proyecto.integrantes.includes(i.slug),
   )
   const linea = LINEAS.findIndex((l) => l.titulo === proyecto.linea)

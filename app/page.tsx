@@ -15,10 +15,14 @@ import {
 import { LINEAS, OBJETIVOS, PRESENTACION, SITIO } from '@/lib/sitio'
 import estilos from './pagina.module.css'
 
-export default function Inicio() {
-  const proyectos = listarProyectos(3)
-  const novedades = listarNovedades(3)
-  const integrantes = listarIntegrantes()
+export const dynamic = 'force-dynamic'
+
+export default async function Inicio() {
+  const [proyectos, novedades, integrantes] = await Promise.all([
+    listarProyectos(3),
+    listarNovedades(3),
+    listarIntegrantes(),
+  ])
   const perfilesResumen = integrantes
     .filter(
       (p, i, lista) => lista.findIndex((item) => item.rol === p.rol) === i,

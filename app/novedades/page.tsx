@@ -5,7 +5,7 @@ import {
   EstadoVacio,
   Seccion,
 } from '@/componentes/Base'
-import { TarjetaNovedad } from '@/componentes/Tarjetas'
+import { FiltrosNovedades } from '@/componentes/FiltrosContenido'
 import { listarNovedades } from '@/lib/contenido'
 import estilos from '../listados.module.css'
 export const metadata: Metadata = {
@@ -13,8 +13,10 @@ export const metadata: Metadata = {
   description:
     'Sección de novedades de la demo académica de ISIA. Notas ilustrativas, sin anuncios ni convocatorias vigentes.',
 }
-export default function PaginaNovedades() {
-  const novedades = listarNovedades()
+export const dynamic = 'force-dynamic'
+
+export default async function PaginaNovedades() {
+  const novedades = await listarNovedades()
   return (
     <Seccion className={estilos.primeraSeccion}>
       <EncabezadoPagina
@@ -28,15 +30,7 @@ export default function PaginaNovedades() {
         sección.
       </AvisoDemo>
       {novedades.length ? (
-        <div className={estilos.rejilla}>
-          {novedades.map((novedad) => (
-            <TarjetaNovedad
-              nivelTitulo={2}
-              key={novedad.slug}
-              novedad={novedad}
-            />
-          ))}
-        </div>
+        <FiltrosNovedades novedades={novedades} />
       ) : (
         <EstadoVacio
           titulo="Novedades por compartir"

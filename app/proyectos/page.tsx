@@ -5,7 +5,7 @@ import {
   EstadoVacio,
   Seccion,
 } from '@/componentes/Base'
-import { TarjetaProyecto } from '@/componentes/Tarjetas'
+import { FiltrosProyectos } from '@/componentes/FiltrosContenido'
 import { listarProyectos } from '@/lib/contenido'
 import estilos from '../listados.module.css'
 export const metadata: Metadata = {
@@ -13,8 +13,10 @@ export const metadata: Metadata = {
   description:
     'Explora las fichas de proyectos de la demo académica de ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.',
 }
-export default function PaginaProyectos() {
-  const proyectos = listarProyectos()
+export const dynamic = 'force-dynamic'
+
+export default async function PaginaProyectos() {
+  const proyectos = await listarProyectos()
   return (
     <Seccion className={estilos.primeraSeccion}>
       <EncabezadoPagina
@@ -28,15 +30,7 @@ export default function PaginaProyectos() {
         equipos confirmados.
       </AvisoDemo>
       {proyectos.length ? (
-        <div className={estilos.rejillaAncha}>
-          {proyectos.map((proyecto) => (
-            <TarjetaProyecto
-              nivelTitulo={2}
-              key={proyecto.slug}
-              proyecto={proyecto}
-            />
-          ))}
-        </div>
+        <FiltrosProyectos proyectos={proyectos} />
       ) : (
         <EstadoVacio
           titulo="Proyectos por compartir"
