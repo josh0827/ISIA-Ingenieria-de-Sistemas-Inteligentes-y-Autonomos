@@ -7,6 +7,10 @@
 export const SITIO = {
   sigla: 'ISIA',
   nombre: 'Ingeniería de Sistemas Inteligentes y Autónomos',
+  // El mismo nombre partido en dos, para el titular de la portada. Se pinta
+  // la primera parte en gris y la segunda en negro, que es lo que le da
+  // jerarquía a un titular largo en vez de dejarlo como un bloque plano.
+  nombreLineas: ['Ingeniería de Sistemas', 'Inteligentes y Autónomos'],
   nombreCorto: 'Grupo ISIA',
   descripcion:
     'Grupo de investigación dedicado al diseño de sistemas que perciben, deciden y actúan por sí mismos, desde el sensor embebido hasta la política de control.',
@@ -30,9 +34,9 @@ export const SITIO = {
 // Cifras de la barra de la portada. Son texto a propósito: algunas llevan "+"
 // o un símbolo y así no hay que pelear con el formateo.
 export const CIFRAS: { valor: string; etiqueta: string }[] = [
-  { valor: '12', etiqueta: 'Integrantes activos' },
-  { valor: '06', etiqueta: 'Proyectos en curso' },
-  { valor: '06', etiqueta: 'Líneas de investigación' },
+  { valor: '14', etiqueta: 'Integrantes activos' },
+  { valor: '7', etiqueta: 'Proyectos en curso' },
+  { valor: '6', etiqueta: 'Líneas de investigación' },
   { valor: String(SITIO.fundacion), etiqueta: 'Año de fundación' },
 ]
 

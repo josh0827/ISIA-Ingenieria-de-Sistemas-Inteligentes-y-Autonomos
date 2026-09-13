@@ -12,7 +12,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Novedad, Proyecto, Integrante } from '@/lib/contenido'
 import { Etiqueta, Fecha } from './Base'
-import { Flecha, Persona, Github, Correo } from './Iconos'
+import { Flecha, Github, Correo } from './Iconos'
 import estilos from './Tarjetas.module.css'
 
 /* ---------------------------------------------------------------- Novedad */
@@ -61,8 +61,7 @@ export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
             className={estilos.portadaImagen}
           />
         ) : (
-          // Sin foto todavía: una retícula técnica hace de marcador de posición
-          // en vez de un hueco gris.
+          // Sin foto todavía: un degradado muy suave en vez de un hueco gris.
           <div className={estilos.portadaVacia} aria-hidden />
         )}
         <div className={estilos.portadaEtiqueta}>
@@ -86,6 +85,19 @@ export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
 
 /* ------------------------------------------------------------- Integrante */
 
+/** Primera letra del nombre y del apellido. Descarta las partes que sean solo
+ *  numeros, que aparecen en los nombres de ejemplo y darian iniciales raras.
+ *  Con una sola palabra devuelve esa letra en vez de inventarse nada. */
+function iniciales(nombre: string): string {
+  const partes = nombre
+    .trim()
+    .split(/\s+/)
+    .filter((parte) => parte && !/^\d+$/.test(parte))
+  if (partes.length === 0) return ''
+  if (partes.length === 1) return partes[0][0].toUpperCase()
+  return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase()
+}
+
 export function TarjetaIntegrante({ integrante }: { integrante: Integrante }) {
   const { nombre, rol, area, foto, enlaces } = integrante
 
@@ -93,9 +105,11 @@ export function TarjetaIntegrante({ integrante }: { integrante: Integrante }) {
     <article className={estilos.integrante}>
       <div className={estilos.retrato}>
         {foto ? (
-          <Image src={foto} alt={nombre} fill sizes="120px" className={estilos.retratoImagen} />
+          <Image src={foto} alt={nombre} fill sizes="140px" className={estilos.retratoImagen} />
         ) : (
-          <Persona size={30} className={estilos.retratoVacio} />
+          <span className={estilos.iniciales} aria-hidden>
+            {iniciales(nombre)}
+          </span>
         )}
       </div>
 

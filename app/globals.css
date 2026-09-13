@@ -3,52 +3,62 @@
    =========================================================================
    Este archivo lo toca SOLO quien coordina el proyecto. Cada sección tiene su
    propio .module.css; si necesitas un color o un espaciado, cógelo de los
-   tokens de aquí abajo en vez de escribir un valor suelto. Así todas las
-   páginas se ven del mismo grupo aunque las monte gente distinta.
+   tokens de aquí abajo en vez de escribir un valor suelto.
 
-   Dirección visual: laboratorio técnico. Fondo casi negro, retícula tenue,
-   acentos en cian y ámbar, tipografía técnica y nada de emojis (los iconos
-   son SVG dibujados a mano en componentes/Iconos.tsx).
+   Dirección visual: minimalista y clara. Blanco, gris muy claro, texto casi
+   negro y MUCHO aire. Una sola familia tipográfica en varios pesos. El color
+   casi no aparece: lo pone el escudo institucional y poco más.
+
+   Tres reglas que sostienen todo el sitio:
+     1. Las secciones se separan con aire y cambio de fondo, no con cajas.
+     2. Un solo acento, el verde del escudo, y usado con cuentagotas.
+     3. Si dudas entre añadir algo o quitarlo, quítalo.
+
+   El verde y el rojo salen del propio escudo institucional
+   (public/imagenes/escudo-unal.svg), no están inventados.
    ========================================================================= */
 
 :root {
-  /* --- Superficies, de más al fondo a más al frente --- */
-  --fondo: #070a0e;
-  --fondo-2: #0c1118;
-  --superficie: #111823;
-  --superficie-2: #18212e;
+  /* --- Superficies. Solo dos: blanco y un gris muy claro que alterna. --- */
+  --fondo: #ffffff;
+  --fondo-2: #f5f5f7;
+  --superficie: #ffffff;
+  --superficie-2: #fafafc;
 
-  /* --- Líneas --- */
-  --linea: rgba(255, 255, 255, 0.08);
-  --linea-suave: rgba(255, 255, 255, 0.04);
-  --linea-viva: rgba(56, 225, 208, 0.35);
+  /* --- Líneas. Se usan poco a propósito: casi todo separa con espacio. --- */
+  --linea: #d9d9de;
+  --linea-suave: #ececf0;
+  --linea-fuerte: #c2c2c9;
 
-  /* --- Texto, tres niveles de jerarquía --- */
-  --texto: #e6edf5;
-  --texto-tenue: #94a3b4;
-  --texto-debil: #5c6b7d;
+  /* --- Texto, tres niveles --- */
+  --texto: #1d1d1f;
+  --texto-tenue: #6e6e73;
+  --texto-debil: #9a9aa0;
 
-  /* --- Acentos --- */
-  --cian: #38e1d0;
-  --cian-hondo: #16a89b;
-  --cian-vel: rgba(56, 225, 208, 0.12);
-  --ambar: #e8b04b;
-  --ambar-vel: rgba(232, 176, 75, 0.12);
+  /* --- Acento único: el verde de la cinta del escudo. Enlaces, marcas
+         pequeñas y poco más. Nunca fondos grandes. --- */
+  --verde: #456a3e;
+  --verde-hondo: #35522f;
+  --verde-vel: rgba(69, 106, 62, 0.07);
 
-  /* --- Radios --- */
-  --r: 14px;
-  --r-sm: 8px;
+  /* --- Énfasis. Solo para lo que de verdad reclama atención, como una
+         convocatoria abierta. Si aparece en tres sitios, deja de servir. --- */
+  --rojo: #a61b30;
+  --rojo-vel: rgba(166, 27, 48, 0.06);
 
-  /* --- Ritmo vertical. Toda sección usa --aire como padding vertical para
-         que el espaciado del sitio sea uno solo y no quince. --- */
-  --aire: clamp(4.5rem, 9vw, 8rem);
-  --ancho: 1200px;
-  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  /* --- Radios generosos, que es lo que da el aire amable de Apple. --- */
+  --r: 18px;
+  --r-sm: 10px;
 
-  /* --- Curva de animación compartida --- */
-  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+  /* --- Ritmo vertical. Generoso a propósito: el aire es el material
+         principal de este diseño. --- */
+  --aire: clamp(5.5rem, 11vw, 10rem);
+  --ancho: 1080px;
+  --gutter: clamp(1.5rem, 5vw, 2.5rem);
 
-  color-scheme: dark;
+  --curva: cubic-bezier(0.16, 1, 0.3, 1);
+
+  color-scheme: light;
 }
 
 /* ------------------------------------------------------------------ reset */
@@ -69,24 +79,27 @@ body {
   background: var(--fondo);
   color: var(--texto);
   font-family: var(--fuente-texto), system-ui, -apple-system, sans-serif;
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 17px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  /* El fondo vive en el body y no en un wrapper: así no aparece la franja
-     blanca antes del pie cuando el contenido es más corto que la pantalla. */
+  /* El fondo vive en el body: así no aparece una franja de otro color antes
+     del pie cuando el contenido es corto. */
   min-height: 100dvh;
   overflow-x: hidden;
 }
 
+/* Titulares: misma familia que el texto, diferenciados por tamaño y peso.
+   Nada de segunda tipografía. El tracking negativo es lo que da el aire
+   compacto y caro de los titulares grandes. */
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--fuente-display), system-ui, sans-serif;
+  font-family: var(--fuente-texto), system-ui, sans-serif;
   font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
   margin: 0;
   text-wrap: balance;
 }
@@ -124,20 +137,18 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--cian);
+  outline: 2px solid var(--verde);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 ::selection {
-  background: var(--cian);
-  color: var(--fondo);
+  background: var(--verde);
+  color: #fff;
 }
 
 /* ------------------------------------------------- utilidades compartidas */
 
-/* Envoltura de ancho máximo. Los gutters laterales viven aquí y usan
-   padding-inline, nunca el atajo padding, para que nada los pise. */
 .contenedor {
   width: 100%;
   max-width: var(--ancho);
@@ -145,17 +156,17 @@ button {
   padding-inline: var(--gutter);
 }
 
-/* Texto pequeño en monoespaciada: fechas, etiquetas, cifras, numeración.
-   Es el recurso que le da el aire técnico al sitio. */
+/* Texto pequeño de apoyo: fechas, categorías, numeración. Va en la misma
+   familia, en mayúsculas y con espaciado. Es más discreto que meter una
+   monoespaciada, que tira hacia lo técnico. */
 .mono {
-  font-family: var(--fuente-mono), ui-monospace, monospace;
   font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--texto-debil);
 }
 
-/* Solo para lectores de pantalla. */
 .solo-lectores {
   position: absolute;
   width: 1px;
@@ -167,17 +178,16 @@ button {
   white-space: nowrap;
 }
 
-/* Salta al contenido, primer elemento enfocable de la página. */
 .saltar {
   position: absolute;
   left: var(--gutter);
   top: -100px;
   z-index: 200;
-  background: var(--cian);
-  color: var(--fondo);
-  padding: 0.7rem 1.1rem;
-  border-radius: var(--r-sm);
-  font-weight: 600;
+  background: var(--texto);
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 500;
   transition: top 0.2s var(--curva);
 }
 
@@ -185,39 +195,21 @@ button {
   top: 1rem;
 }
 
-/* Retícula técnica de fondo. Se aplica a una sección para que se note el
-   plano cuadriculado detrás del contenido. */
-.reticula {
-  position: relative;
-}
-
-.reticula::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--linea-suave) 1px, transparent 1px),
-    linear-gradient(90deg, var(--linea-suave) 1px, transparent 1px);
-  background-size: 64px 64px;
-  /* Se desvanece hacia los bordes para que no parezca papel milimetrado. */
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, #000 20%, transparent 75%);
-  pointer-events: none;
-}
-
 /* Texto largo venido de Markdown (páginas de detalle). */
 .prosa {
   color: var(--texto-tenue);
-  line-height: 1.8;
+  line-height: 1.75;
+  font-size: 1.0625rem;
 }
 
 .prosa > * + * {
-  margin-top: 1.15em;
+  margin-top: 1.3em;
 }
 
 .prosa h2,
 .prosa h3 {
   color: var(--texto);
-  margin-top: 2em;
+  margin-top: 2.2em;
 }
 
 .prosa h2 {
@@ -225,35 +217,36 @@ button {
 }
 
 .prosa h3 {
-  font-size: 1.15rem;
+  font-size: 1.1875rem;
 }
 
 .prosa a {
-  color: var(--cian);
+  color: var(--verde);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
 }
 
 .prosa ul,
 .prosa ol {
-  padding-left: 1.2rem;
+  padding-left: 1.1rem;
 }
 
 .prosa ul li {
   list-style: none;
   position: relative;
-  padding-left: 1rem;
+  padding-left: 1.1rem;
 }
 
 .prosa ul li::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 0.7em;
+  top: 0.75em;
   width: 5px;
   height: 5px;
-  background: var(--cian);
   border-radius: 50%;
+  background: var(--linea-fuerte);
 }
 
 .prosa ol {
@@ -261,38 +254,33 @@ button {
 }
 
 .prosa code {
-  font-family: var(--fuente-mono), monospace;
+  font-family: var(--fuente-mono), ui-monospace, monospace;
   font-size: 0.875em;
-  background: var(--superficie-2);
-  border: 1px solid var(--linea);
-  border-radius: 4px;
-  padding: 0.1em 0.4em;
+  background: var(--fondo-2);
+  border-radius: 5px;
+  padding: 0.15em 0.45em;
 }
 
 .prosa pre {
-  background: var(--superficie);
-  border: 1px solid var(--linea);
+  background: var(--fondo-2);
   border-radius: var(--r-sm);
-  padding: 1rem;
+  padding: 1.1rem 1.25rem;
   overflow-x: auto;
 }
 
 .prosa pre code {
   background: none;
-  border: none;
   padding: 0;
 }
 
 .prosa blockquote {
-  border-left: 2px solid var(--cian);
-  padding-left: 1.1rem;
+  border-left: 2px solid var(--linea);
+  padding-left: 1.25rem;
   color: var(--texto);
-  font-style: italic;
 }
 
 .prosa img {
   border-radius: var(--r-sm);
-  border: 1px solid var(--linea);
 }
 
 /* ------------------------------------------------------------ movimiento */

@@ -10,7 +10,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { NAVEGACION, SITIO } from '@/lib/sitio'
-import { Monograma, Menu, Cerrar } from './Iconos'
+import { Menu, Cerrar } from './Iconos'
+import Escudo from './Escudo'
 import estilos from './Nav.module.css'
 
 export default function Nav() {
@@ -54,9 +55,16 @@ export default function Nav() {
     <>
       <header className={`${estilos.barra} ${posado ? estilos.posada : ''}`}>
         <div className={`contenedor ${estilos.fila}`}>
+          {/* Bloque de marca: escudo institucional, separador y sigla con la
+              universidad debajo. Es el orden habitual de un grupo que depende
+              de una institución, primero ella y después el grupo. */}
           <Link href="/" className={estilos.marca} aria-label={`${SITIO.sigla}, ir al inicio`}>
-            <Monograma size={30} className={estilos.monograma} />
-            <span className={estilos.sigla}>{SITIO.sigla}</span>
+            <Escudo alto={32} />
+            <span className={estilos.separador} aria-hidden />
+            <span className={estilos.identidad}>
+              <span className={estilos.sigla}>{SITIO.sigla}</span>
+              <span className={`mono ${estilos.institucion}`}>{SITIO.universidad}</span>
+            </span>
           </Link>
 
           <nav className={estilos.enlaces} aria-label="Navegación principal">

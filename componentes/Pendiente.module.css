@@ -1,33 +1,28 @@
-/* Marcador de sección en construcción. Borde discontinuo y acento ámbar para
-   que se distinga de un bloque terminado a primera vista. */
+/* Marcador de sección en construcción. Sin bordes de color: solo el fondo gris
+   del sitio y un aviso en rojo institucional, que es el único sitio de la web
+   donde ese rojo aparece junto a la convocatoria. */
 
 .caja {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.35rem;
-  max-width: 680px;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  background: var(--superficie);
-  border: 1px dashed rgba(232, 176, 75, 0.4);
+  max-width: 42rem;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  background: var(--fondo-2);
   border-radius: var(--r);
 }
 
 .aviso {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.625rem;
-  color: var(--ambar);
-  padding: 0.35rem 0.8rem;
-  border: 1px solid rgba(232, 176, 75, 0.35);
-  background: var(--ambar-vel);
-  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--rojo);
 }
 
 .descripcion {
   color: var(--texto);
   font-size: 1.0625rem;
+  line-height: 1.6;
 }
 
 .bloque {
@@ -37,16 +32,16 @@
 }
 
 .tituloBloque {
-  font-size: 0.625rem;
-  color: var(--cian);
+  font-size: 0.75rem;
+  color: var(--texto-debil);
   margin-bottom: 0.9rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .pasos {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.65rem;
 }
 
 .pasos li {
@@ -58,26 +53,24 @@
 }
 
 .numero {
-  color: var(--cian);
-  font-size: 0.6875rem;
-  padding-top: 0.28rem;
+  color: var(--texto-debil);
+  padding-top: 0.2rem;
   flex-shrink: 0;
 }
 
 .codigo,
 .nota code {
-  font-family: var(--fuente-mono), monospace;
+  font-family: var(--fuente-mono), ui-monospace, monospace;
   font-size: 0.8125rem;
-  color: var(--cian);
-  background: var(--fondo-2);
-  border: 1px solid var(--linea);
-  border-radius: 4px;
+  color: var(--texto);
+  background: var(--superficie);
+  border-radius: 6px;
   padding: 0.2em 0.45em;
 }
 
 .codigo {
   display: block;
-  padding: 0.75rem 0.9rem;
+  padding: 0.85rem 1rem;
   overflow-x: auto;
   white-space: pre-wrap;
 }
@@ -85,4 +78,5 @@
 .nota {
   color: var(--texto-debil);
   font-size: 0.875rem;
+  line-height: 1.6;
 }
