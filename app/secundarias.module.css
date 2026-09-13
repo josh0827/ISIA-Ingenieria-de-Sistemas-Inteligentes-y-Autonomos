@@ -1,0 +1,182 @@
+.primeraSeccion {
+  padding-top: var(--aire);
+}
+
+.seccionCompacta {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.sobretitulo {
+  display: block;
+  margin-bottom: 0.85rem;
+  color: var(--verde);
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.5;
+  letter-spacing: 0.095em;
+  text-transform: uppercase;
+}
+
+.nota {
+  display: block;
+  color: var(--texto-tenue);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.lineas { margin-top: 3rem; }
+
+.linea {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1.3fr) minmax(0, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-block: 2.75rem;
+  border-top: 1px solid var(--linea);
+  scroll-margin-top: 2rem;
+}
+
+.numeroLinea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.3rem;
+  color: var(--verde);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.tituloLinea {
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  line-height: 1.2;
+}
+
+.descripcionLinea {
+  margin-top: 1rem;
+  color: var(--texto-tenue);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+.relacionados { padding-top: 0.2rem; }
+.relacionados h3 {
+  margin-bottom: 1rem;
+  color: var(--texto-tenue);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+.relacionados li + li { margin-top: 1.25rem; }
+
+.enlaceRelacionado {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+  color: var(--verde);
+  font-size: 0.91rem;
+  font-weight: 550;
+  line-height: 1.5;
+}
+.enlaceRelacionado svg { flex: 0 0 auto; margin-top: 0.2rem; }
+.enlaceRelacionado:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.cierre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.cierre > div { max-width: 610px; }
+.cierre h2, .preguntas h2 { font-size: clamp(1.7rem, 3vw, 2.5rem); line-height: 1.15; }
+.cierre p { margin-top: 1rem; color: var(--texto-tenue); font-size: 0.96rem; }
+.cierre > a { flex-shrink: 0; }
+
+.grupos { margin-top: 3.5rem; }
+.grupo + .grupo { margin-top: 4.5rem; }
+.cabeceraGrupo { padding-top: 1.5rem; margin-bottom: 2rem; border-top: 1px solid var(--linea); }
+.cabeceraGrupo h2 { font-size: 1.6rem; line-height: 1.25; }
+.cabeceraGrupo p { margin-top: 0.7rem; color: var(--texto-tenue); font-size: 0.91rem; }
+.rejillaIntegrantes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+
+.notaEditorial {
+  display: grid;
+  grid-template-columns: 0.65fr 1.35fr;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--linea);
+}
+.notaEditorial p { max-width: 640px; color: var(--texto-tenue); font-size: 0.9rem; line-height: 1.7; }
+.grupoPublicaciones { display: grid; grid-template-columns: 110px 1fr; gap: 2.5rem; border-top: 1px solid var(--linea); padding-top: 2rem; }
+.grupoPublicaciones + .grupoPublicaciones { margin-top: 3rem; }
+.anio { color: var(--verde); font-size: 1.8rem; }
+.publicacion + .publicacion { border-top: 1px solid var(--linea); margin-top: 2rem; padding-top: 2rem; }
+.publicacion h3 { font-size: 1.4rem; line-height: 1.35; }
+.autores { margin-top: 0.75rem; color: var(--texto-tenue); font-size: 0.9rem; }
+.publicacion > div, .publicacion > a { margin-top: 1.25rem; }
+
+.participacion { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2.5rem, 7vw, 6rem); margin-top: 3rem; }
+.textoParticipacion h2 { font-size: 2rem; line-height: 1.2; margin-bottom: 1.4rem; }
+.textoParticipacion p { color: var(--texto-tenue); font-size: 1rem; line-height: 1.8; }
+.textoParticipacion p + p { margin-top: 1rem; }
+.enlacesParticipacion { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; margin-top: 1.8rem; }
+.contacto { padding: clamp(1.5rem, 3vw, 2.4rem); background: var(--fondo-2); border-top: 3px solid var(--verde); }
+.contacto > svg { color: var(--verde); margin-bottom: 1.5rem; }
+.contacto h2 { font-size: 1.6rem; line-height: 1.25; }
+.contacto p { margin-top: 1rem; color: var(--texto-tenue); font-size: 0.93rem; line-height: 1.7; }
+.estadoContacto { margin-top: 2rem; padding-top: 1.3rem; border-top: 1px solid var(--linea); color: var(--verde); font-size: 0.95rem; font-weight: 600; }
+.preguntas { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 6vw, 5rem); }
+.respuestas article + article { margin-top: 1.7rem; padding-top: 1.7rem; border-top: 1px solid var(--linea); }
+.respuestas h3 { font-size: 1.12rem; line-height: 1.4; }
+.respuestas p { margin-top: 0.7rem; color: var(--texto-tenue); font-size: 0.95rem; line-height: 1.8; }
+.respuestas a { margin-top: 1rem; }
+.ubicacion { display: flex; align-items: flex-start; gap: 1rem; padding-top: 2rem; border-top: 1px solid var(--linea); margin-top: 3.5rem; font-size: 0.88rem; color: var(--texto-tenue); }
+.ubicacion svg { flex-shrink: 0; color: var(--verde); margin-top: 0.15rem; }
+.ubicacion strong { color: var(--texto); font-weight: 550; }
+
+.bloqueAgenda { margin-top: 3rem; }
+.cabeceraAgenda { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.7rem; }
+.cabeceraAgenda h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; }
+.cabeceraAgenda p { color: var(--texto-tenue); font-size: 0.85rem; }
+.archivo { margin-top: 4rem; }
+.introduccionArchivo { max-width: 680px; margin-bottom: 1.75rem; color: var(--texto-tenue); font-size: 0.94rem; line-height: 1.75; }
+.reunion { border-top: 1px solid var(--linea); }
+.reunion:last-child { border-bottom: 1px solid var(--linea); }
+.resumenReunion { display: grid; grid-template-columns: 145px minmax(0, 1fr) 24px; align-items: start; gap: 1.6rem; padding-block: 1.6rem; cursor: pointer; list-style: none; }
+.resumenReunion::-webkit-details-marker { display: none; }
+.resumenReunion::after { content: '+'; color: var(--verde); font-size: 1.5rem; line-height: 1; text-align: center; }
+.reunion[open] .resumenReunion::after { content: '−'; }
+.fechaReunion { display: flex; flex-direction: column; gap: 0.4rem; color: var(--verde); font-size: 0.78rem; line-height: 1.6; font-weight: 550; }
+.textoReunion { display: block; }
+.tituloReunion { display: block; font-size: 1.15rem; font-weight: 600; line-height: 1.4; }
+.resumenBreve { display: block; margin-top: 0.5rem; color: var(--texto-tenue); font-size: 0.9rem; line-height: 1.65; }
+.abrirReunion { display: inline-block; margin-top: 0.8rem; color: var(--verde); font-size: 0.8rem; font-weight: 550; }
+.contenidoReunion { padding: 0 3.1rem 2rem calc(145px + 1.6rem); }
+.datosReunion { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 2rem; margin: 0 0 2rem; padding: 1.5rem; background: var(--fondo-2); }
+.datosReunion dt { font-size: 0.72rem; font-weight: 550; color: var(--texto-tenue); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem; }
+.datosReunion dd { margin: 0; font-size: 0.89rem; }
+.contenidoReunion > a { margin-top: 1.5rem; }
+
+@media (max-width: 850px) {
+  .linea { grid-template-columns: 45px minmax(0, 1fr); gap: 1.5rem; }
+  .relacionados { grid-column: 2; padding-top: 0; }
+  .cierre { align-items: flex-start; flex-direction: column; }
+  .rejillaIntegrantes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .participacion { grid-template-columns: 1fr; }
+  .preguntas { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+@media (max-width: 540px) {
+  .linea { grid-template-columns: 30px minmax(0, 1fr); gap: 1rem; padding-block: 2rem; }
+  .numeroLinea svg { width: 25px; height: 25px; }
+  .rejillaIntegrantes { grid-template-columns: 1fr; }
+  .notaEditorial, .grupoPublicaciones { grid-template-columns: 1fr; gap: 0.8rem; }
+  .resumenReunion { grid-template-columns: minmax(0, 1fr) 24px; gap: 0.8rem; }
+  .fechaReunion { grid-column: 1; flex-direction: row; flex-wrap: wrap; gap: 0.4rem 1rem; }
+  .resumenReunion > .textoReunion { grid-column: 1; grid-row: 2; }
+  .resumenReunion::after { grid-column: 2; grid-row: 2; }
+  .contenidoReunion { padding: 0 0 1.75rem; }
+  .datosReunion { grid-template-columns: 1fr; padding: 1.25rem; }
+}

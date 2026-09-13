@@ -1,81 +1,65 @@
-// Pie del sitio. Se pinta en todas las páginas desde app/layout.tsx.
-
 import Link from 'next/link'
 import { NAVEGACION, SITIO } from '@/lib/sitio'
-import { Correo, Github, Pin } from './Iconos'
 import Escudo from './Escudo'
 import estilos from './Pie.module.css'
-
 export default function Pie() {
   return (
     <footer className={estilos.pie}>
       <div className="contenedor">
         <div className={estilos.rejilla}>
-          <div className={estilos.identidad}>
+          <div>
             <Link href="/" className={estilos.marca}>
-              <Escudo alto={48} />
-              <span className={estilos.sigla}>{SITIO.sigla}</span>
+              <Escudo alto={68} />
+              <span>
+                <strong>ISIA</strong>
+                <span>Semillero de investigación</span>
+              </span>
             </Link>
             <p className={estilos.nombre}>{SITIO.nombre}</p>
-            <p className={estilos.descripcion}>{SITIO.descripcion}</p>
+            <p className={estilos.ubicacion}>
+              {SITIO.universidad}
+              <br />
+              Sede Manizales · Manizales, Colombia
+            </p>
           </div>
-
-          <nav className={estilos.columna} aria-label="Secciones">
-            <h2 className={`mono ${estilos.tituloColumna}`}>Secciones</h2>
-            <ul>
-              {NAVEGACION.map((item) => (
+          <nav aria-label="Secciones del sitio">
+            <h2>Explorar</h2>
+            <ul className={estilos.enlaces}>
+              {NAVEGACION.filter((i) => i.href !== '/unete').map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className={estilos.enlace}>
-                    {item.texto}
-                  </Link>
+                  <Link href={item.href}>{item.texto}</Link>
                 </li>
               ))}
-              <li>
-                <Link href="/unete" className={estilos.enlace}>
-                  Únete al grupo
-                </Link>
-              </li>
             </ul>
           </nav>
-
-          <div className={estilos.columna}>
-            <h2 className={`mono ${estilos.tituloColumna}`}>Contacto</h2>
-            <ul>
-              <li>
-                <a href={`mailto:${SITIO.correo}`} className={estilos.enlaceIcono}>
-                  <Correo size={17} />
-                  {SITIO.correo}
-                </a>
-              </li>
-              <li>
-                <span className={estilos.enlaceIcono}>
-                  <Pin size={17} />
-                  {SITIO.ubicacion}
-                </span>
-              </li>
-              {SITIO.redes.github && (
-                <li>
-                  <a
-                    href={SITIO.redes.github}
-                    className={estilos.enlaceIcono}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <Github size={17} />
-                    Repositorio del grupo
-                  </a>
-                </li>
-              )}
-            </ul>
+          <div className={estilos.contacto}>
+            <h2>Participación y contacto</h2>
+            <p>Canal de contacto pendiente de confirmar</p>
+            <Link href="/unete">
+              Conoce cómo participar <span aria-hidden>↗</span>
+            </Link>
+            <a
+              href={SITIO.repositorio}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Repositorio del sitio <span aria-hidden>↗</span>
+            </a>
           </div>
         </div>
-
         <div className={estilos.cierre}>
-          <p className="mono">
-            {SITIO.universidad} · {SITIO.sede}
-          </p>
-          <p className="mono">
-            {SITIO.sigla} {SITIO.fundacion}
+          <p>Demo académica · Contenido pendiente de validación.</p>
+          <p>
+            Escudo provisional, sin modificaciones. César Puertas Céspedes, vía
+            Wikimedia Commons.{' '}
+            <a
+              href="https://commons.wikimedia.org/wiki/File:Escudo_de_la_Universidad_Nacional_de_Colombia_(2016).svg"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Fuente y licencia de atribución
+            </a>
+            .
           </p>
         </div>
       </div>

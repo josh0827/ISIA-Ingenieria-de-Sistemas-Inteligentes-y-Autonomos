@@ -1,589 +1,318 @@
-/* Estilos exclusivos de la página principal.
-
-   Criterios que se repiten en todo el archivo:
-     - Se separa con aire y con líneas de un píxel, no con cajas.
-     - Las rejillas van centradas, también cuando la última fila va incompleta.
-     - Nada de sombras de color, degradados en el texto ni fondos animados. */
-
-/* ==================================================== 1. PORTADA ========= */
-
 .portada {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100svh;
-  padding-block: 9.5rem 3rem;
+  padding-block: clamp(3rem, 5vw, 5rem);
 }
-
-/* Asimétrica: escudo a un lado, texto al otro. En móvil se apila y el escudo
-   se encoge, porque a tamaño grande se comería la pantalla. */
 .portadaRejilla {
   display: grid;
-  grid-template-columns: 1fr;
-  justify-items: center;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4rem;
   align-items: center;
-  gap: clamp(2rem, 5vw, 4.5rem);
-  text-align: center;
-  flex: 1;
 }
-
-.portadaEscudo > span {
-  --alto-escudo: clamp(120px, 26vw, 250px) !important;
+.eyebrow {
+  color: var(--verde);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  font-weight: 650;
+  text-transform: uppercase;
+  margin-bottom: 1.4rem;
 }
-
-.portadaTexto {
-  max-width: 34rem;
-}
-
-.titulo {
-  font-size: clamp(2.25rem, 5.4vw, 4rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  margin-bottom: 1.5rem;
-}
-
-.proposito {
-  color: var(--texto-tenue);
-  font-size: clamp(1.0625rem, 1.7vw, 1.25rem);
-  line-height: 1.5;
-}
-
-.portadaAcciones {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem 1.75rem;
-  margin-top: 2.25rem;
-}
-
-/* --- cifras: sin cajas, solo números y una línea de separación --- */
-
-.cifrasCaja {
-  margin-top: clamp(3.5rem, 8vw, 6rem);
-}
-
-.cifras {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem 1rem;
-  margin: 0;
-  padding-top: 2.25rem;
-  border-top: 1px solid var(--linea-suave);
-}
-
-.cifra {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  text-align: center;
-}
-
-.cifraValor {
-  font-size: clamp(2rem, 4.5vw, 2.75rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
+.sigla {
+  display: block;
+  font-size: clamp(4.8rem, 7.6vw, 7rem);
+  letter-spacing: -0.06em;
   line-height: 1;
-  margin: 0;
-}
-
-.cifraEtiqueta {
-  font-size: 0.8125rem;
-  color: var(--texto-tenue);
-  line-height: 1.35;
-}
-
-/* ============================================ 2. PRÓXIMA REUNIÓN ========= */
-
-.seccionReunion {
-  padding-block: clamp(3.5rem, 6vw, 5rem);
-}
-
-/* Única caja con fondo propio de toda la portada, y se lo gana por ser el
-   aviso más importante de la página. Sin borde ni sombra de color. */
-.reunion {
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 1.75rem;
-  padding: clamp(1.75rem, 4vw, 2.75rem);
-  background: var(--superficie);
-  border-radius: var(--r);
-}
-
-.reunionFecha {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15rem;
-  padding-right: clamp(0rem, 3vw, 2.25rem);
-}
-
-.reunionDia {
-  font-size: 3.25rem;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-
-.reunionMes {
-  font-size: 0.875rem;
-  color: var(--texto-tenue);
-  text-transform: capitalize;
-}
-
-.reunionCuerpo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.reunionEtiquetas {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.reunionAviso {
+  font-weight: 580;
   color: var(--verde);
 }
-
-.reunionTitulo {
-  font-size: clamp(1.375rem, 2.8vw, 1.75rem);
-  font-weight: 600;
+.nombre {
+  display: block;
+  font-size: clamp(1.85rem, 3vw, 2.65rem);
+  line-height: 1.15;
+  max-width: 34rem;
+  margin-top: 1rem;
+  font-weight: 500;
 }
-
-.reunionResumen {
+.proposito {
   color: var(--texto-tenue);
-  font-size: 0.9375rem;
-  max-width: 56ch;
+  margin-top: 1.5rem;
+  max-width: 31rem;
+  font-size: 0.95rem;
 }
-
-.reunionDatos {
+.acciones {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.75rem 1.6rem;
+  margin-top: 2rem;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem 1.5rem;
+}
+.identificador {
+  font-size: 0.68rem;
   color: var(--texto-tenue);
-  font-size: 0.875rem;
-  margin-top: 0.35rem;
+  margin-top: 2rem;
 }
-
-.reunionDatos li {
-  display: inline-flex;
+.identificador span {
+  margin-inline: 0.5rem;
+  color: var(--linea-fuerte);
+}
+.figura {
+  background: var(--verde-vel);
+  border: 1px solid var(--linea);
+  padding: 1.4rem;
+}
+.figuraCabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--verde);
+  font-size: 0.53rem;
+  letter-spacing: 0.09em;
+  border-bottom: 1px solid var(--linea);
+  padding-bottom: 1rem;
+}
+.figura figcaption {
+  border-top: 1px solid var(--linea);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.figura figcaption > span:first-child {
+  font-size: 0.9rem;
+  font-weight: 550;
+}
+.figura figcaption > span:last-child {
+  font-size: 0.65rem;
+  color: var(--texto-tenue);
+}
+.explorar {
+  border-block: 1px solid var(--linea);
+}
+.explorar > div {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.15rem;
 }
-
-.reunionDatos svg {
-  color: var(--texto-debil);
-  flex-shrink: 0;
+.explorar > div > span {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-tenue);
 }
-
-/* ========================================= 3. EL GRUPO Y OBJETIVOS ======= */
-
-.sobre {
+.explorar a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--verde);
+  font-size: 0.8rem;
+}
+.explorar a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.presentacion {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: start;
-  margin-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
 }
-
-.sobreTitular {
-  font-size: clamp(2rem, 4.4vw, 3rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  max-width: 16ch;
+.presentacion h2 {
+  font-size: clamp(2rem, 3.7vw, 3rem);
+  max-width: 28rem;
 }
-
-.sobreParrafo {
+.nota {
+  display: block;
   color: var(--texto-tenue);
-  font-size: 1.0625rem;
-  line-height: 1.7;
-  max-width: 56ch;
+  font-size: 0.7rem;
+  margin-top: 1.25rem;
 }
-
-.sobreParrafo + .sobreParrafo {
-  margin-top: 1.35rem;
+.textoPresentacion {
+  color: var(--texto-tenue);
+  font-size: 0.96rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-
-/* Objetivos en lista separada por líneas, no en tarjetas. */
 .objetivos {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 3.5rem;
 }
-
-.objetivo {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.4rem;
-  padding-block: 1.75rem;
-  border-top: 1px solid var(--linea-suave);
+.objetivos li {
+  border-top: 1px solid var(--linea);
+  padding-top: 1.4rem;
 }
-
-.objetivos > *:last-child .objetivo {
-  border-bottom: 1px solid var(--linea-suave);
+.numero {
+  color: var(--verde);
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.67rem;
 }
-
-.objetivoNumero {
-  color: var(--texto-debil);
+.objetivos h3 {
+  font-size: 1.05rem;
+  margin: 0.8rem 0;
+  letter-spacing: -0.015em;
 }
-
-.objetivoTitulo {
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.objetivoTexto {
+.objetivos p {
   color: var(--texto-tenue);
-  font-size: 1rem;
-  max-width: 62ch;
+  font-size: 0.83rem;
 }
-
-/* ==================================================== 4. LÍNEAS ========== */
-
-/* Dos columnas de filas separadas por línea, en lugar de seis tarjetas. */
+.cabeceraSeccion {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.cabeceraSeccion > a {
+  margin-top: 2.1rem;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
 .lineas {
   display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 3rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 4rem;
 }
-
 .linea {
   display: flex;
   align-items: flex-start;
-  gap: 1.1rem;
+  gap: 1.2rem;
   padding-block: 1.6rem;
-  border-top: 1px solid var(--linea-suave);
-  height: 100%;
+  border-top: 1px solid var(--linea);
 }
-
-.lineaIcono {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
+.linea > .numero {
+  margin-top: 0.2rem;
+}
+.linea > svg {
   flex-shrink: 0;
-  border-radius: 50%;
   color: var(--verde);
-  background: var(--verde-vel);
+  margin-top: 0.25rem;
 }
-
-.lineaTitulo {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin-bottom: 0.3rem;
+.linea > div {
+  flex: 1;
 }
-
-.lineaTexto {
+.linea h3 {
+  font-size: 1.08rem;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+.linea:hover h3 {
+  color: var(--verde);
+}
+.linea p {
   color: var(--texto-tenue);
-  font-size: 0.9375rem;
-  line-height: 1.55;
+  font-size: 0.83rem;
+  margin-top: 0.65rem;
 }
-
-/* ================================================= 5. PROYECTOS ========== */
-
 .proyectos {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 2.5rem 2rem;
-}
-
-.proyectos > * {
-  flex: 1 1 280px;
-  max-width: 360px;
-}
-
-/* ================================================= 6. NOVEDADES ========== */
-
-.novedades {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
 }
-
-/* =============================================== 7. INTEGRANTES ========== */
-
 .integrantes {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 2.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
 }
-
-.integrantes > * {
-  flex: 1 1 150px;
-  max-width: 190px;
-}
-
-/* ===================================================== 8. ÚNETE ========== */
-
 .unete {
-  padding-block: var(--aire);
-  background: var(--fondo-2);
+  border-top: 1px solid var(--linea);
+  background: var(--verde-vel);
+  padding-block: 4rem;
 }
-
-.uneteCaja {
+.uneteInterior {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 1.1rem;
-  max-width: 38rem;
-  margin-inline: auto;
+  justify-content: space-between;
+  gap: 3rem;
 }
-
-.uneteAviso {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--rojo);
+.unete h2 {
+  font-size: clamp(2rem, 3.6vw, 3rem);
 }
-
-.uneteTitulo {
-  font-size: clamp(1.875rem, 4.4vw, 2.75rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-}
-
-.uneteTexto {
+.unete p:last-child {
   color: var(--texto-tenue);
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  max-width: 37rem;
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
 }
-
-.uneteAcciones {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem 1.75rem;
-  margin-top: 1rem;
+.unete a {
+  flex-shrink: 0;
 }
-
-.uneteCorreo {
-  font-size: 0.9375rem;
-  color: var(--texto-tenue);
-  transition: color 0.25s var(--curva);
-}
-
-.uneteCorreo:hover {
-  color: var(--verde);
-}
-
-/* ================================================ PUNTOS DE CORTE ======== */
-
-@media (min-width: 600px) {
-  .cifras {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 760px) {
-  .reunion {
-    grid-template-columns: auto 1fr auto;
-    text-align: left;
-    justify-items: start;
+@media (max-width: 1000px) {
+  .portadaRejilla {
     gap: 2rem;
   }
-
-  .reunionCuerpo {
-    align-items: flex-start;
-  }
-
-  .reunionEtiquetas,
-  .reunionDatos {
-    justify-content: flex-start;
-  }
-
-  .reunionFecha {
-    border-right: 1px solid var(--linea-suave);
-  }
-
-  .objetivo {
-    grid-template-columns: 4rem 1fr;
-    gap: 0.4rem 1.5rem;
-  }
-
-  .objetivoNumero {
-    grid-row: span 2;
-    padding-top: 0.3rem;
-  }
-}
-
-@media (min-width: 900px) {
-  .portadaRejilla {
-    grid-template-columns: auto 1fr;
-    justify-items: start;
-    text-align: left;
-    gap: clamp(3rem, 6vw, 5.5rem);
-  }
-
-  .portadaAcciones {
-    justify-content: flex-start;
-  }
-
-  .sobre {
-    grid-template-columns: 0.85fr 1.15fr;
-  }
-
-  .lineas {
+  .objetivos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-
-/* ============================== TITULAR EN DOS TONOS Y ENTRADA =========== */
-
-/* El titular se parte en dos bloques: la parte genérica en gris y la que
-   identifica al grupo en negro. Un nombre tan largo en un solo tono se lee
-   como un párrafo y no como un título. */
-.tituloTenue,
-.tituloFuerte {
-  display: block;
-}
-
-.tituloTenue {
-  color: var(--texto-tenue);
-  font-weight: 500;
-}
-
-.tituloFuerte {
-  color: var(--texto);
-}
-
-/* Entrada escalonada al cargar: escudo, titular, texto y botones aparecen en
-   ese orden. Es medio segundo en total, lo justo para que la página se sienta
-   viva sin hacerse esperar. */
-.portadaEscudo,
-.titulo,
-.proposito,
-.portadaAcciones,
-.cifrasCaja {
-  opacity: 0;
-  transform: translateY(14px);
-  animation: entrada 0.75s var(--curva) forwards;
-}
-
-.portadaEscudo {
-  animation-delay: 0.05s;
-}
-
-.titulo {
-  animation-delay: 0.14s;
-}
-
-.proposito {
-  animation-delay: 0.24s;
-}
-
-.portadaAcciones {
-  animation-delay: 0.32s;
-}
-
-.cifrasCaja {
-  animation-delay: 0.4s;
-}
-
-@keyframes entrada {
-  to {
-    opacity: 1;
-    transform: none;
+  .proyectos {
+    gap: 1.2rem;
+  }
+  .integrantes {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .presentacion {
+    gap: 3rem;
   }
 }
-
-/* Sin animación de entrada para quien pide menos movimiento: se muestra ya
-   colocado en vez de quedarse invisible esperando una animación que no corre. */
-@media (prefers-reduced-motion: reduce) {
-  .portadaEscudo,
-  .titulo,
-  .proposito,
-  .portadaAcciones,
-  .cifrasCaja {
-    opacity: 1;
-    transform: none;
-    animation: none;
+@media (max-width: 760px) {
+  .portadaRejilla {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .figura {
+    max-width: 480px;
+  }
+  .nombre {
+    max-width: 28rem;
+  }
+  .proyectos {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .presentacion {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .lineas {
+    grid-template-columns: 1fr;
+  }
+  .cabeceraSeccion {
+    display: block;
+    margin-bottom: 2rem;
+  }
+  .cabeceraSeccion > a {
+    margin: 0;
+  }
+  .cabeceraSeccion > header {
+    margin-bottom: 0.5rem;
+  }
+  .uneteInterior {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .explorar > div {
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+  }
+  .explorar > div > span {
+    width: 100%;
   }
 }
-
-/* ========================= ESTADOS AL PASAR EL CURSOR ==================== */
-
-/* Cada fila de línea se levanta sobre una placa blanca al pasar por encima.
-   Es el único adorno del bloque y deja claro que la fila es una unidad. */
-.linea {
-  border-radius: var(--r-sm);
-  transition:
-    background 0.25s var(--curva),
-    transform 0.25s var(--curva);
-}
-
-.linea:hover {
-  background: var(--superficie);
-  transform: translateY(-2px);
-}
-
-.lineaIcono {
-  transition:
-    background 0.25s var(--curva),
-    color 0.25s var(--curva),
-    transform 0.3s var(--curva);
-}
-
-.linea:hover .lineaIcono {
-  background: var(--verde);
-  color: #fff;
-  transform: scale(1.08);
-}
-
-/* Los objetivos se aclaran y desplazan un pelo. */
-.objetivo {
-  border-radius: var(--r-sm);
-  transition:
-    background 0.25s var(--curva),
-    padding-left 0.25s var(--curva);
-}
-
-.objetivo:hover {
-  background: var(--fondo-2);
-}
-
-.objetivo:hover .objetivoTitulo {
-  color: var(--verde);
-}
-
-.objetivoTitulo {
-  transition: color 0.2s var(--curva);
-}
-
-/* La tarjeta de reunión se eleva con una sombra muy suave. */
-.reunion {
-  transition:
-    box-shadow 0.3s var(--curva),
-    transform 0.3s var(--curva);
-}
-
-.reunion:hover {
-  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.22);
-  transform: translateY(-2px);
-}
-
-/* Las cifras crecen ligeramente al pasar por encima. */
-.cifra {
-  transition: transform 0.25s var(--curva);
-}
-
-.cifra:hover {
-  transform: translateY(-3px);
+@media (max-width: 420px) {
+  .objetivos {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .figura {
+    padding: 1rem;
+  }
+  .figuraCabecera {
+    font-size: 0.46rem;
+  }
+  .acciones {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
 }

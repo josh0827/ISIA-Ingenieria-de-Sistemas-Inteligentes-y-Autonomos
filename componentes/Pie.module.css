@@ -1,111 +1,101 @@
-/* Pie del sitio.
-
-   El pie NO lleva fondo distinto del body ni margen superior: así, aunque la
-   página sea corta, no puede aparecer una franja de otro color justo encima. */
-
 .pie {
-  border-top: 1px solid var(--linea-suave);
-  padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
-  background: var(--fondo);
+  background: var(--fondo-2);
+  border-top: 1px solid var(--linea);
+  padding-top: 3.5rem;
 }
-
 .rejilla {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
-  align-items: start;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
 }
-
-/* ---------------------------------------------------------------- identidad */
-
 .marca {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.85rem;
-  margin-bottom: 1.1rem;
+  gap: 1.25rem;
+  width: fit-content;
 }
-
-.sigla {
-  font-size: 1.25rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.nombre {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--texto);
-  margin-bottom: 0.6rem;
-}
-
-.descripcion {
-  color: var(--texto-tenue);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  max-width: 42ch;
-}
-
-/* ----------------------------------------------------------------- columnas */
-
-.tituloColumna {
-  font-size: 0.75rem;
-  color: var(--texto-debil);
-  margin-bottom: 1rem;
-  font-weight: 500;
-}
-
-.columna ul {
+.marca > span {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
 }
-
-.enlace,
-.enlaceIcono {
+.marca strong {
+  font-size: 1.9rem;
+  letter-spacing: 0.025em;
+  line-height: 1.2;
+}
+.marca > span > span {
   color: var(--texto-tenue);
-  font-size: 0.9375rem;
-  transition: color 0.2s var(--curva);
+  font-size: 0.73rem;
 }
-
-.enlaceIcono {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  line-height: 1.4;
+.nombre {
+  font-size: 0.9rem;
+  margin-top: 1.3rem;
+  max-width: 22rem;
 }
-
-.enlaceIcono svg {
-  flex-shrink: 0;
-  color: var(--texto-debil);
+.ubicacion {
+  font-size: 0.8rem;
+  color: var(--texto-tenue);
+  margin-top: 0.75rem;
 }
-
-a.enlace:hover,
-a.enlaceIcono:hover {
-  color: var(--texto);
-}
-
-/* ------------------------------------------------------------------ cierre */
-
-.cierre {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--linea-suave);
-}
-
-.cierre p {
-  font-size: 0.75rem;
+.pie h2 {
+  font-size: 0.8rem;
+  font-weight: 650;
   letter-spacing: 0;
-  text-transform: none;
+  margin: 0.4rem 0 1.3rem;
 }
-
-@media (min-width: 760px) {
+.enlaces {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1rem;
+  color: var(--texto-tenue);
+  font-size: 0.8rem;
+}
+.pie a:hover {
+  color: var(--verde);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.contacto {
+  font-size: 0.82rem;
+}
+.contacto p {
+  color: var(--texto-tenue);
+  max-width: 16rem;
+}
+.contacto > a {
+  display: block;
+  color: var(--verde);
+  margin-top: 1rem;
+}
+.cierre {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 3rem;
+  border-top: 1px solid var(--linea);
+  padding-block: 1.5rem;
+  color: var(--texto-tenue);
+  font-size: 0.67rem;
+  line-height: 1.65;
+}
+.cierre a {
+  text-decoration: underline;
+}
+@media (max-width: 800px) {
   .rejilla {
-    grid-template-columns: 1.6fr 1fr 1.2fr;
-    gap: 3rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  .rejilla > :first-child {
+    grid-column: 1/-1;
+  }
+  .cierre {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+@media (max-width: 500px) {
+  .rejilla {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 }

@@ -1,9 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { SITIO } from '@/lib/sitio'
-
+// Permite leer el noindex de cada página; no anuncia un sitemap de producción.
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: { userAgent: '*', allow: '/' },
-    sitemap: `${SITIO.url}/sitemap.xml`,
-  }
+  return { rules: { userAgent: '*', allow: '/' } }
 }

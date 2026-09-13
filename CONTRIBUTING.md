@@ -1,257 +1,162 @@
-# Cómo trabajar en este repositorio
+# Mantenimiento de la demo ISIA
 
-Este sitio lo monta un equipo, no una persona. Casi todos los problemas de trabajar en grupo sobre
-el mismo repositorio salen de dos personas editando el mismo archivo a la vez, así que el proyecto
-está partido para que eso no pase.
+Esta guía describe cómo editar la demo académica en la rama local **Prueba**. El contenido publicado debe utilizar **semillero de investigación**. El proyecto conserva Next.js, TypeScript, CSS modular y Markdown.
 
----
-
-## 1. Reparto de secciones
-
-Cada sección es una carpeta propia dentro de `app/`, con su `page.tsx` y, si hace falta, su propio
-`.module.css`. **Dos personas nunca tienen que editar el mismo archivo.**
-
-| Sección | Carpeta | Responsable |
-|---|---|---|
-| Reuniones | `app/reuniones/` | por asignar |
-| Líneas de investigación | `app/lineas/` | por asignar |
-| Integrantes | `app/integrantes/` | por asignar |
-| Publicaciones | `app/publicaciones/` | por asignar |
-| Galería | `app/galeria/` | por asignar |
-| Únete | `app/unete/` | por asignar |
-
-Apunta tu nombre en esta tabla cuando cojas una sección.
-
-### Archivos compartidos: no los toques por tu cuenta
-
-Estos los usa todo el mundo, y un cambio ahí afecta a todas las secciones a la vez:
-
-```
-app/globals.css          tokens de color, tipografía, utilidades
-app/layout.tsx           navegación, pie, metadatos
-app/listados.module.css  rejillas compartidas
-app/detalle.module.css   páginas de detalle
-componentes/*            piezas compartidas
-lib/*                    datos y configuración
-```
-
-Si de verdad necesitas cambiar algo ahí, dilo primero en el grupo. Si solo necesitas un estilo para
-tu sección, créate un `.module.css` dentro de tu carpeta.
-
----
-
-## 2. Flujo de trabajo
+## Flujo local
 
 ```bash
-git checkout main
-git pull                              # empieza siempre desde lo último
-git checkout -b seccion/reuniones     # una rama por sección
-# ... trabajas ...
-npm run build                         # TIENE que pasar antes de subir
-git add .
-git commit -m "Monta la agenda de reuniones"
-git push -u origin seccion/reuniones
+git branch --show-current
+npm run lint
+npm run typecheck
+npm run build
 ```
 
-Después, en github.com, abrir un **pull request** hacia `main`.
+La rama de este trabajo debe ser `Prueba`. Revisa los cambios con `git diff` y prueba la navegación antes de dar por terminada una edición. No hagas push, merges a `main` ni despliegues sin una solicitud posterior. Esta demo no presupone un flujo automático de publicación.
 
-Vercel genera automáticamente una dirección de vista previa para tu pull request. Pega ese enlace en
-la descripción: así el grupo puede ver tu sección funcionando antes de mezclarla, sin bajarse nada.
+Coordina los archivos compartidos cuando varias personas trabajen a la vez. La configuración general vive en `lib/sitio.ts`; las reglas de lectura y los tipos, en `lib/contenido.ts`.
 
-**Nunca subas directamente a `main`.**
+## Regla de veracidad
 
+Todo archivo publicable debe declarar `confirmado: false` mientras contenga datos ilustrativos. El sistema solo reconoce como confirmación el booleano `true`, sin comillas. Su presencia significa que una persona responsable ya revisó la información; el programa no puede verificar por sí mismo que un proyecto o una identidad sean reales.
+
+Para cambiar a `confirmado: true`:
+
+1. Sustituye el texto de ejemplo por información confirmada.
+2. Comprueba nombres, fechas, estados, participantes y destinos.
+3. Revisa permisos de uso de fotografías y atribuciones.
+4. Asegúrate de que la etiqueta y el contexto público correspondan al contenido.
+5. Ejecuta las comprobaciones y revisa la página en navegador.
+
+Conserva evidencia de la validación en el registro editorial que use el equipo. No publiques información privada dentro del frontmatter.
+
+Las fechas de ejemplo se identifican junto a cada ficha. No presentes proyectos activos, resultados, cifras, fundación, requisitos de ingreso, beneficios, acceso a laboratorios ni convocatorias sin confirmación. Los perfiles ilustrativos muestran roles pendientes, no nombres inventados.
+
+## Editar Markdown
+
+Los archivos van en `contenido/<seccion>/`. Usa nombres en minúsculas y guiones. El nombre determina el slug de los detalles de proyectos y novedades. Los archivos cuyo nombre empieza con `_` son plantillas y no se publican.
+
+El frontmatter va entre dos líneas `---`. Después se escribe el cuerpo Markdown. Usa títulos de segundo nivel (`##`) en el cuerpo: la página ya proporciona el `h1`.
+
+### Proyecto
+
+```yaml
 ---
-
-## 3. Cómo montar tu sección
-
-Abre `app/novedades/page.tsx`. Está terminada y hace exactamente lo que tú necesitas hacer:
-
-```tsx
-import { Seccion, TituloSeccion } from '@/componentes/Base'
-import { listarNovedades } from '@/lib/contenido'
-import estilos from '../listados.module.css'
-
-export default function PaginaNovedades() {
-  const novedades = listarNovedades()
-
-  return (
-    <Seccion className={estilos.primeraSeccion}>
-      <TituloSeccion indice="Novedades" titulo="Lo que pasa en el grupo" descripcion="..." />
-      <div className={estilos.rejilla}>
-        {novedades.map((n) => <TarjetaNovedad key={n.slug} novedad={n} />)}
-      </div>
-    </Seccion>
-  )
-}
-```
-
-Tu página debe empezar igual: `<Seccion className={estilos.primeraSeccion}>`. Esa clase deja el
-hueco que necesita la barra de navegación, que es fija.
-
-Cuando tu sección esté lista, **borra el `<Pendiente>`** de tu `page.tsx`.
-
-### Piezas que ya tienes hechas
-
-De `@/componentes/Base`:
-
-| Pieza | Para qué |
-|---|---|
-| `<Seccion>` | Envuelve la sección con el ancho y el espaciado del sitio. `alterna` la pinta sobre el gris claro |
-| `<TituloSeccion>` | Encabezado de sección, con `indice`, `titulo`, `descripcion` y `centrado` |
-| `<Boton href variante>` | Enlace de acción. `principal` o `sutil` |
-| `<Etiqueta valor>` | Pinta un estado, tipo o modalidad con su color fijo |
-| `<Fecha iso>` | Formatea una fecha igual en todo el sitio |
-| `<VerTodo href>` | El enlace que cierra un bloque |
-
-De `@/componentes/Tarjetas`: `<TarjetaNovedad>`, `<TarjetaProyecto>`, `<TarjetaIntegrante>`.
-
-De `@/componentes/Revelar`: envuelve un bloque para que aparezca al hacer scroll. Con varios
-hermanos, escalona el retardo: `<Revelar retardo={i * 70}>`.
-
-De `@/componentes/Iconos`: los iconos SVG. **En este sitio no se usan emojis.** Si necesitas uno
-nuevo, añádelo ahí siguiendo el mismo patrón.
-
-De `@/componentes/Escudo`: el escudo institucional. `<Escudo alto={32} />`, y `placa` le pone un
-fondo claro detrás para cuando va sobre un fondo oscuro.
-
-De `@/lib/contenido`:
-
-```ts
-listarNovedades(limite?)   obtenerNovedad(slug)
-listarReuniones()          proximaReunion()      reunionesPasadas()
-listarProyectos(limite?)   obtenerProyecto(slug)
-listarIntegrantes()
-markdownAHtml(texto)
-```
-
-### Reglas de estilo
-
-- Colores y espaciados **siempre desde los tokens** (`var(--verde)`, `var(--aire)`), nunca valores sueltos
-- **Un solo acento**: el verde `--verde`, y con cuentagotas. El rojo `--rojo` solo para una
-  convocatoria abierta. Si el rojo aparece en tres sitios, deja de significar nada
-- Separa con **aire y líneas de un píxel**, no metiendo todo en tarjetas con borde
-- Todo lo que se pueda pulsar necesita un estado al pasar el cursor. Desplazamientos de 2 a 4
-  píxeles con `var(--curva)`, nunca saltos bruscos
-- Toda rejilla va centrada, horizontal y verticalmente
-- Revisa tu sección a **390 px de ancho** antes de abrir el pull request
-- Nada de librerías nuevas sin hablarlo antes: el sitio no usa ninguna y así se queda ligero
-
----
-
-## 4. Formato de los archivos de contenido
-
-Lo de arriba, entre las dos líneas de `---`, se llama frontmatter. Los nombres de los campos van tal
-cual; solo se cambia lo que va después de los dos puntos. Debajo del segundo `---` se escribe el
-texto largo en Markdown normal.
-
-Las fechas van **siempre** como `YYYY-MM-DD`.
-
-### Novedad · `contenido/novedades/2026-10-15-titulo-corto.md`
-
-```markdown
----
-titulo: Título de la novedad
-fecha: 2026-10-15
-tipo: convocatoria
-resumen: Una o dos frases. Es lo que se lee en la tarjeta de la portada.
-imagen: /imagenes/novedades/archivo.jpg
-autor: Quién lo publica
----
-
-El texto largo va aquí, en Markdown.
-
-## Puedes usar subtítulos
-
-- y listas
-```
-
-`tipo` solo admite: `convocatoria`, `evento`, `logro`, `publicacion`.
-`imagen` y `autor` son opcionales.
-
-### Reunión · `contenido/reuniones/2026-10-15-tema.md`
-
-```markdown
----
-titulo: Tema de la sesión
-fecha: 2026-10-15
-hora: "16:00"
-lugar: Laboratorio de Electrónica, bloque Q
-modalidad: presencial
-ponente: Quién la dirige
-enlace: https://...
-resumen: De qué va la sesión.
----
-
-Orden del día y lo que haga falta.
-```
-
-`modalidad` solo admite: `presencial`, `virtual`, `hibrida`.
-La hora va **entre comillas**, o el sistema la lee como un número y se rompe.
-`enlace` es para las virtuales.
-
-La portada muestra automáticamente la primera reunión cuya fecha no haya pasado.
-
-### Proyecto · `contenido/proyectos/nombre-del-proyecto.md`
-
-```markdown
----
-titulo: Nombre del proyecto
-estado: activo
+titulo: Título de la propuesta ilustrativa
+confirmado: false
+estado: propuesta
 linea: Percepción y visión por computador
-resumen: Una o dos frases para la tarjeta.
-portada: /imagenes/proyectos/archivo.jpg
-integrantes: [nombre-apellido, otro-nombre]
+resumen: Descripción explícitamente ilustrativa, sin resultados atribuidos.
+integrantes: []
 ---
-
-Descripción larga del proyecto.
 ```
 
-`estado` solo admite: `activo`, `en-curso`, `completado`, `pausado`. Los activos salen primero.
-`linea` debe coincidir con una de `LINEAS` en `lib/sitio.ts`.
-`integrantes` son los **nombres de archivo** de `contenido/integrantes/`, sin el `.md`.
+Campos opcionales: `portada`, con ruta local de una imagen real. Los estados admitidos son `propuesta`, `activo`, `en-curso`, `completado` y `pausado`; conserva `propuesta` para los ejemplos actuales.
 
-### Integrante · `contenido/integrantes/nombre-apellido.md`
+La línea debe coincidir con un título de `LINEAS` en `lib/sitio.ts`. `integrantes` admite slugs de perfiles confirmados. En proyectos ilustrativos no se vinculan participantes ni fotografías.
 
-```markdown
+Describe la pregunta, el alcance, una posible forma de evaluación y los datos pendientes. No redactes métodos propuestos como si ya hubieran producido resultados.
+
+### Novedad
+
+```yaml
 ---
-nombre: Nombre y Apellido
+titulo: Título de la nota ilustrativa
+confirmado: false
+fecha: "2026-09-08"
+tipo: divulgacion
+resumen: Contenido de ejemplo para demostrar la presentación de novedades.
+---
+```
+
+Tipos: `divulgacion`, `convocatoria`, `evento`, `logro` y `publicacion`. La demo utiliza divulgación para evitar anuncios ficticios. `imagen` y `autor` son opcionales y se omiten de la presentación mientras la ficha no esté confirmada.
+
+La fecha debe ser válida y usar `YYYY-MM-DD`; escríbela entre comillas. Las novedades se ordenan de la más reciente a la más antigua. En una nota ilustrativa también debe quedar claro que la fecha es de ejemplo.
+
+### Reunión
+
+```yaml
+---
+titulo: Ejemplo de sesión de lectura
+confirmado: false
+fecha: "2026-09-19"
+hora: "16:00"
+modalidad: presencial
+lugar: Lugar pendiente de confirmar
+resumen: Agenda ilustrativa; no es una reunión convocada.
+---
+```
+
+Modalidades: `presencial`, `virtual`, `hibrida` y `pendiente`. Si falta una modalidad válida, se utiliza `pendiente`. La hora debe usar `HH:mm`. Campos opcionales: `ponente` y `enlace`; no se activan en reuniones ilustrativas.
+
+La agenda de ejemplo puede demostrar fecha, hora y modalidad, siempre con la advertencia junto al bloque. La agenda real usa únicamente fichas confirmadas. `proximaReunion()` y `reunionesPasadas()` excluyen todos los ejemplos y comparan las fechas con el día actual en Colombia.
+
+### Integrante
+
+```yaml
+---
+nombre: Perfil por confirmar
+confirmado: false
 rol: estudiante
-area: Percepción y visión por computador
-foto: /imagenes/integrantes/nombre-apellido.jpg
-enlaces:
-  github: https://github.com/usuario
-  linkedin: https://linkedin.com/in/usuario
-  correo: persona@unal.edu.co
+area: Intereses pendientes de validación
+enlaces: {}
 ---
-
-Una o dos frases sobre la persona.
 ```
 
-`rol` solo admite: `director`, `investigador`, `estudiante`, `egresado`. Ese es el orden en que
-aparecen. Los campos de `enlaces` se pueden dejar vacíos con `""`.
+Roles: `director`, `investigador`, `estudiante` y `egresado`; son categorías de presentación y deben validarse. El rol técnico `director` puede mostrarse públicamente como coordinación.
 
----
+Solo los perfiles confirmados pueden mostrar `foto` y `enlaces.github`, `enlaces.linkedin` o `enlaces.correo`. No añadas destinos genéricos de redes sociales ni correos de prueba.
 
-## 5. Imágenes
+### Publicaciones y recursos
 
-- van en `public/imagenes/` dentro de la subcarpeta que toque
-- nombre en minúsculas y con guiones, sin espacios ni tildes
-- en el `.md` se referencian desde la raíz: `/imagenes/proyectos/mi-foto.jpg`
-- **redúcelas antes de subirlas**: 1600 px de ancho sobra y evita que el repositorio engorde
-- en código usa `next/image`, nunca `<img>`, y siempre con texto alternativo que describa la foto
+Parte de [contenido/publicaciones/_plantilla.md](contenido/publicaciones/_plantilla.md). Campos requeridos para una referencia visible:
 
----
+- `confirmado: true`.
+- `titulo`.
+- `anio` numérico válido.
+- `autores`, como lista no vacía.
+- `tipo`, por ejemplo el tipo real del material.
+- `enlace` opcional, hacia el recurso real.
 
-## 6. Si algo falla
+El listado se organiza de año más reciente a más antiguo. No se generan DOI ni enlaces de descarga. Sin referencias confirmadas se mantiene el estado vacío.
 
-**Mi novedad no aparece.** Repasa el frontmatter: `titulo` y `fecha` son obligatorios y la fecha
-tiene que ser `YYYY-MM-DD`. Un archivo mal escrito se ignora en silencio para no tumbar el sitio;
-al correr `npm run build` verás un aviso diciendo cuál y por qué.
+### Galería
 
-**Mi reunión no sale en la portada.** La portada solo muestra reuniones cuya fecha no haya pasado.
+Parte de [contenido/galeria/_plantilla.md](contenido/galeria/_plantilla.md). Campos requeridos:
 
-**`npm run build` falla.** Lee el error de arriba abajo: casi siempre dice el archivo y la línea. Si
-te atascas, pega el error completo en el grupo.
+- `confirmado: true`.
+- `titulo`.
+- `imagen`, como ruta a un archivo existente en `public/imagenes/`.
+- `alt`, descripción textual de la imagen.
+- `pie`, contexto confirmado y atribución cuando corresponda.
 
-**Toqué algo y se descuadró otra sección.** Seguramente editaste un archivo compartido. Deshaz y
-pregunta antes.
+`anio` es opcional. No uses el escudo ni ilustraciones conceptuales como si fueran fotografías del semillero. Sin fotografías reales se mantiene el estado pendiente.
+
+## Recursos y destinos
+
+Las imágenes editoriales deben existir dentro de `public/imagenes/`. Se aceptan AVIF, WebP, PNG, JPEG y SVG locales. Optimiza las fotografías, conserva sus proporciones y utiliza dimensiones explícitas en los componentes para evitar saltos de disposición.
+
+Los enlaces de contenido admiten HTTPS, páginas internas existentes y archivos PDF reales bajo `public/recursos/`. Las rutas a PDF se escriben como `/recursos/nombre.pdf`. Se descartan protocolos ejecutables, dominios reservados para ejemplos, redes sociales genéricas y archivos locales inexistentes.
+
+Esta validación comprueba el formato y la existencia local; no garantiza que un destino externo siga disponible. Compruébalo manualmente antes de confirmar la ficha.
+
+El cuerpo Markdown pasa por saneamiento HTML y un filtro de recursos. No añadas HTML interactivo, scripts, iframes, formularios ni instrucciones internas de desarrollo a los archivos publicados.
+
+El canal de contacto permanece como **Canal de contacto pendiente de confirmar**. El enlace al repositorio debe identificarse como **Repositorio del sitio**, sin atribuirle un carácter institucional no verificado.
+
+## Presentación y accesibilidad
+
+- Conserva la paleta centralizada de `app/globals.css` y la tipografía Geist.
+- No modifiques el escudo provisional ni retires la atribución de [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Escudo_de_la_Universidad_Nacional_de_Colombia_(2016).svg), autor atribuido **César Puertas Céspedes**.
+- No incorpores apariciones al scroll, opacidad inicial cero, transformaciones de entrada, escalonamientos ni parallax.
+- `Revelar` es un envoltorio sin efectos; no reintroduzcas observadores para ocultar contenido.
+- Usa encabezados jerárquicos, foco visible, enlaces descriptivos y alternativas textuales.
+- Revisa escritorio, tableta y móvil, incluyendo teclado y menú móvil.
+- Mantén `noindex` en modo DEMO y evita datos ficticios en metadatos o datos estructurados.
+
+## Comprobación antes de entregar
+
+Ejecuta lint, TypeScript y compilación. Después revisa en navegador la portada, el menú, los CTA **Ver los proyectos** y **Quiero participar**, todos los listados y detalles, y los estados pendientes.
+
+Comprueba que no existan desbordamientos horizontales, errores relevantes de consola ni destinos ficticios activos. Todo el contenido debe ser visible desde el renderizado, incluso antes de desplazarse.
+
+Para preparar una versión FULL, confirma primero la información indicada en [README.md](README.md). No basta con retirar el aviso DEMO.

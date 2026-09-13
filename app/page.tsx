@@ -1,288 +1,201 @@
-// PÁGINA PRINCIPAL
-//
-// Ocho bloques en este orden:
-//   1. Portada: escudo institucional y nombre del grupo, en asimétrico
-//   2. Próxima reunión (sale sola de contenido/reuniones)
-//   3. Qué es ISIA y objetivos
-//   4. Líneas de investigación
-//   5. Proyectos destacados
-//   6. Novedades recientes
-//   7. Integrantes
-//   8. Invitación a unirse
-//
-// Los bloques 2, 5, 6 y 7 se alimentan de los .md de /contenido: no hay que
-// tocar este archivo para actualizarlos, basta con añadir o editar un archivo
-// en esa carpeta.
-
 import Link from 'next/link'
-import type { ReactNode } from 'react'
-import { Boton, Etiqueta, Seccion, TituloSeccion, VerTodo, partesFecha } from '@/componentes/Base'
-import Escudo from '@/componentes/Escudo'
-import Revelar from '@/componentes/Revelar'
-import { TarjetaIntegrante, TarjetaNovedad, TarjetaProyecto } from '@/componentes/Tarjetas'
-import { Antena, Brazo, Brujula, Ojo, Onda, Persona, Pin, Red, Reloj } from '@/componentes/Iconos'
-import { listarIntegrantes, listarNovedades, listarProyectos, proximaReunion } from '@/lib/contenido'
-import { CIFRAS, LINEAS, OBJETIVOS, PRESENTACION, SITIO } from '@/lib/sitio'
+import { Boton, Seccion, TituloSeccion, VerTodo } from '@/componentes/Base'
+import {
+  TarjetaIntegrante,
+  TarjetaNovedad,
+  TarjetaProyecto,
+} from '@/componentes/Tarjetas'
+import Esquema from '@/componentes/Esquema'
+import { Flecha } from '@/componentes/Iconos'
+import {
+  listarIntegrantes,
+  listarNovedades,
+  listarProyectos,
+} from '@/lib/contenido'
+import { LINEAS, OBJETIVOS, PRESENTACION, SITIO } from '@/lib/sitio'
 import estilos from './pagina.module.css'
 
-// Enlaza el campo "icono" de LINEAS (lib/sitio.ts) con el SVG que le toca.
-const ICONOS: Record<string, (p: { size?: number; className?: string }) => ReactNode> = {
-  ojo: Ojo,
-  brujula: Brujula,
-  antena: Antena,
-  red: Red,
-  brazo: Brazo,
-  onda: Onda,
-}
-
 export default function Inicio() {
-  const reunion = proximaReunion()
   const proyectos = listarProyectos(3)
   const novedades = listarNovedades(3)
   const integrantes = listarIntegrantes()
-
+  const perfilesResumen = integrantes
+    .filter(
+      (p, i, lista) => lista.findIndex((item) => item.rol === p.rol) === i,
+    )
+    .slice(0, 3)
   return (
     <>
-      {/* ------------------------------------------------ 1. PORTADA ------ */}
-      {/* Composición asimétrica: el escudo a un lado y el texto al otro. Sin
-          fondo animado ni degradados: el peso lo lleva el aire. */}
       <section className={estilos.portada}>
         <div className={`contenedor ${estilos.portadaRejilla}`}>
-          <div className={estilos.portadaEscudo}>
-            <Escudo alto={250} />
-          </div>
-
           <div className={estilos.portadaTexto}>
-            {/* El titular va en dos tonos: la parte generica en gris y la que
-                identifica al grupo en negro. Un nombre tan largo en un solo
-                tono se lee como un parrafo, no como un titulo. */}
-            <h1 className={estilos.titulo}>
-              <span className={estilos.tituloTenue}>{SITIO.nombreLineas[0]}</span>
-              <span className={estilos.tituloFuerte}>{SITIO.nombreLineas[1]}</span>
+            <p className={estilos.eyebrow}>
+              Universidad Nacional de Colombia · Sede Manizales
+            </p>
+            <h1>
+              <span className={estilos.sigla}>ISIA</span>
+              <span className={estilos.nombre}>{SITIO.nombre}</span>
             </h1>
-
-            <p className={estilos.proposito}>{SITIO.descripcion}</p>
-
-            <div className={estilos.portadaAcciones}>
+            <p className={estilos.proposito}>
+              Un espacio de formación en investigación para explorar cómo los
+              sistemas perciben, aprenden e interactúan con su entorno.
+            </p>
+            <div className={estilos.acciones}>
               <Boton href="/proyectos">Ver los proyectos</Boton>
               <Boton href="/unete" variante="sutil">
-                Únete al grupo
+                Quiero participar
               </Boton>
             </div>
+            <p className={estilos.identificador}>
+              Semillero de investigación <span aria-hidden> / </span> Manizales,
+              Colombia
+            </p>
           </div>
-        </div>
-
-        {/* Cifras del grupo. Sin cajas: solo números separados por una línea. */}
-        <div className={`contenedor ${estilos.cifrasCaja}`}>
-          <dl className={estilos.cifras}>
-            {CIFRAS.map((cifra) => (
-              <div key={cifra.etiqueta} className={estilos.cifra}>
-                <dd className={estilos.cifraValor}>{cifra.valor}</dd>
-                <dt className={estilos.cifraEtiqueta}>{cifra.etiqueta}</dt>
-              </div>
-            ))}
-          </dl>
+          <figure className={estilos.figura}>
+            <div className={estilos.figuraCabecera}>
+              <span>SISTEMAS INTELIGENTES Y AUTÓNOMOS</span>
+              <span aria-hidden>01 — ISIA</span>
+            </div>
+            <Esquema />
+            <figcaption>
+              <span>Del entorno a la acción</span>
+              <span>Esquema conceptual · Ilustración</span>
+            </figcaption>
+          </figure>
         </div>
       </section>
-
-      {/* --------------------------------------- 2. PRÓXIMA REUNIÓN ------ */}
-      {/* Si no hay ninguna reunión futura en contenido/reuniones, este bloque
-          entero desaparece en vez de mostrar un hueco vacío. */}
-      {reunion && (
-        <Seccion alterna className={estilos.seccionReunion}>
-          <Revelar>
-            <article className={estilos.reunion}>
-              <div className={estilos.reunionFecha}>
-                <span className={estilos.reunionDia}>{partesFecha(reunion.fecha).dia}</span>
-                <span className={estilos.reunionMes}>
-                  {partesFecha(reunion.fecha).nombreMes} {partesFecha(reunion.fecha).anio}
-                </span>
-              </div>
-
-              <div className={estilos.reunionCuerpo}>
-                <div className={estilos.reunionEtiquetas}>
-                  <span className={`mono ${estilos.reunionAviso}`}>Próxima reunión</span>
-                  <Etiqueta valor={reunion.modalidad} />
-                </div>
-
-                <h2 className={estilos.reunionTitulo}>{reunion.titulo}</h2>
-                {reunion.resumen && <p className={estilos.reunionResumen}>{reunion.resumen}</p>}
-
-                <ul className={estilos.reunionDatos}>
-                  {reunion.hora && (
-                    <li>
-                      <Reloj size={16} />
-                      {reunion.hora}
-                    </li>
-                  )}
-                  {reunion.lugar && (
-                    <li>
-                      <Pin size={16} />
-                      {reunion.lugar}
-                    </li>
-                  )}
-                  {reunion.ponente && (
-                    <li>
-                      <Persona size={16} />
-                      {reunion.ponente}
-                    </li>
-                  )}
-                </ul>
-              </div>
-
-              <div className={estilos.reunionAccion}>
-                <Boton href="/reuniones" variante="sutil">
-                  Ver la agenda
-                </Boton>
-              </div>
-            </article>
-          </Revelar>
-        </Seccion>
-      )}
-
-      {/* ----------------------------------- 3. QUÉ ES ISIA Y OBJETIVOS --- */}
-      <Seccion id="sobre-el-grupo">
-        <div className={estilos.sobre}>
-          <Revelar>
-            <h2 className={estilos.sobreTitular}>{PRESENTACION.titular}</h2>
-          </Revelar>
-
-          <Revelar retardo={80}>
-            <div className={estilos.sobreTexto}>
-              {PRESENTACION.parrafos.map((parrafo) => (
-                <p key={parrafo.slice(0, 24)} className={estilos.sobreParrafo}>
-                  {parrafo}
-                </p>
-              ))}
-            </div>
-          </Revelar>
+      <div className={estilos.explorar}>
+        <div className="contenedor">
+          <span>Explora el semillero</span>
+          <Link href="/lineas">
+            Investigación <Flecha size={15} />
+          </Link>
+          <Link href="/reuniones">
+            Encuentros académicos <Flecha size={15} />
+          </Link>
+          <Link href="/publicaciones">
+            Conocimiento y recursos <Flecha size={15} />
+          </Link>
         </div>
-
-        {/* Los objetivos van en lista separada por líneas, no en tarjetas.
-            Cuatro cajas seguidas pesan mucho más de lo que aportan. */}
+      </div>
+      <Seccion id="semillero">
+        <div className={estilos.presentacion}>
+          <div>
+            <p className={estilos.eyebrow}>EL SEMILLERO</p>
+            <h2>{PRESENTACION.titular}</h2>
+            <span className={estilos.nota}>
+              Presentación y objetivos ilustrativos
+            </span>
+          </div>
+          <div className={estilos.textoPresentacion}>
+            {PRESENTACION.parrafos.map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+          </div>
+        </div>
         <ol className={estilos.objetivos}>
-          {OBJETIVOS.map((objetivo, i) => (
-            <Revelar key={objetivo.titulo} retardo={i * 70}>
-              <li className={estilos.objetivo}>
-                <span className={`mono ${estilos.objetivoNumero}`}>{String(i + 1).padStart(2, '0')}</span>
-                <h3 className={estilos.objetivoTitulo}>{objetivo.titulo}</h3>
-                <p className={estilos.objetivoTexto}>{objetivo.texto}</p>
-              </li>
-            </Revelar>
+          {OBJETIVOS.map((o, i) => (
+            <li key={o.titulo}>
+              <span className={estilos.numero}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3>{o.titulo}</h3>
+              <p>{o.texto}</p>
+            </li>
           ))}
         </ol>
       </Seccion>
-
-      {/* ------------------------------------------------ 4. LÍNEAS ------- */}
       <Seccion alterna id="lineas">
-        <TituloSeccion
-          titulo="Líneas de investigación"
-          descripcion="Seis frentes de trabajo que se cruzan constantemente. Casi todos nuestros proyectos viven en la frontera entre dos de ellos."
-        />
-
-        <div className={estilos.lineas}>
-          {LINEAS.map((linea, i) => {
-            const Icono = ICONOS[linea.icono] ?? Red
-            return (
-              <Revelar key={linea.titulo} retardo={i * 60}>
-                <article className={estilos.linea}>
-                  <span className={estilos.lineaIcono}>
-                    <Icono size={21} />
-                  </span>
-                  <div>
-                    <h3 className={estilos.lineaTitulo}>{linea.titulo}</h3>
-                    <p className={estilos.lineaTexto}>{linea.texto}</p>
-                  </div>
-                </article>
-              </Revelar>
-            )
-          })}
+        <div className={estilos.cabeceraSeccion}>
+          <TituloSeccion
+            indice="ÁREAS DE EXPLORACIÓN"
+            titulo="Líneas de investigación"
+            descripcion="Seis líneas de referencia para esta demo. Su definición como líneas oficiales está pendiente de validación."
+          />
+          <Boton href="/lineas" variante="sutil">
+            Explorar las líneas
+          </Boton>
         </div>
-
-        <VerTodo href="/lineas">Conocer las líneas a fondo</VerTodo>
-      </Seccion>
-
-      {/* -------------------------------------------- 5. PROYECTOS -------- */}
-      {proyectos.length > 0 && (
-        <Seccion id="proyectos">
-          <TituloSeccion
-            titulo="Proyectos destacados"
-            descripcion="Lo que hay montado ahora mismo sobre la mesa del laboratorio."
-          />
-
-          <div className={estilos.proyectos}>
-            {proyectos.map((proyecto, i) => (
-              <Revelar key={proyecto.slug} retardo={i * 80}>
-                <TarjetaProyecto proyecto={proyecto} />
-              </Revelar>
-            ))}
-          </div>
-
-          <VerTodo href="/proyectos">Ver todos los proyectos</VerTodo>
-        </Seccion>
-      )}
-
-      {/* -------------------------------------------- 6. NOVEDADES -------- */}
-      {/* En lista y no en tarjetas: una novedad es una línea de titular con su
-          fecha, y así se leen las tres de un vistazo. */}
-      {novedades.length > 0 && (
-        <Seccion alterna id="novedades">
-          <TituloSeccion
-            titulo="Novedades"
-            descripcion="Convocatorias, resultados y todo lo que pasa dentro del grupo."
-          />
-
-          <div className={estilos.novedades}>
-            {novedades.map((novedad, i) => (
-              <Revelar key={novedad.slug} retardo={i * 70}>
-                <TarjetaNovedad novedad={novedad} />
-              </Revelar>
-            ))}
-          </div>
-
-          <VerTodo href="/novedades">Ver todas las novedades</VerTodo>
-        </Seccion>
-      )}
-
-      {/* ------------------------------------------ 7. INTEGRANTES -------- */}
-      {integrantes.length > 0 && (
-        <Seccion id="integrantes">
-          <TituloSeccion
-            titulo="Quiénes somos"
-            descripcion="Docentes y estudiantes de distintos semestres trabajando en el mismo laboratorio."
-          />
-
-          <div className={estilos.integrantes}>
-            {integrantes.slice(0, 8).map((integrante, i) => (
-              <Revelar key={integrante.slug} retardo={i * 50}>
-                <TarjetaIntegrante integrante={integrante} />
-              </Revelar>
-            ))}
-          </div>
-
-          <VerTodo href="/integrantes">Conocer a todo el equipo</VerTodo>
-        </Seccion>
-      )}
-
-      {/* ------------------------------------------------ 8. ÚNETE -------- */}
-      <section className={estilos.unete}>
-        <div className="contenedor">
-          <Revelar>
-            <div className={estilos.uneteCaja}>
-              <span className={estilos.uneteAviso}>Convocatoria abierta</span>
-              <h2 className={estilos.uneteTitulo}>¿Te interesa investigar con nosotros?</h2>
-              <p className={estilos.uneteTexto}>
-                Buscamos estudiantes con ganas de montar cosas y de sostenerlas hasta que funcionen. No hace
-                falta experiencia previa en investigación, hace falta constancia y curiosidad.
-              </p>
-              <div className={estilos.uneteAcciones}>
-                <Boton href="/unete">Quiero participar</Boton>
-                <Link href={`mailto:${SITIO.correo}`} className={estilos.uneteCorreo}>
-                  {SITIO.correo}
-                </Link>
+        <div className={estilos.lineas}>
+          {LINEAS.map((linea, i) => (
+            <Link
+              href={`/lineas#linea-${i + 1}`}
+              key={linea.titulo}
+              className={estilos.linea}
+            >
+              <span className={estilos.numero}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3>{linea.titulo}</h3>
+                <p>{linea.texto}</p>
               </div>
-            </div>
-          </Revelar>
+              <Flecha size={18} />
+            </Link>
+          ))}
+        </div>
+      </Seccion>
+      <Seccion id="proyectos">
+        <div className={estilos.cabeceraSeccion}>
+          <TituloSeccion
+            indice="INVESTIGACIÓN EN CONTEXTO"
+            titulo="Proyectos destacados"
+            descripcion="Propuestas ilustrativas para conocer las preguntas y los enfoques que puede reunir el semillero."
+          />
+          <Boton href="/proyectos" variante="sutil">
+            Todos los proyectos
+          </Boton>
+        </div>
+        <div className={estilos.proyectos}>
+          {proyectos.map((p) => (
+            <TarjetaProyecto key={p.slug} proyecto={p} />
+          ))}
+        </div>
+      </Seccion>
+      <Seccion alterna id="novedades">
+        <div className={estilos.cabeceraSeccion}>
+          <TituloSeccion
+            indice="VIDA ACADÉMICA"
+            titulo="Novedades recientes"
+            descripcion="Notas de ejemplo para explorar esta sección. No constituyen anuncios ni actividades vigentes."
+          />
+          <Boton href="/novedades" variante="sutil">
+            Todas las novedades
+          </Boton>
+        </div>
+        {novedades.map((n) => (
+          <TarjetaNovedad key={n.slug} novedad={n} />
+        ))}
+      </Seccion>
+      <Seccion id="integrantes">
+        <TituloSeccion
+          indice="COMUNIDAD"
+          titulo="Personas que hacen posible la investigación"
+          descripcion="Vista ilustrativa de los roles del semillero. Los nombres, perfiles y fotografías están pendientes de confirmación."
+        />
+        <div className={estilos.integrantes}>
+          {perfilesResumen.map((p) => (
+            <TarjetaIntegrante key={p.slug} integrante={p} />
+          ))}
+        </div>
+        <VerTodo href="/integrantes">Conocer la sección de integrantes</VerTodo>
+      </Seccion>
+      <section className={estilos.unete}>
+        <div className={`contenedor ${estilos.uneteInterior}`}>
+          <div>
+            <p className={estilos.eyebrow}>PARTICIPACIÓN ESTUDIANTIL</p>
+            <h2>
+              La investigación empieza
+              <br />
+              con una pregunta.
+            </h2>
+            <p>
+              Si te interesan los sistemas inteligentes y autónomos, conoce este
+              espacio. El procedimiento de vinculación está pendiente de
+              confirmación.
+            </p>
+          </div>
+          <Boton href="/unete">Quiero participar</Boton>
         </div>
       </section>
     </>

@@ -1,306 +1,218 @@
-/* Tarjetas compartidas.
-
-   Casi ninguna es una "tarjeta" de verdad: no llevan borde ni fondo. Lo que
-   las separa es el aire y, en el caso de las novedades, una línea de un píxel.
-   Las cajas con borde redondeado en todas partes eran lo que más ensuciaba el
-   diseño anterior.
-
-   Todas llevan un enlace invisible estirado por encima para que se pueda
-   pulsar la pieza entera y no solo el titular, sin anidar enlaces. */
-
-.enlaceCompleto {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
-/* ---------------------------------------------------------------- Novedad */
-
-/* Fila de lista, no tarjeta: fecha y categoría arriba, titular grande debajo. */
-.novedad {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.5rem;
-  padding-block: 1.9rem;
-  border-top: 1px solid var(--linea-suave);
-  transition: opacity 0.25s var(--curva);
-}
-
-.novedad:last-of-type {
-  border-bottom: 1px solid var(--linea-suave);
-}
-
-.novedadCabecera {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.fecha {
-  font-size: 0.75rem;
-}
-
-.novedadTitulo {
-  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  transition: color 0.2s var(--curva);
-}
-
-.novedad:hover .novedadTitulo {
-  color: var(--verde);
-}
-
-.resumen {
-  color: var(--texto-tenue);
-  font-size: 1rem;
-  line-height: 1.6;
-  max-width: 68ch;
-  /* Recorta a dos líneas para que una lista no se descuadre cuando alguien
-     escribe un resumen mucho más largo que los demás. */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.pieTarjeta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.35rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--verde);
-  transition: gap 0.25s var(--curva);
-}
-
-.novedad:hover .pieTarjeta,
-.proyecto:hover .pieTarjeta {
-  gap: 0.65rem;
-}
-
-/* --------------------------------------------------------------- Proyecto */
-
-/* Imagen arriba y texto debajo, sin caja alrededor. */
 .proyecto {
-  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
+  border-bottom: 1px solid var(--linea);
 }
-
 .portada {
+  display: block;
   position: relative;
-  aspect-ratio: 4 / 3;
-  max-width: 100%;
-  background: var(--fondo-2);
+  aspect-ratio: 1.65;
+  background: var(--verde-vel);
   overflow: hidden;
-  border-radius: var(--r);
-  margin-bottom: 1.15rem;
 }
-
 .portadaImagen {
   object-fit: cover;
-  transition: transform 0.7s var(--curva);
 }
-
-.proyecto:hover .portadaImagen {
-  transform: scale(1.03);
-}
-
-/* Marcador de posición cuando el proyecto aún no tiene foto: un degradado
-   muy suave, nada de retículas técnicas. */
 .portadaVacia {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, #eeeef1 0%, #e3e3e8 100%);
-}
-
-.portadaEtiqueta {
-  position: absolute;
-  bottom: 0.85rem;
-  left: 0.95rem;
-  z-index: 1;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
-}
-
-.proyectoCuerpo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.linea {
-  font-size: 0.75rem;
-  color: var(--texto-debil);
-}
-
-.proyectoTitulo {
-  font-size: 1.25rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  transition: color 0.2s var(--curva);
-}
-
-.proyecto:hover .proyectoTitulo {
-  color: var(--verde);
-}
-
-/* ------------------------------------------------------------- Integrante */
-
-.integrante {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  gap: 0.25rem;
-  height: 100%;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--verde);
+  background-image:
+    linear-gradient(var(--linea-suave) 1px, transparent 1px),
+    linear-gradient(90deg, var(--linea-suave) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
-
-.retrato {
-  position: relative;
-  width: 104px;
-  height: 104px;
-  max-width: 100%;
-  border-radius: 50%;
-  overflow: hidden;
-  background: var(--fondo-2);
+.portadaVacia > span:last-child {
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  background: var(--verde-vel);
+  padding: 0.1rem 0.5rem;
+}
+.marcoIcono {
+  width: 76px;
+  height: 76px;
   display: grid;
   place-items: center;
-  margin-bottom: 0.9rem;
+  border: 1px solid var(--linea-fuerte);
+  background: var(--verde-vel);
+  border-radius: 50%;
 }
-
+.portadaEtiqueta {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  color: var(--verde-oscuro);
+  background: var(--fondo);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.58rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+}
+.proyectoCuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.4rem 0 1.5rem;
+}
+.linea {
+  font-size: 0.7rem;
+  color: var(--verde);
+  margin-bottom: 0.65rem;
+  line-height: 1.5;
+}
+.proyecto :is(h2, h3) {
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+}
+.proyecto p {
+  font-size: 0.87rem;
+  color: var(--texto-tenue);
+  margin-top: 0.85rem;
+}
+.proyecto a:hover h3,
+.proyecto :is(h2, h3) a:hover {
+  color: var(--verde);
+}
+.pieProyecto {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 1.5rem;
+  margin-top: auto;
+}
+.pieProyecto > a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--verde);
+  font-size: 0.75rem;
+  min-height: 32px;
+}
+.pieProyecto > a:hover {
+  text-decoration: underline;
+}
+.novedad {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 44px;
+  gap: 2rem;
+  align-items: start;
+  padding: 1.8rem 0;
+  border-top: 1px solid var(--linea);
+}
+.novedad:last-child {
+  border-bottom: 1px solid var(--linea);
+}
+.novedadFecha {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  padding-top: 0.15rem;
+}
+.novedadFecha > span {
+  font-size: 0.58rem;
+}
+.meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.55rem;
+}
+.demo {
+  font-size: 0.67rem;
+  color: var(--texto-tenue);
+}
+.novedad :is(h2, h3) {
+  font-size: 1.3rem;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+.novedad :is(h2, h3) a:hover {
+  color: var(--verde);
+}
+.novedad p {
+  font-size: 0.88rem;
+  color: var(--texto-tenue);
+  margin-top: 0.5rem;
+  max-width: 43rem;
+}
+.flechaEnlace {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--linea);
+  color: var(--verde);
+  border-radius: 50%;
+  margin-top: 1rem;
+}
+.flechaEnlace:hover {
+  background: var(--verde-vel);
+}
+.integrante {
+  display: flex;
+  gap: 1.25rem;
+  border-top: 1px solid var(--linea);
+  padding: 1.7rem 0;
+  align-items: flex-start;
+}
+.retrato {
+  width: 64px;
+  height: 74px;
+  flex-shrink: 0;
+  position: relative;
+  background: var(--verde-vel);
+  color: var(--verde);
+  display: grid;
+  place-items: center;
+}
 .retratoImagen {
   object-fit: cover;
 }
-
-/* Sin foto se ponen las iniciales, no un monigote genérico. Un icono de
-   persona repetido ocho veces es de las cosas que más delatan una plantilla. */
-.iniciales {
-  font-size: 1.75rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--texto-debil);
-  user-select: none;
+.rol {
+  color: var(--verde);
+  font-size: 0.69rem;
 }
-
-.integranteNombre {
+.integrante h3 {
   font-size: 1rem;
-  font-weight: 600;
+  line-height: 1.5;
+  margin: 0.3rem 0;
   letter-spacing: -0.01em;
 }
-
-.rol {
-  font-size: 0.75rem;
-  color: var(--texto-debil);
-}
-
-.area {
+.integrante p {
   color: var(--texto-tenue);
-  font-size: 0.875rem;
-  line-height: 1.45;
-  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
 }
-
 .integranteEnlaces {
   display: flex;
-  gap: 0.85rem;
-  margin-top: 0.8rem;
-  color: var(--texto-debil);
-}
-
-.integranteEnlaces a {
-  transition: color 0.2s var(--curva);
-}
-
-.integranteEnlaces a:hover {
-  color: var(--texto);
-}
-
-/* El enlace del proyecto se ancla abajo para que los tres de una fila queden
-   a la misma altura aunque los titulares ocupen distinto número de líneas. */
-.proyectoCuerpo .pieTarjeta {
-  margin-top: auto;
-  padding-top: 0.65rem;
-}
-
-/* ========================= ESTADOS AL PASAR EL CURSOR ==================== */
-
-/* Novedad: la fila se aclara y el texto se desplaza un poco a la derecha, como
-   si la fila entrara hacia el lector. */
-.novedad {
-  border-radius: var(--r-sm);
-  padding-inline: 0;
-  transition:
-    background 0.25s var(--curva),
-    padding-inline 0.25s var(--curva);
-}
-
-.novedad:hover {
-  background: var(--superficie);
-  padding-inline: 1.1rem;
-}
-
-/* Proyecto: la pieza entera se eleva y la imagen se acerca. */
-.proyecto {
-  transition: transform 0.3s var(--curva);
-}
-
-.proyecto:hover {
-  transform: translateY(-4px);
-}
-
-.portada {
-  transition: box-shadow 0.3s var(--curva);
-}
-
-.proyecto:hover .portada {
-  box-shadow: 0 20px 40px -26px rgba(0, 0, 0, 0.35);
-}
-
-/* Integrante: el retrato crece y el nombre se tiñe. */
-.integrante {
-  transition: transform 0.3s var(--curva);
-}
-
-.integrante:hover {
-  transform: translateY(-4px);
-}
-
-.retrato {
-  transition:
-    background 0.3s var(--curva),
-    transform 0.3s var(--curva);
-}
-
-.integrante:hover .retrato {
-  background: var(--verde-vel);
-  transform: scale(1.05);
-}
-
-.iniciales {
-  transition: color 0.3s var(--curva);
-}
-
-.integrante:hover .iniciales {
+  flex-wrap: wrap;
+  gap: 1rem;
   color: var(--verde);
+  font-size: 0.8rem;
 }
-
-.integranteNombre {
-  transition: color 0.2s var(--curva);
-}
-
-.integrante:hover .integranteNombre {
-  color: var(--verde);
+@media (max-width: 650px) {
+  .novedad {
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 1rem;
+  }
+  .novedadFecha {
+    grid-column: 1/-1;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .novedad :is(h2, h3) {
+    font-size: 1.15rem;
+  }
+  .pieProyecto {
+    flex-wrap: wrap;
+  }
 }

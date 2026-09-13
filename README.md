@@ -1,125 +1,94 @@
-# Sitio web del grupo ISIA
+# ISIA · Demo académica
 
-Sitio público del grupo de investigación **ISIA (Ingeniería de Sistemas Inteligentes y Autónomos)**.
+Sitio del **semillero de investigación ISIA — Ingeniería de Sistemas Inteligentes y Autónomos**, de la Universidad Nacional de Colombia, sede Manizales.
 
-Todo el contenido vive en este repositorio como archivos de texto. Para publicar una novedad o
-anunciar una reunión no hace falta instalar nada ni saber programar: se crea un archivo `.md` en la
-carpeta `contenido/`, se hace commit y el sitio se actualiza solo.
+Esta versión se trabaja en la rama local **Prueba**. Es una demo navegable con contenido ilustrativo pendiente de validación. No corresponde a una convocatoria abierta ni a un directorio confirmado. El trabajo actual no incluye publicación en producción, push ni modificación del repositorio remoto.
 
----
+## Revisar en local
 
-## Publicar sin instalar nada
-
-Esta es la vía normal para la mayoría del grupo.
-
-1. Entra a este repositorio en github.com
-2. Abre la carpeta `contenido/` y luego la que te toque (`novedades/`, `reuniones/`, `proyectos/`,
-   `integrantes/`)
-3. Pulsa **Add file → Create new file**
-4. Ponle un nombre en minúsculas, con guiones y terminado en `.md`
-   - novedades y reuniones van con la fecha delante: `2026-10-15-titulo-corto.md`
-   - proyectos e integrantes no llevan fecha: `nodo-de-medida-autonomo.md`
-5. Copia la plantilla que corresponda de [CONTRIBUTING.md](CONTRIBUTING.md), rellénala y guarda
-6. En dos o tres minutos aparece en el sitio
-
-Lo más rápido es abrir un archivo que ya exista, pulsar **Copy raw contents** y partir de ahí.
-
-**Lo único que no se puede cambiar** es la parte de arriba entre las dos líneas de `---`: los
-nombres de los campos tienen que quedar tal cual, solo se cambia lo que va después de los dos
-puntos. Si te equivocas, el sitio no se rompe: ese archivo se ignora y los demás siguen viéndose.
-
----
-
-## Levantar el sitio en tu equipo
-
-Solo hace falta si vas a tocar código.
+Requisitos: Node.js 20 o superior y npm.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Y abre http://localhost:3000
+Abre [http://localhost:3000](http://localhost:3000). Si el puerto está ocupado, usa el que indique el servidor o inicia con `npm run dev -- --port 3001`.
 
-Otros comandos:
+Para una vista previa de la compilación:
 
-| Comando | Para qué |
-|---|---|
-| `npm run dev` | Servidor de desarrollo, recarga sola al guardar |
-| `npm run build` | Compila el sitio entero. **Pásalo antes de cada pull request** |
-| `npm start` | Sirve lo compilado, igual que en producción |
-| `npm run lint` | Revisa el código |
-
-Requisitos: Node 20 o superior.
-
----
-
-## Cómo está organizado
-
-```
-app/              una carpeta por sección del sitio
-componentes/      piezas compartidas por todas las secciones
-lib/
-  sitio.ts        nombre, correo, navegación, objetivos y líneas del grupo
-  contenido.ts    lee los archivos .md
-contenido/        AQUÍ escribe el grupo. Sin tocar código
-public/imagenes/  fotos
+```bash
+npm run build
+npm start
 ```
 
-**Dirección visual**: minimalista y clara. Blanco y gris muy claro, una sola tipografía en varios
-pesos y un único color de acento, el verde del escudo institucional. Las secciones se separan con
-aire y líneas de un píxel, no con cajas. La regla práctica: si dudas entre añadir algo o quitarlo,
-quítalo.
+| Comando | Función |
+| --- | --- |
+| `npm run dev` | Servidor local con recarga de cambios |
+| `npm run lint` | ESLint sobre `app`, `componentes` y `lib` |
+| `npm run typecheck` | Comprobación TypeScript con `tsc --noEmit` |
+| `npm run build` | Compilación de Next.js y generación de páginas |
+| `npm start` | Vista previa local de la compilación |
 
-**Si quieres cambiar un dato del grupo** (el correo, los objetivos, las cifras de la portada, las
-líneas de investigación), está todo en `lib/sitio.ts`. Es un archivo de texto normal y es el único
-sitio donde hay que tocarlo: el cambio se propaga a la portada, al pie y a las metaetiquetas a la vez.
+## Páginas
 
----
+- **Inicio**: identidad, presentación propuesta, objetivos, líneas, proyectos, novedades, integrantes y participación.
+- **Líneas**: seis áreas de referencia, con carácter provisional.
+- **Proyectos**: cuatro propuestas ilustrativas con páginas de detalle.
+- **Novedades**: tres notas ilustrativas, ordenadas por fechas de ejemplo, con detalle.
+- **Reuniones**: agenda e historial confirmados separados de las sesiones ilustrativas.
+- **Integrantes**: categorías y perfiles pendientes de validación, sin nombres ni fotografías ficticias.
+- **Publicaciones y recursos**: estado vacío hasta incorporar referencias confirmadas.
+- **Galería**: estado pendiente hasta incorporar fotografías reales y autorizadas.
+- **Únete**: orientación sobre la sección y estado pendiente del procedimiento y contacto.
 
-## Estado de las secciones
+El aviso DEMO permanece visible. La demo configura `noindex`, no activa correos ni canales sociales de ejemplo y no incorpora formularios de inscripción, analítica ni integraciones externas de contacto.
 
-| Sección | Ruta | Estado |
-|---|---|---|
-| Portada | `/` | Terminada |
-| Novedades | `/novedades` | Terminada, sirve de modelo |
-| Proyectos | `/proyectos` | Terminada, sirve de modelo |
-| Reuniones | `/reuniones` | Por montar |
-| Líneas | `/lineas` | Por montar |
-| Integrantes | `/integrantes` | Por montar |
-| Publicaciones | `/publicaciones` | Por montar |
-| Galería | `/galeria` | Por montar |
-| Únete | `/unete` | Por montar |
+## Organización del proyecto
 
-Cada página por montar tiene dentro, en comentarios, qué hay que hacer y con qué piezas. El reparto
-y las reglas para no pisarnos están en [CONTRIBUTING.md](CONTRIBUTING.md).
+```text
+app/                      rutas, metadatos y estilos compartidos
+componentes/              navegación, pie, tarjetas y patrones reutilizables
+lib/sitio.ts              identidad, modo, navegación y textos propuestos
+lib/contenido.ts          lectura, clasificación y validación de Markdown
+contenido/
+  proyectos/              fichas con detalle
+  novedades/              notas con detalle
+  reuniones/              agendas en Markdown
+  integrantes/            perfiles por rol
+  publicaciones/          referencias reales; incluye _plantilla.md
+  galeria/                fotografías reales; incluye _plantilla.md
+public/imagenes/           recursos gráficos locales
+```
 
----
+El contenido se edita en Markdown. Las instrucciones y formatos completos están en [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Publicación
+## Identidad y movimiento
 
-El sitio se publica en Vercel conectado a este repositorio:
+La paleta está centralizada en `app/globals.css`. El verde provisional `#456A3E` coincide con el relleno `.st2` del escudo SVG disponible; `#35522F` sirve de apoyo. Estos valores **no constituyen un manual institucional oficial**. La tipografía principal es Geist.
 
-- lo que se mezcla en `main` sale publicado en unos minutos
-- **cada pull request genera su propia dirección de vista previa**, así que se puede revisar una
-  sección antes de mezclarla
+El escudo se conserva sin alterar. El recurso provisional procede de [Wikimedia Commons: Escudo de la Universidad Nacional de Colombia (2016)](https://commons.wikimedia.org/wiki/File:Escudo_de_la_Universidad_Nacional_de_Colombia_(2016).svg); la documentación de origen atribuye su autoría a **César Puertas Céspedes**. Se mantiene la atribución visible en el sitio. Antes de sustituirlo, confirma el archivo institucional y sus condiciones de uso.
 
-### Puesta en marcha (una sola vez)
+No se utilizan apariciones, fade-in, desplazamientos, zoom ni parallax asociados al scroll. El contenido es visible desde el renderizado. El componente `Revelar` se conserva únicamente como envoltorio compatible, sin ocultamiento ni animaciones de entrada. Las transiciones de interacción respetan movimiento reducido.
 
-1. Crear el repositorio en la organización del grupo y subir este proyecto
-2. Entrar en vercel.com con la cuenta de GitHub e importar el repositorio
-3. No hay que configurar nada: Vercel detecta Next.js solo. No hay variables de entorno
-4. Cuando haya dominio propio, añadirlo en Vercel y actualizar `url` en `lib/sitio.ts`
+## Sustituir el contenido de ejemplo
 
----
+El campo `confirmado: true` indica que una ficha ha sido validada editorialmente. No se debe cambiar como trámite para ocultar la etiqueta DEMO: primero hay que reemplazar el contenido, revisar sus fuentes y comprobar los datos.
 
-## Pendientes de la primera versión
+Si falta el campo o no es el booleano `true`, proyectos, novedades, reuniones e integrantes se consideran ilustrativos. Las reuniones ilustrativas nunca aparecen como próximas reuniones reales ni como encuentros ya celebrados. Las publicaciones y fotografías sin confirmación no se listan.
 
-- [ ] Poner el correo real del grupo en `lib/sitio.ts`
-- [ ] Sustituir objetivos y líneas de ejemplo por los oficiales
-- [ ] Cambiar las cifras de la portada por las reales
-- [ ] Sustituir los `.md` de ejemplo de `contenido/` por contenido real
-- [ ] Pedir al director el escudo oficial del manual de identidad de la UNAL. El que hay en
-      `public/imagenes/escudo-unal.svg` viene de Wikimedia Commons con licencia de atribución
-      (autor: César Puertas Céspedes); es sustituir el archivo y ya
-- [ ] Montar las seis secciones pendientes
+Falta confirmar para preparar una versión FULL:
+
+- Presentación, objetivos y líneas aprobadas.
+- Proyectos reales, alcance, estado, responsables y recursos.
+- Novedades y reuniones reales con fecha, hora, modalidad y lugar.
+- Identidades, roles, perfiles y fotografías autorizadas de integrantes.
+- Publicaciones y enlaces bibliográficos, si existen.
+- Fotografías reales con pie, alternativa textual y atribución.
+- Procedimiento de vinculación y canal de contacto.
+- Ubicación específica: facultad y Campus La Nubia permanecen pendientes.
+- Recurso institucional oficial y dirección de publicación autorizada.
+
+No hay cifras de integrantes, año de fundación, dominio ni correo de ejemplo en la configuración final. La ubicación confirmada es **Manizales, Colombia — Universidad Nacional de Colombia, sede Manizales**.
+
+La publicación de una versión FULL requiere una solicitud posterior y una nueva revisión; cambiar datos de contenido no autoriza un despliegue remoto.

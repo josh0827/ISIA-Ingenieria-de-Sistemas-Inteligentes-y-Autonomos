@@ -1,12 +1,9 @@
 ---
-nombre: Nombre Apellido 07
+nombre: Vinculación de egresados por confirmar
+confirmado: false
 rol: egresado
-area: Percepción y visión por computador
-foto: ""
-enlaces:
-  github: ""
-  linkedin: ""
-  correo: ""
+area: Participación pendiente de validación
+enlaces: {}
 ---
 
-CONTENIDO DE EJEMPLO. Sustituir por los datos reales de la persona.
+Perfil ilustrativo que muestra una posible categoría del directorio. No confirma la existencia de egresados vinculados al semillero ni les atribuye una trayectoria.

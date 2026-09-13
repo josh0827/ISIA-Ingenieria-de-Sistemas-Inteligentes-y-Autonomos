@@ -1,248 +1,156 @@
-/* Barra de navegación fija y menú móvil. */
-
 .barra {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 100;
-  transition:
-    background 0.3s var(--curva),
-    border-color 0.3s var(--curva);
-  border-bottom: 1px solid transparent;
+  background: var(--fondo);
+  border-bottom: 1px solid var(--linea);
 }
-
-/* Al bajar, la barra se apoya sobre un cristal claro. */
-.posada {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: saturate(180%) blur(18px);
-  -webkit-backdrop-filter: saturate(180%) blur(18px);
-  border-bottom-color: var(--linea-suave);
-}
-
 .fila {
+  min-height: 96px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  height: 82px;
+  gap: 2rem;
 }
-
-/* ------------------------------------------------------------------- marca */
-
 .marca {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.15rem;
   flex-shrink: 0;
 }
-
-.marca img {
-  transition: transform 0.4s var(--curva);
-}
-
-.marca:hover img {
-  transform: scale(1.08);
-}
-
-.separador {
-  width: 1px;
-  height: 32px;
-  background: var(--linea);
-  flex-shrink: 0;
-}
-
 .identidad {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  line-height: 1.2;
+  border-left: 1px solid var(--linea);
+  padding-left: 1.15rem;
 }
-
-.sigla {
-  font-size: 1.0625rem;
-  font-weight: 600;
+.identidad strong {
+  font-size: 1.65rem;
   letter-spacing: 0.02em;
+  font-weight: 650;
+  line-height: 1.15;
 }
-
-/* El nombre de la universidad bajo la sigla. Se oculta en móvil, donde no
-   cabe sin apretar el resto de la barra. */
-.institucion {
-  font-size: 0.5625rem;
-  letter-spacing: 0.05em;
-  line-height: 1;
-  display: none;
-}
-
-/* ----------------------------------------------------------------- enlaces */
-
-.enlaces {
-  display: none;
-  align-items: center;
-  gap: 1.6rem;
-}
-
-.enlace {
-  position: relative;
-  font-size: 0.875rem;
+.identidad > span {
+  font-size: 0.68rem;
   color: var(--texto-tenue);
-  padding-block: 0.35rem;
-  transition: color 0.2s var(--curva);
+  margin-top: 0.3rem;
 }
-
-/* Subrayado que crece desde el centro al pasar el cursor. */
-.enlace::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1.5px;
-  border-radius: 2px;
-  background: var(--texto);
-  transform: scaleX(0);
-  transition: transform 0.3s var(--curva);
-}
-
-.enlace:hover {
-  color: var(--texto);
-}
-
-.enlace:hover::after {
-  transform: scaleX(1);
-}
-
-.enlace.activo::after {
-  transform: scaleX(1);
-  background: var(--verde);
-}
-
-.enlace.activo {
-  color: var(--texto);
-  font-weight: 500;
-}
-
-/* ---------------------------------------------------------------- acciones */
-
-.acciones {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-shrink: 0;
-}
-
-.cta {
-  display: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.45rem 1rem;
-  border-radius: 999px;
-  background: var(--texto);
-  color: #fff;
-  transition:
-    background 0.25s var(--curva),
-    transform 0.2s var(--curva);
-}
-
-.cta:hover {
-  background: #000;
-  transform: translateY(-1px);
-}
-
-.cta:active {
-  transform: scale(0.97);
-}
-
-.hamburguesa {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: var(--texto);
-  transition: background 0.2s var(--curva);
-}
-
-.hamburguesa:hover {
-  background: var(--fondo-2);
-}
-
-/* ------------------------------------------------------------- menú móvil */
-
-.panel {
-  position: fixed;
-  inset: 82px 0 0 0;
-  z-index: 99;
-  background: var(--fondo);
-  padding: 1.5rem var(--gutter) 3rem;
-  overflow-y: auto;
-  opacity: 0;
-  transition: opacity 0.25s var(--curva);
-}
-
-.panelAbierto {
-  opacity: 1;
-}
-
-.panelEnlaces {
+.institucion {
   display: flex;
   flex-direction: column;
+  margin-left: auto;
+  font-size: 0.78rem;
+  line-height: 1.6;
 }
-
-.panelEnlace {
+.institucion > span:last-child {
+  color: var(--texto-tenue);
+  font-size: 0.72rem;
+}
+.cta {
+  padding: 0.65rem 1rem;
+  background: var(--verde);
+  color: white;
+  font-size: 0.8rem;
+  border-radius: var(--r-sm);
+  display: flex;
+  gap: 1.3rem;
+  align-items: center;
+  min-height: 44px;
+  transition: background 0.18s;
+}
+.cta:hover {
+  background: var(--verde-oscuro);
+}
+.navBorde {
+  border-top: 1px solid var(--linea-suave);
+}
+.enlaces {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.enlace {
+  display: block;
+  padding: 0.85rem 0;
+  font-size: 0.8rem;
+  color: var(--texto-tenue);
+  border-bottom: 2px solid transparent;
+}
+.enlace:hover {
+  color: var(--verde);
+}
+.enlace[aria-current='page'] {
+  color: var(--verde);
+  border-color: var(--verde);
+  font-weight: 650;
+}
+.hamburguesa {
+  display: none;
+  background: none;
+  border: 1px solid var(--linea);
+  border-radius: var(--r-sm);
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+.panel {
+  padding: 0 var(--gutter) 1.25rem;
+  background: var(--fondo);
+}
+.panel[hidden] {
+  display: none;
+}
+.panel a {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.05rem 0.25rem;
-  border-bottom: 1px solid var(--linea-suave);
-  font-size: 1.375rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--texto);
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 0.4s var(--curva),
-    transform 0.4s var(--curva);
+  justify-content: space-between;
+  min-height: 48px;
+  border-top: 1px solid var(--linea-suave);
+  font-size: 0.95rem;
 }
-
-.panelAbierto .panelEnlace {
-  opacity: 1;
-  transform: none;
+.panel a[aria-current='page'] {
+  color: var(--verde);
+  font-weight: 650;
 }
-
-.panelEnlace.activo {
+.panel span {
   color: var(--verde);
 }
-
-.panelCta {
-  color: var(--verde);
-}
-
-/* -------------------------------------------------------------- escritorio */
-
-@media (min-width: 560px) {
-  .institucion {
-    display: block;
-  }
-}
-
-@media (min-width: 1000px) {
-  .enlaces,
-  .cta {
-    display: flex;
-  }
-
-  .hamburguesa {
+@media (min-width: 901px) {
+  .panel {
     display: none;
   }
 }
-
-@media (min-width: 1000px) and (max-width: 1180px) {
-  .enlaces {
-    gap: 1.1rem;
+@media (max-width: 900px) {
+  .fila {
+    min-height: 88px;
+    gap: 1rem;
   }
-
-  .enlace {
-    font-size: 0.8125rem;
+  .navBorde,
+  .institucion {
+    display: none;
+  }
+  .cta {
+    margin-left: auto;
+  }
+  .hamburguesa {
+    display: flex;
+  }
+}
+@media (max-width: 540px) {
+  .fila {
+    min-height: 88px;
+  }
+  .cta {
+    display: none;
+  }
+  .hamburguesa {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .marca {
+    gap: 0.8rem;
+  }
+  .identidad {
+    padding-left: 0.8rem;
+  }
+  .identidad > span {
+    font-size: 0.62rem;
   }
 }

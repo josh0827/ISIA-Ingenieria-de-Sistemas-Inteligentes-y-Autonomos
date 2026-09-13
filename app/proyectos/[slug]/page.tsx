@@ -1,82 +1,109 @@
-// SECCIÓN: Proyectos (ficha de un proyecto)
-//
-// Añade sobre el modelo de novedades una ficha técnica con los datos del
-// frontmatter, y resuelve los slugs de "integrantes" contra las fichas reales
-// de contenido/integrantes para mostrar los nombres.
-
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import { Boton, Etiqueta, Seccion } from '@/componentes/Base'
-import { listarIntegrantes, listarProyectos, markdownAHtml, obtenerProyecto } from '@/lib/contenido'
+import { AvisoDemo, Boton, Etiqueta, Seccion } from '@/componentes/Base'
+import {
+  listarIntegrantes,
+  listarProyectos,
+  markdownAHtml,
+  obtenerProyecto,
+} from '@/lib/contenido'
+import { LINEAS } from '@/lib/sitio'
 import estilos from '../../detalle.module.css'
-
 type Props = { params: Promise<{ slug: string }> }
-
 export function generateStaticParams() {
-  return listarProyectos().map((proyecto) => ({ slug: proyecto.slug }))
+  return listarProyectos().map((p) => ({ slug: p.slug }))
 }
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const proyecto = obtenerProyecto(slug)
-  if (!proyecto) return { title: 'Proyecto no encontrado' }
-
+  const p = obtenerProyecto((await params).slug)
+  if (!p) return { title: 'Proyecto no encontrado' }
   return {
-    title: proyecto.titulo,
-    description: proyecto.resumen,
-    openGraph: { title: proyecto.titulo, description: proyecto.resumen, type: 'article' },
+    title: p.ilustrativo ? 'Ficha de proyecto ilustrativo' : p.titulo,
+    description: p.ilustrativo
+      ? 'Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.'
+      : p.resumen,
   }
 }
-
 export default async function PaginaProyecto({ params }: Props) {
-  const { slug } = await params
-  const proyecto = obtenerProyecto(slug)
+  const proyecto = obtenerProyecto((await params).slug)
   if (!proyecto) notFound()
-
   const cuerpo = await markdownAHtml(proyecto.cuerpo)
-
-  // El frontmatter guarda slugs; aquí se traducen a nombres. Un slug que no
-  // corresponda a ninguna ficha se ignora en vez de romper la página.
-  const equipo = listarIntegrantes().filter((i) => proyecto.integrantes.includes(i.slug))
-
+  const equipo = listarIntegrantes().filter(
+    (i) => !i.ilustrativo && proyecto.integrantes.includes(i.slug),
+  )
+  const linea = LINEAS.findIndex((l) => l.titulo === proyecto.linea)
   return (
     <Seccion className={estilos.primeraSeccion}>
       <article className={estilos.articulo}>
+        <nav className={estilos.migas} aria-label="Ruta de navegación">
+          <Link href="/">Inicio</Link>
+          <span>/</span>
+          <Link href="/proyectos">Proyectos</Link>
+          <span>/</span>
+          <span aria-current="page">Ficha</span>
+        </nav>
+        {proyecto.ilustrativo && (
+          <AvisoDemo>
+            Proyecto ilustrativo. Su descripción y estado son ejemplos; no
+            corresponden a resultados ni actividades confirmadas del semillero.
+          </AvisoDemo>
+        )}
         <header className={estilos.cabecera}>
           <div className={estilos.meta}>
             <Etiqueta valor={proyecto.estado} />
-            {proyecto.linea && <span className="mono">{proyecto.linea}</span>}
           </div>
-
           <h1 className={estilos.titulo}>{proyecto.titulo}</h1>
-          {proyecto.resumen && <p className={estilos.resumen}>{proyecto.resumen}</p>}
+          <p className={estilos.resumen}>{proyecto.resumen}</p>
         </header>
-
         {proyecto.portada && (
           <div className={estilos.imagen}>
-            <Image src={proyecto.portada} alt="" width={1200} height={750} className={estilos.imagenFoto} />
+            <Image
+              src={proyecto.portada}
+              alt={`Imagen del proyecto ${proyecto.titulo}`}
+              width={1200}
+              height={750}
+              className={estilos.imagenFoto}
+            />
           </div>
         )}
-
         <dl className={estilos.ficha}>
           <div className={estilos.fichaDato}>
-            <dt className={`mono ${estilos.fichaEtiqueta}`}>Línea</dt>
-            <dd className={estilos.fichaValor}>{proyecto.linea || 'Sin asignar'}</dd>
+            <dt>Línea de referencia</dt>
+            <dd>
+              {linea >= 0 ? (
+                <Link href={`/lineas#linea-${linea + 1}`}>
+                  {proyecto.linea} ↗
+                </Link>
+              ) : (
+                proyecto.linea || 'Pendiente de confirmar'
+              )}
+            </dd>
           </div>
           <div className={estilos.fichaDato}>
-            <dt className={`mono ${estilos.fichaEtiqueta}`}>Equipo</dt>
-            <dd className={estilos.fichaValor}>
-              {equipo.length > 0 ? equipo.map((i) => i.nombre).join(', ') : 'Por definir'}
+            <dt>Estado</dt>
+            <dd>
+              {proyecto.ilustrativo ? (
+                'Propuesta ilustrativa, sin ejecución confirmada'
+              ) : (
+                <Etiqueta valor={proyecto.estado} />
+              )}
             </dd>
           </div>
         </dl>
-
+        {equipo.length > 0 && (
+          <div className={estilos.equipo}>
+            <h2>Participantes</h2>
+            <p>{equipo.map((i) => i.nombre).join(', ')}</p>
+          </div>
+        )}
         <div className="prosa" dangerouslySetInnerHTML={{ __html: cuerpo }} />
-
         <footer className={estilos.pieArticulo}>
           <Boton href="/proyectos" variante="sutil">
             Volver a proyectos
+          </Boton>
+          <Boton href="/unete" variante="sutil">
+            Conocer cómo participar
           </Boton>
         </footer>
       </article>

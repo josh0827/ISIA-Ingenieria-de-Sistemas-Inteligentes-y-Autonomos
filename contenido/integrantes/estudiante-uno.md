@@ -1,12 +1,9 @@
 ---
-nombre: Nombre Apellido 03
+nombre: Participación estudiantil por confirmar
+confirmado: false
 rol: estudiante
-area: Redes y sistemas embebidos
-foto: ""
-enlaces:
-  github: ""
-  linkedin: ""
-  correo: ""
+area: Intereses de investigación pendientes
+enlaces: {}
 ---
 
-CONTENIDO DE EJEMPLO. Sustituir por los datos reales de la persona.
+Perfil ilustrativo para mostrar la participación de estudiantes de pregrado. No corresponde a una persona inscrita ni confirma el número de integrantes del semillero.
