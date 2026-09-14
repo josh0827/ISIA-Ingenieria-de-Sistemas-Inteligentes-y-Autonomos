@@ -1,44 +1,69 @@
-// SECCIÓN: Integrantes                  RESPONSABLE: por asignar
-//
-// QUÉ HAY QUE MONTAR
-// El equipo completo, agrupado por rol: dirección, investigadores, estudiantes
-// y egresados. listarIntegrantes() ya los devuelve ordenados por rol.
-//
-// LO QUE YA ESTÁ HECHO POR TI
-//   - listarIntegrantes()  todas las fichas de contenido/integrantes/
-//   - <TarjetaIntegrante integrante={...} />  la tarjeta ya maquetada
-//
-// Para añadir a alguien se crea un .md en contenido/integrantes/ con su foto en
-// public/imagenes/integrantes/. Ya hay ocho fichas de ejemplo.
-
 import type { Metadata } from 'next'
-import { Seccion, TituloSeccion } from '@/componentes/Base'
-import Pendiente from '@/componentes/Pendiente'
-import estilos from '../listados.module.css'
+import { AvisoDemo, Boton, EncabezadoPagina, EstadoVacio, Seccion } from '@/componentes/Base'
+import { TarjetaIntegrante } from '@/componentes/Tarjetas'
+import { listarIntegrantes, type Integrante } from '@/lib/contenido'
+import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Integrantes',
-  description: 'Docentes, investigadores y estudiantes que forman el grupo ISIA.',
+  description: 'Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.',
 }
 
-export default function PaginaIntegrantes() {
+export const dynamic = 'force-dynamic'
+
+const ROLES: { valor: Integrante['rol']; titulo: string; descripcion: string }[] = [
+  { valor: 'director', titulo: 'Coordinación académica', descripcion: 'Información de la persona responsable pendiente de confirmar.' },
+  { valor: 'investigador', titulo: 'Docentes e investigadores', descripcion: 'Perfiles de acompañamiento e investigación pendientes de confirmar.' },
+  { valor: 'estudiante', titulo: 'Estudiantes', descripcion: 'Directorio estudiantil pendiente de confirmar.' },
+  { valor: 'egresado', titulo: 'Egresados', descripcion: 'Información de egresados vinculados pendiente de confirmar.' },
+]
+
+export default async function PaginaIntegrantes() {
+  const integrantes = await listarIntegrantes()
+
   return (
-    <Seccion className={estilos.primeraSeccion}>
-      <TituloSeccion
-        indice="Integrantes"
-        titulo="El equipo"
-        descripcion="Docentes y estudiantes de distintos semestres trabajando en el mismo laboratorio."
-      />
-      <Pendiente
-        descripcion="Esta página debe mostrar a todo el equipo agrupado por rol, con la dirección destacada arriba."
-        pasos={[
-          'Separar la lista en cuatro grupos: dirección, investigadores, estudiantes y egresados.',
-          'Destacar la ficha de dirección con más tamaño o en una fila propia.',
-          'Recorrer cada grupo con <TarjetaIntegrante /> dentro de la rejilla de listados.module.css.',
-          'Añadir el texto de cada persona (el cuerpo del .md) si se quiere una ficha individual.',
-        ]}
-        datos={'import { listarIntegrantes } from "@/lib/contenido"'}
-      />
-    </Seccion>
+    <>
+      <Seccion className={estilos.primeraSeccion}>
+        <EncabezadoPagina
+          indice="Comunidad"
+          titulo="Integrantes"
+          descripcion="El espacio para conocer a las personas que dan forma al semillero y sus intereses de investigación."
+        />
+        <AvisoDemo>
+          Los perfiles de esta demo son ilustrativos y no representan personas reales. El directorio, los roles y las fotografías están pendientes de confirmación.
+        </AvisoDemo>
+        {integrantes.length === 0 ? (
+          <EstadoVacio titulo="Directorio pendiente de confirmación" descripcion="Los perfiles se compartirán cuando se disponga de información y fotografías autorizadas." />
+        ) : (
+          <div className={estilos.grupos}>
+            {ROLES.map((rol) => {
+              const personas = integrantes.filter((integrante) => integrante.rol === rol.valor)
+              if (personas.length === 0) return null
+              return (
+                <section key={rol.valor} aria-labelledby={`rol-${rol.valor}`} className={estilos.grupo}>
+                  <div className={estilos.cabeceraGrupo}>
+                    <h2 id={`rol-${rol.valor}`}>{rol.titulo}</h2>
+                    {personas.every((persona) => persona.ilustrativo) && <p>{rol.descripcion}</p>}
+                  </div>
+                  <div className={estilos.rejillaIntegrantes}>
+                    {personas.map((integrante) => <TarjetaIntegrante key={integrante.slug} integrante={integrante} />)}
+                  </div>
+                </section>
+              )
+            })}
+          </div>
+        )}
+      </Seccion>
+      <Seccion alterna className={estilos.seccionCompacta}>
+        <div className={estilos.cierre}>
+          <div>
+            <span className={estilos.sobretitulo}>Participación estudiantil</span>
+            <h2>¿Te interesa el semillero?</h2>
+            <p>Consulta la información disponible sobre participación y los datos que aún están por confirmar.</p>
+          </div>
+          <Boton href="/unete">Quiero participar</Boton>
+        </div>
+      </Seccion>
+    </>
   )
 }

@@ -1,42 +1,23 @@
-/* Estilos compartidos por las páginas de listado (novedades, proyectos y las
-   que monte el resto del equipo). Se importan con ../listados.module.css.
-
-   Si tu sección necesita algo distinto, créate tu propio .module.css dentro de
-   tu carpeta en vez de tocar este, que lo usa todo el mundo. */
-
-/* La barra de navegación es fija y mide 66px: la primera sección de cualquier
-   página interior necesita ese hueco extra para no quedar por debajo. */
 .primeraSeccion {
-  padding-top: calc(82px + var(--aire));
+  padding-top: var(--aire);
 }
-
-/* Lista separada por líneas, para novedades. */
 .rejilla {
   display: grid;
   grid-template-columns: 1fr;
 }
-
-/* Rejilla centrada para proyectos e integrantes. Se usa flex y no grid a
-   propósito: cuando la última fila queda incompleta, una rejilla dejaría los
-   sobrantes pegados a la izquierda y aquí se centran. */
 .rejillaAncha {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-  gap: 2.5rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem 2.5rem;
 }
-
-.rejillaAncha > * {
-  flex: 1 1 280px;
-  max-width: 360px;
-}
-
-/* Mensaje cuando todavía no hay contenido escrito en esa sección. */
 .vacio {
+  padding: 3rem;
   text-align: center;
-  color: var(--texto-tenue);
-  padding: 3.5rem 1rem;
   background: var(--fondo-2);
-  border-radius: var(--r);
+  color: var(--texto-tenue);
+}
+@media (max-width: 700px) {
+  .rejillaAncha {
+    grid-template-columns: 1fr;
+  }
 }

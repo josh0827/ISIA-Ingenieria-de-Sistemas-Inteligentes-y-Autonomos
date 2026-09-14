@@ -1,184 +1,152 @@
-/* Primitivas compartidas: Seccion, TituloSeccion, Boton, Etiqueta, VerTodo. */
-
-/* ------------------------------------------------------------------ Seccion */
-
 .seccion {
   padding-block: var(--aire);
-  position: relative;
 }
-
-/* Las secciones no se separan con bordes: alternan entre blanco y el gris
-   claro. Es más limpio y evita la sensación de rejas horizontales. */
 .alterna {
   background: var(--fondo-2);
 }
-
-.seccion > :global(.contenedor) {
-  position: relative;
-  z-index: 1;
-}
-
-/* ------------------------------------------------------------ TituloSeccion */
-
 .encabezado {
-  max-width: 34rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  max-width: 44rem;
+  margin-bottom: 2.5rem;
 }
-
 .encabezadoCentrado {
   margin-inline: auto;
   text-align: center;
 }
-
 .indice {
   display: block;
-  color: var(--texto-debil);
-  margin-bottom: 0.9rem;
+  color: var(--verde);
+  margin-bottom: 1rem;
 }
-
-/* La raya que acompañaba al índice sobra en un diseño sin adornos. */
 .raya {
   display: none;
 }
-
 .tituloSeccion {
-  font-size: clamp(2rem, 4.4vw, 3rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
 }
-
 .descripcion {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   color: var(--texto-tenue);
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 44rem;
 }
-
-/* -------------------------------------------------------------------- Boton */
-
 .boton {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+  justify-content: center;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 550;
+  min-height: 46px;
   transition:
-    background 0.25s var(--curva),
-    color 0.25s var(--curva),
-    transform 0.15s var(--curva);
+    background 0.18s,
+    color 0.18s;
 }
-
-/* Píldora rellena. Un solo botón sólido por bloque: en cuanto hay dos, ninguno
-   destaca. El secundario va como enlace de texto. */
 .botonPrincipal {
-  padding: 0.7rem 1.4rem;
-  border-radius: 999px;
-  background: var(--texto);
-  color: #fff;
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--r-sm);
+  background: var(--verde);
+  color: white;
 }
-
 .botonPrincipal:hover {
-  background: #000;
+  background: var(--verde-oscuro);
 }
-
-/* Respuesta táctil al pulsar, que es lo que hace que un botón se sienta
-   físico en vez de plano. */
-.botonPrincipal:active {
-  transform: scale(0.975);
-}
-
 .botonSutil {
   color: var(--verde);
-  padding: 0;
+  padding: 0.75rem 0;
 }
-
 .botonSutil:hover {
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: 5px;
 }
-
 .botonFlecha {
   flex-shrink: 0;
-  transition: transform 0.25s var(--curva);
 }
-
-.boton:hover .botonFlecha {
-  transform: translateX(2px);
-}
-
-/* ----------------------------------------------------------------- Etiqueta */
-
-/* Sin fondo ni borde: solo un punto de color y el texto. Una pastilla de color
-   por cada estado llenaba la página de manchas. */
 .etiqueta {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   text-transform: none;
-  line-height: 1;
   color: var(--texto-tenue);
 }
-
 .etiqueta::before {
   content: '';
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: currentColor;
-  flex-shrink: 0;
 }
-
 .verde {
   color: var(--verde);
 }
-
 .rojo {
   color: var(--rojo);
 }
-
 .neutro {
-  color: var(--texto-debil);
+  color: var(--texto-tenue);
 }
-
-/* ------------------------------------------------------------------ VerTodo */
-
 .verTodo {
+  margin-top: 2rem;
   display: flex;
-  justify-content: center;
-  margin-top: clamp(2.5rem, 4vw, 3.5rem);
 }
-
-/* Botón principal: se eleva al pasar el cursor y se hunde al pulsar. Es lo que
-   hace que se sienta físico en vez de plano. */
-.botonPrincipal {
-  transition:
-    background 0.25s var(--curva),
-    transform 0.2s var(--curva),
-    box-shadow 0.25s var(--curva);
+.encabezadoPagina {
+  padding-bottom: 2.5rem;
+  max-width: 55rem;
 }
-
-.botonPrincipal:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.55);
+.encabezadoPagina h1 {
+  font-size: clamp(2.3rem, 5vw, 3.7rem);
 }
-
-.botonPrincipal:active {
-  transform: translateY(0) scale(0.975);
-  box-shadow: none;
-}
-
-/* El enlace de "ver todo" se separa un poco de su flecha. */
-.botonSutil {
-  transition:
-    color 0.2s var(--curva),
-    gap 0.25s var(--curva);
-}
-
-.botonSutil:hover {
+.miga {
+  display: inline-flex;
   gap: 0.7rem;
+  color: var(--verde);
+  font-size: 0.78rem;
+  margin-bottom: 2rem;
+}
+.miga:hover {
+  text-decoration: underline;
+}
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1rem 1.2rem;
+  margin-bottom: 2.5rem;
+  background: var(--verde-vel);
+  border-left: 3px solid var(--verde);
+  color: var(--verde-oscuro);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.avisoEtiqueta {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--linea-fuerte);
+  padding: 0.15rem 0.4rem;
+  margin-top: 0.1rem;
+}
+.estadoVacio {
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid var(--linea);
+  background: var(--fondo-2);
+  text-align: center;
+}
+.estadoVacio > .mono {
+  color: var(--verde);
+}
+.estadoVacio h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin: 1rem 0;
+}
+.estadoVacio p {
+  color: var(--texto-tenue);
+  max-width: 38rem;
+  margin-inline: auto;
+}
+.estadoAccion {
+  margin-top: 1.5rem;
 }
