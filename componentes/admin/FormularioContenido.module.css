@@ -1,0 +1,104 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 640px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.campo label {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--texto);
+}
+
+.requerido {
+  color: var(--rojo);
+}
+
+.campo input[type='text'],
+.campo input[type='date'],
+.campo input[type='time'],
+.campo input[type='number'],
+.campo textarea,
+.campo select {
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--r-sm);
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  background: var(--superficie);
+  color: var(--texto);
+}
+
+.campo textarea {
+  resize: vertical;
+}
+
+.markdown {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85rem;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400 !important;
+}
+
+.ayuda {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--texto-debil);
+}
+
+.etiquetaFija {
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.valorFijo {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--texto-tenue);
+}
+
+.error {
+  color: var(--rojo);
+  font-weight: 600;
+  border: 1px solid var(--rojo);
+  border-radius: var(--r-sm);
+  padding: 0.75rem 1rem;
+  margin: 0;
+}
+
+.acciones {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.enviar {
+  border: none;
+  border-radius: var(--r);
+  background: var(--verde-oscuro);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s var(--curva);
+}
+
+.enviar:hover:not(:disabled) {
+  background: var(--verde);
+}
+
+.enviar:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}

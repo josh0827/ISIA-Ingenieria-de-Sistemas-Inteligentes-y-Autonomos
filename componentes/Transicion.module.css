@@ -1,0 +1,13 @@
+@media (prefers-reduced-motion: no-preference) {
+  .difuminado {
+    animation: difuminarEntrada 0.38s ease both;
+  }
+}
+@keyframes difuminarEntrada {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

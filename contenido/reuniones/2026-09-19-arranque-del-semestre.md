@@ -1,22 +1,19 @@
 ---
-titulo: Sesión de arranque y reparto de líneas
-fecha: 2026-09-19
+titulo: Ejemplo de conversación sobre propuestas
+confirmado: false
+fecha: "2026-09-19"
 hora: "16:00"
-lugar: Laboratorio de Electrónica, bloque Q
+lugar: Lugar pendiente de confirmar
 modalidad: presencial
-ponente: Dirección del grupo
-resumen: Presentación del plan del semestre, reparto de líneas de trabajo y conformación de los equipos de cada proyecto.
+resumen: Agenda ilustrativa para presentar preguntas y discutir posibles alcances de estudio.
 ---
 
-CONTENIDO DE EJEMPLO. Sustituir por la información real de la reunión.
+**Sesión ilustrativa; no es una reunión convocada.** La fecha, la hora y la modalidad se muestran exclusivamente para demostrar la agenda.
 
-En esta primera sesión se presenta el plan de trabajo del semestre y se
-conforman los equipos. Quien vaya a entrar al grupo puede asistir sin
-compromiso previo.
+## Agenda de ejemplo
 
-## Orden del día
+- Presentar una pregunta de estudio.
+- Conversar sobre posibles métodos y limitaciones.
+- Identificar información que haría falta para formular una propuesta.
 
-- Presentación del grupo y de las líneas activas
-- Estado de los proyectos que vienen del semestre anterior
-- Reparto de responsables por línea
-- Calendario de sesiones y de entregas
+No hay responsables, participantes ni lugar confirmados. Esta ficha no abre inscripciones ni anuncia una actividad a la que se pueda asistir.

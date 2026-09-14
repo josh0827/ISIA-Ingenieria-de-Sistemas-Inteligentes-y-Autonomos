@@ -1,12 +1,9 @@
 ---
-nombre: Nombre del director
+nombre: Coordinación por confirmar
+confirmado: false
 rol: director
-area: Dirección del grupo
-foto: ""
-enlaces:
-  github: ""
-  linkedin: ""
-  correo: ""
+area: Acompañamiento académico
+enlaces: {}
 ---
 
-CONTENIDO DE EJEMPLO. Sustituir por los datos reales de la persona.
+Perfil ilustrativo para mostrar el espacio de coordinación académica. La persona responsable, su rol y su vinculación están pendientes de confirmación. No representa a una persona real.

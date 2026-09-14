@@ -1,45 +1,40 @@
-// SECCIÓN: Galería del laboratorio      RESPONSABLE: por asignar
-//
-// QUÉ HAY QUE MONTAR
-// Fotos de montajes, equipos y sesiones de trabajo. Es la sección que más
-// credibilidad da y la que más depende de tener material real.
-//
-// ANTES DE EMPEZAR: HAZ LAS FOTOS
-// Sin fotos propias esta página no tiene sentido. No usar imágenes de banco.
-//
-// CÓMO TRATAR LAS IMÁGENES
-//   - van en public/imagenes/galeria/
-//   - usar siempre next/image, nunca <img>, para que Next las optimice
-//   - dar width y height reales, o la página saltará al cargar
-//   - poner texto alternativo describiendo la foto, no "foto1"
-
 import type { Metadata } from 'next'
-import { Seccion, TituloSeccion } from '@/componentes/Base'
-import Pendiente from '@/componentes/Pendiente'
-import estilos from '../listados.module.css'
+import { Boton, EncabezadoPagina, EstadoVacio, Seccion } from '@/componentes/Base'
+import { listarGaleria } from '@/lib/contenido'
+import GaleriaFotos from './GaleriaFotos'
+import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Galería',
-  description: 'Montajes, equipos y sesiones de trabajo del laboratorio del grupo ISIA.',
+  description: 'Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.',
 }
 
-export default function PaginaGaleria() {
+export const dynamic = 'force-dynamic'
+
+export default async function PaginaGaleria() {
+  const fotos = await listarGaleria()
+
   return (
     <Seccion className={estilos.primeraSeccion}>
-      <TituloSeccion
-        indice="Galería"
-        titulo="El laboratorio por dentro"
-        descripcion="Montajes a medio armar, medidas que no salieron y las que sí."
+      <EncabezadoPagina
+        indice="Registro visual"
+        titulo="Galería"
+        descripcion="Un espacio para acercarse a las actividades del semillero a través de fotografías y sus historias."
       />
-      <Pendiente
-        descripcion="Esta página debe mostrar una rejilla de fotos reales del laboratorio, con pie de foto y ampliación al pulsar."
-        pasos={[
-          'Reunir las fotos y dejarlas en public/imagenes/galeria/.',
-          'Montar una rejilla tipo mosaico con next/image y width y height reales.',
-          'Escribir un pie para cada foto: qué se ve y de qué proyecto es.',
-          'Añadir la ampliación al pulsar, cerrable con Escape y con foco atrapado dentro.',
-        ]}
-      />
+      {fotos.length > 0 ? <GaleriaFotos fotos={fotos} /> : (
+        <>
+          <EstadoVacio
+            titulo="Registro fotográfico pendiente"
+            descripcion="Aún no hay fotografías reales del semillero disponibles para esta demo. Aquí se compartirán imágenes autorizadas de proyectos, encuentros y actividades, acompañadas de su contexto."
+          >
+            <Boton href="/proyectos" variante="sutil">Conocer los proyectos ilustrativos</Boton>
+          </EstadoVacio>
+          <div className={estilos.notaEditorial}>
+            <span className={estilos.sobretitulo}>Imágenes con contexto</span>
+            <p>Cada fotografía contará con un pie de foto y una descripción accesible. Podrás ampliarla para observarla con más detalle.</p>
+          </div>
+        </>
+      )}
     </Seccion>
   )
 }

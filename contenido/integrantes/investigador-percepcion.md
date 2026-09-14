@@ -1,12 +1,9 @@
 ---
-nombre: Nombre Apellido 01
+nombre: Acompañamiento por confirmar
+confirmado: false
 rol: investigador
-area: Percepción y visión por computador
-foto: ""
-enlaces:
-  github: ""
-  linkedin: ""
-  correo: ""
+area: Áreas de acompañamiento pendientes
+enlaces: {}
 ---
 
-CONTENIDO DE EJEMPLO. Sustituir por los datos reales de la persona.
+Perfil ilustrativo para presentar a quienes acompañen las actividades de investigación. No hay nombre, trayectoria, afiliación individual ni fotografía confirmados.

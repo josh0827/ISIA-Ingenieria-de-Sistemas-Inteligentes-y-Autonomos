@@ -1,0 +1,23 @@
+.rejilla { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem 1.5rem; margin-top: 3rem; }
+.foto, .ampliacion { margin: 0; }
+.ampliar { display: block; width: 100%; padding: 0; border: 0; background: none; text-align: left; }
+.marco { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--fondo-2); }
+.miniatura { object-fit: cover; }
+.accion { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.8rem; color: var(--verde); font-size: 0.78rem; font-weight: 550; }
+.ampliar:hover .accion { text-decoration: underline; text-underline-offset: 4px; }
+.foto figcaption { border-top: 1px solid var(--linea); padding-top: 1rem; }
+.foto strong { display: block; font-size: 1rem; font-weight: 600; line-height: 1.4; }
+.foto p, .anio { margin-top: 0.6rem; color: var(--texto-tenue); font-size: 0.88rem; line-height: 1.65; }
+.anio { display: block; font-size: 0.78rem; }
+.dialogo { width: min(1080px, calc(100% - 2rem)); max-height: calc(100dvh - 2rem); margin: auto; padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--linea); color: var(--texto); background: var(--fondo); overflow-y: auto; }
+.dialogo::backdrop { background: rgb(20 30 20 / 75%); }
+.cabecera { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; margin-bottom: 1rem; }
+.cabecera h2 { align-self: center; font-size: clamp(1.2rem, 2.5vw, 1.7rem); line-height: 1.3; }
+.cerrar { display: grid; place-items: center; flex-shrink: 0; min-width: 44px; min-height: 44px; border: 1px solid var(--linea); color: var(--verde); background: var(--fondo-2); }
+.cerrar:hover { background: var(--linea); }
+.marcoAmpliado { position: relative; height: min(60dvh, 670px); background: var(--fondo-2); }
+.imagenAmpliada { object-fit: contain; }
+.ampliacion figcaption { margin-top: 1rem; color: var(--texto-tenue); font-size: 0.95rem; line-height: 1.7; }
+.ayuda { margin-top: 1rem; color: var(--texto-tenue); font-size: 0.8rem; }
+@media (max-width: 900px) { .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .rejilla { grid-template-columns: 1fr; } }

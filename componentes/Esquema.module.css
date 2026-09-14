@@ -1,0 +1,18 @@
+.esquema {
+  color: var(--verde);
+  width: 100%;
+}
+.compacto {
+  color: var(--verde);
+  width: 100%;
+  max-width: 220px;
+}
+.reticula {
+  color: var(--linea-fuerte);
+}
+.centro {
+  fill: var(--fondo);
+}
+.nodo {
+  fill: var(--verde-vel);
+}

@@ -1,0 +1,89 @@
+.envoltorio {
+  overflow-x: auto;
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.65rem 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid var(--linea-suave);
+  white-space: nowrap;
+}
+
+.tabla th {
+  background: var(--fondo-2);
+  font-weight: 700;
+}
+
+.tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.celdaSlug {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--texto-tenue);
+}
+
+.columnaAcciones {
+  text-align: right;
+}
+
+.celdaAcciones {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.enlaceEditar {
+  color: var(--verde-oscuro);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.enlaceEditar:hover {
+  text-decoration: underline;
+}
+
+.botonEliminar {
+  border: 1px solid var(--rojo);
+  background: transparent;
+  color: var(--rojo);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.7rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.botonEliminar:hover:not(:disabled) {
+  background: var(--rojo);
+  color: #fff;
+}
+
+.botonEliminar:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.errorFila {
+  color: var(--rojo);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.vacio {
+  color: var(--texto-tenue);
+  border: 1px dashed var(--linea-fuerte);
+  border-radius: var(--r);
+  padding: 1.5rem;
+  text-align: center;
+}

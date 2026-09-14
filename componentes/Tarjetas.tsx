@@ -1,136 +1,169 @@
-// Tarjetas de novedad, proyecto e integrante.
-//
-// Están aquí y no dentro de la portada a propósito: quien monte /novedades,
-// /proyectos o /integrantes solo tiene que recorrer la lista completa con la
-// tarjeta que ya existe, y su página sale igual de cuidada que la portada sin
-// escribir una línea de CSS.
-//
-//   const novedades = listarNovedades()
-//   {novedades.map((n) => <TarjetaNovedad key={n.slug} novedad={n} />)}
-
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Novedad, Proyecto, Integrante } from '@/lib/contenido'
 import { Etiqueta, Fecha } from './Base'
-import { Flecha, Github, Correo } from './Iconos'
+import { Flecha, Persona, Antena, Ojo, Brujula, Onda } from './Iconos'
 import estilos from './Tarjetas.module.css'
 
-/* ---------------------------------------------------------------- Novedad */
-
-export function TarjetaNovedad({ novedad }: { novedad: Novedad }) {
+export function TarjetaNovedad({
+  novedad,
+  nivelTitulo = 3,
+}: {
+  novedad: Novedad
+  nivelTitulo?: 2 | 3
+}) {
+  const Titulo = nivelTitulo === 2 ? 'h2' : 'h3'
   return (
     <article className={estilos.novedad}>
-      <Link href={`/novedades/${novedad.slug}`} className={estilos.enlaceCompleto}>
-        <span className="solo-lectores">Leer {novedad.titulo}</span>
-      </Link>
-
-      <div className={estilos.novedadCabecera}>
-        <span className={`mono ${estilos.fecha}`}>
-          <Fecha iso={novedad.fecha} corta />
+      <div className={estilos.novedadFecha}>
+        <span className="mono">
+          {novedad.ilustrativo ? 'Fecha de ejemplo' : 'Publicado'}
         </span>
-        <Etiqueta valor={novedad.tipo} />
+        <Fecha iso={novedad.fecha} corta />
       </div>
-
-      <h3 className={estilos.novedadTitulo}>{novedad.titulo}</h3>
-      {novedad.resumen && <p className={estilos.resumen}>{novedad.resumen}</p>}
-
-      <span className={estilos.pieTarjeta}>
-        Leer
-        <Flecha size={15} />
-      </span>
+      <div className={estilos.novedadCuerpo}>
+        <div className={estilos.meta}>
+          <Etiqueta valor={novedad.tipo} />
+          {novedad.ilustrativo && (
+            <span className={estilos.demo}>Nota ilustrativa</span>
+          )}
+        </div>
+        <Titulo>
+          <Link href={`/novedades/${novedad.slug}`}>{novedad.titulo}</Link>
+        </Titulo>
+        <p>{novedad.resumen}</p>
+      </div>
+      <Link
+        href={`/novedades/${novedad.slug}`}
+        className={estilos.flechaEnlace}
+        aria-label={`Leer: ${novedad.titulo}`}
+      >
+        <Flecha size={22} />
+      </Link>
     </article>
   )
 }
 
-/* --------------------------------------------------------------- Proyecto */
-
-export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
+export function TarjetaProyecto({
+  proyecto,
+  nivelTitulo = 3,
+}: {
+  proyecto: Proyecto
+  nivelTitulo?: 2 | 3
+}) {
+  const Titulo = nivelTitulo === 2 ? 'h2' : 'h3'
+  const Icono = proyecto.linea.includes('Percepción')
+    ? Ojo
+    : proyecto.linea.includes('Control')
+      ? Brujula
+      : proyecto.linea.includes('Instrumentación')
+        ? Onda
+        : Antena
   return (
     <article className={estilos.proyecto}>
-      <Link href={`/proyectos/${proyecto.slug}`} className={estilos.enlaceCompleto}>
-        <span className="solo-lectores">Ver {proyecto.titulo}</span>
-      </Link>
-
-      <div className={estilos.portada}>
+      <Link
+        href={`/proyectos/${proyecto.slug}`}
+        className={estilos.portada}
+        aria-label={`Ver proyecto: ${proyecto.titulo}`}
+      >
         {proyecto.portada ? (
           <Image
             src={proyecto.portada}
-            alt=""
+            alt={`Imagen del proyecto ${proyecto.titulo}`}
             fill
-            sizes="(max-width: 760px) 100vw, 380px"
+            sizes="(max-width: 700px) 90vw, 400px"
             className={estilos.portadaImagen}
           />
         ) : (
-          // Sin foto todavía: un degradado muy suave en vez de un hueco gris.
-          <div className={estilos.portadaVacia} aria-hidden />
+          <div className={estilos.portadaVacia}>
+            <span className={estilos.marcoIcono}>
+              <Icono size={48} />
+            </span>
+            <span>Registro visual pendiente</span>
+          </div>
         )}
-        <div className={estilos.portadaEtiqueta}>
-          <Etiqueta valor={proyecto.estado} />
-        </div>
-      </div>
-
+        {proyecto.ilustrativo && (
+          <span className={estilos.portadaEtiqueta}>PROYECTO ILUSTRATIVO</span>
+        )}
+      </Link>
       <div className={estilos.proyectoCuerpo}>
-        {proyecto.linea && <span className={`mono ${estilos.linea}`}>{proyecto.linea}</span>}
-        <h3 className={estilos.proyectoTitulo}>{proyecto.titulo}</h3>
-        {proyecto.resumen && <p className={estilos.resumen}>{proyecto.resumen}</p>}
-
-        <span className={estilos.pieTarjeta}>
-          Ver proyecto
-          <Flecha size={15} />
-        </span>
+        <span className={estilos.linea}>{proyecto.linea}</span>
+        <Titulo>
+          <Link href={`/proyectos/${proyecto.slug}`}>{proyecto.titulo}</Link>
+        </Titulo>
+        <p>{proyecto.resumen}</p>
+        <div className={estilos.pieProyecto}>
+          <Etiqueta valor={proyecto.estado} />
+          <Link
+            href={`/proyectos/${proyecto.slug}`}
+            aria-label={`Consultar ficha: ${proyecto.titulo}`}
+          >
+            <span>Ver proyecto</span>
+            <Flecha size={16} />
+          </Link>
+        </div>
       </div>
     </article>
   )
 }
 
-/* ------------------------------------------------------------- Integrante */
-
-/** Primera letra del nombre y del apellido. Descarta las partes que sean solo
- *  numeros, que aparecen en los nombres de ejemplo y darian iniciales raras.
- *  Con una sola palabra devuelve esa letra en vez de inventarse nada. */
-function iniciales(nombre: string): string {
-  const partes = nombre
-    .trim()
-    .split(/\s+/)
-    .filter((parte) => parte && !/^\d+$/.test(parte))
-  if (partes.length === 0) return ''
-  if (partes.length === 1) return partes[0][0].toUpperCase()
-  return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase()
+const ROLES = {
+  director: 'Orientación académica',
+  investigador: 'Investigación',
+  estudiante: 'Estudiantes de pregrado',
+  egresado: 'Egresados',
 }
-
 export function TarjetaIntegrante({ integrante }: { integrante: Integrante }) {
-  const { nombre, rol, area, foto, enlaces } = integrante
-
   return (
     <article className={estilos.integrante}>
       <div className={estilos.retrato}>
-        {foto ? (
-          <Image src={foto} alt={nombre} fill sizes="140px" className={estilos.retratoImagen} />
+        {integrante.foto ? (
+          <Image
+            src={integrante.foto}
+            alt={integrante.nombre}
+            fill
+            sizes="80px"
+            className={estilos.retratoImagen}
+          />
         ) : (
-          <span className={estilos.iniciales} aria-hidden>
-            {iniciales(nombre)}
-          </span>
+          <Persona size={30} />
         )}
       </div>
-
-      <h3 className={estilos.integranteNombre}>{nombre}</h3>
-      <span className={`mono ${estilos.rol}`}>{rol}</span>
-      {area && <p className={estilos.area}>{area}</p>}
-
-      {(enlaces.github || enlaces.correo) && (
-        <div className={estilos.integranteEnlaces}>
-          {enlaces.github && (
-            <a href={enlaces.github} target="_blank" rel="noreferrer noopener" aria-label={`GitHub de ${nombre}`}>
-              <Github size={17} />
-            </a>
-          )}
-          {enlaces.correo && (
-            <a href={`mailto:${enlaces.correo}`} aria-label={`Escribir a ${nombre}`}>
-              <Correo size={17} />
-            </a>
-          )}
-        </div>
-      )}
+      <div>
+        <span className={estilos.rol}>{ROLES[integrante.rol]}</span>
+        <h3>{integrante.nombre}</h3>
+        <p>{integrante.area}</p>
+        <span className={estilos.demo}>
+          {integrante.ilustrativo
+            ? 'Perfil ilustrativo · Datos pendientes'
+            : 'Integrante'}
+        </span>
+        {!integrante.ilustrativo && (
+          <div className={estilos.integranteEnlaces}>
+            {integrante.enlaces.github && (
+              <a
+                href={integrante.enlaces.github}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                GitHub ↗
+              </a>
+            )}
+            {integrante.enlaces.linkedin && (
+              <a
+                href={integrante.enlaces.linkedin}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                LinkedIn ↗
+              </a>
+            )}
+            {integrante.enlaces.correo && (
+              <a href={`mailto:${integrante.enlaces.correo}`}>Correo</a>
+            )}
+          </div>
+        )}
+      </div>
     </article>
   )
 }

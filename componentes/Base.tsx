@@ -29,7 +29,11 @@ type SeccionProps = {
 }
 
 export function Seccion({ children, id, alterna, className }: SeccionProps) {
-  const clases = [estilos.seccion, alterna ? estilos.alterna : '', className ?? '']
+  const clases = [
+    estilos.seccion,
+    alterna ? estilos.alterna : '',
+    className ?? '',
+  ]
     .filter(Boolean)
     .join(' ')
 
@@ -51,9 +55,16 @@ type TituloSeccionProps = {
   centrado?: boolean
 }
 
-export function TituloSeccion({ indice, titulo, descripcion, centrado }: TituloSeccionProps) {
+export function TituloSeccion({
+  indice,
+  titulo,
+  descripcion,
+  centrado,
+}: TituloSeccionProps) {
   return (
-    <header className={`${estilos.encabezado} ${centrado ? estilos.encabezadoCentrado : ''}`}>
+    <header
+      className={`${estilos.encabezado} ${centrado ? estilos.encabezadoCentrado : ''}`}
+    >
       {indice && (
         <span className={`mono ${estilos.indice}`}>
           <span className={estilos.raya} aria-hidden />
@@ -79,7 +90,13 @@ type BotonProps = {
   className?: string
 }
 
-export function Boton({ href, children, variante = 'principal', flecha = true, className }: BotonProps) {
+export function Boton({
+  href,
+  children,
+  variante = 'principal',
+  flecha = true,
+  className,
+}: BotonProps) {
   const externo = href.startsWith('http') || href.startsWith('mailto:')
   const clases = `${estilos.boton} ${variante === 'sutil' ? estilos.botonSutil : estilos.botonPrincipal} ${className ?? ''}`
   const contenido = (
@@ -91,7 +108,12 @@ export function Boton({ href, children, variante = 'principal', flecha = true, c
 
   if (externo) {
     return (
-      <a href={href} className={clases} target="_blank" rel="noreferrer noopener">
+      <a
+        href={href}
+        className={clases}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
         {contenido}
       </a>
     )
@@ -128,6 +150,8 @@ const COLOR_ETIQUETA: Record<string, string> = {
 }
 
 const TEXTO_ETIQUETA: Record<string, string> = {
+  propuesta: 'Propuesta ilustrativa',
+  divulgacion: 'Divulgación',
   activo: 'Activo',
   'en-curso': 'En curso',
   pausado: 'Pausado',
@@ -143,7 +167,11 @@ const TEXTO_ETIQUETA: Record<string, string> = {
 
 export function Etiqueta({ valor }: { valor: string }) {
   const color = COLOR_ETIQUETA[valor] ?? 'neutro'
-  return <span className={`mono ${estilos.etiqueta} ${estilos[color]}`}>{TEXTO_ETIQUETA[valor] ?? valor}</span>
+  return (
+    <span className={`mono ${estilos.etiqueta} ${estilos[color]}`}>
+      {TEXTO_ETIQUETA[valor] ?? valor}
+    </span>
+  )
 }
 
 /* -------------------------------------------------------------------- Fecha */
@@ -163,32 +191,114 @@ const MESES = [
   'diciembre',
 ]
 
-const MESES_CORTOS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']
+const MESES_CORTOS = [
+  'ENE',
+  'FEB',
+  'MAR',
+  'ABR',
+  'MAY',
+  'JUN',
+  'JUL',
+  'AGO',
+  'SEP',
+  'OCT',
+  'NOV',
+  'DIC',
+]
 
 /** Parte una fecha YYYY-MM-DD sin pasar por new Date(), que interpreta la
  *  cadena como UTC y en Colombia haría que toda fecha saliera un día antes. */
 export function partesFecha(iso: string) {
   const [anio, mes, dia] = iso.split('-').map(Number)
-  return { anio, mes, dia, nombreMes: MESES[mes - 1] ?? '', mesCorto: MESES_CORTOS[mes - 1] ?? '' }
+  return {
+    anio,
+    mes,
+    dia,
+    nombreMes: MESES[mes - 1] ?? '',
+    mesCorto: MESES_CORTOS[mes - 1] ?? '',
+  }
 }
 
 /** Fecha en texto, siempre igual en todo el sitio: "19 de septiembre de 2026". */
 export function Fecha({ iso, corta }: { iso: string; corta?: boolean }) {
   const { anio, dia, nombreMes, mesCorto } = partesFecha(iso)
   return (
-    <time dateTime={iso}>{corta ? `${dia} ${mesCorto} ${anio}` : `${dia} de ${nombreMes} de ${anio}`}</time>
+    <time dateTime={iso}>
+      {corta
+        ? `${dia} ${mesCorto} ${anio}`
+        : `${dia} de ${nombreMes} de ${anio}`}
+    </time>
   )
 }
 
 /* ------------------------------------------------------------- EnlaceMasCosas */
 
 /** El "ver todo" que cierra los bloques de la portada. */
-export function VerTodo({ href, children }: { href: string; children: ReactNode }) {
+export function VerTodo({
+  href,
+  children,
+}: {
+  href: string
+  children: ReactNode
+}) {
   return (
     <div className={estilos.verTodo}>
       <Boton href={href} variante="sutil">
         {children}
       </Boton>
+    </div>
+  )
+}
+
+export function EncabezadoPagina({
+  indice,
+  titulo,
+  descripcion,
+}: {
+  indice?: string
+  titulo: string
+  descripcion?: string
+}) {
+  return (
+    <header className={estilos.encabezadoPagina}>
+      <nav className={estilos.miga} aria-label="Ruta de navegación">
+        <Link href="/">Inicio</Link>
+        <span aria-hidden>/</span>
+        <span aria-current="page">{indice ?? titulo}</span>
+      </nav>
+      <h1>{titulo}</h1>
+      {descripcion && <p className={estilos.descripcion}>{descripcion}</p>}
+    </header>
+  )
+}
+
+export function AvisoDemo({ children }: { children?: ReactNode }) {
+  return (
+    <aside className={estilos.aviso}>
+      <span className={estilos.avisoEtiqueta}>DEMO</span>
+      <p>
+        {children ??
+          'Contenido ilustrativo pendiente de validación por el semillero.'}
+      </p>
+    </aside>
+  )
+}
+
+export function EstadoVacio({
+  titulo,
+  descripcion,
+  children,
+}: {
+  titulo: string
+  descripcion: string
+  children?: ReactNode
+}) {
+  return (
+    <div className={estilos.estadoVacio}>
+      <span className="mono">Información pendiente</span>
+      <h2>{titulo}</h2>
+      <p>{descripcion}</p>
+      {children && <div className={estilos.estadoAccion}>{children}</div>}
     </div>
   )
 }
