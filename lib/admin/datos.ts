@@ -39,7 +39,7 @@ export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmi
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
   const instantanea = await db().collection(coleccion).get()
   return instantanea.docs
-    .map((doc) => {
+    .map((doc: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>) => {
       const { cuerpo, ...datos } = doc.data()
       return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
     })
