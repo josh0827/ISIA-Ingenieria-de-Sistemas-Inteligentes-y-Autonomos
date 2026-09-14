@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // El Markdown de contenido/ se lee en tiempo de ejecucion. El rastreo
+  // automatico de archivos no sigue rutas construidas con process.cwd(), asi
+  // que sin esto contenido/ no viaja a las funciones del servidor y el sitio
+  // se publica con todas las secciones vacias.
+  outputFileTracingIncludes: {
+    '/**': ['./contenido/**/*.md'],
+  },
   // Cabeceras basicas de seguridad. No hay formularios que envien datos a
   // terceros ni scripts externos, asi que con esto sobra para un sitio publico.
   async headers() {

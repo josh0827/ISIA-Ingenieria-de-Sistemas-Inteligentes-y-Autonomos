@@ -112,7 +112,7 @@ function leerCarpeta(carpeta: string): Crudo[] {
 
 /** Cada documento de Firestore se mapea al mismo formato {slug, datos, cuerpo} que el Markdown. */
 async function leerColeccion(nombre: NombreColeccion): Promise<Crudo[]> {
-  const instantanea = await db().collection(nombre).get()
+  const instantanea = await (await db()).collection(nombre).get()
   return instantanea.docs.map((doc) => {
     const { cuerpo, ...datos } = doc.data()
     return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
@@ -125,8 +125,18 @@ async function leerColeccion(nombre: NombreColeccion): Promise<Crudo[]> {
  * para que el sitio y el desarrollo local sigan funcionando sin ellas.
  */
 async function leerFuente(carpeta: NombreColeccion): Promise<Crudo[]> {
-  if (firebaseListo()) return leerColeccion(carpeta)
-  return leerCarpeta(carpeta)
+  if (!firebaseListo()) return leerCarpeta(carpeta)
+  try {
+    return await leerColeccion(carpeta)
+  } catch (error) {
+    // Si Firestore no responde (credenciales caducadas, permisos, red), el
+    // sitio publico no puede quedarse en blanco ni devolver un error 500: se
+    // sirve el Markdown de contenido/, que siempre viaja con el despliegue.
+    console.error(
+      `[contenido] Firestore no respondio para "${carpeta}" (${(error as Error).message}). Se usa el Markdown de contenido/.`,
+    )
+    return leerCarpeta(carpeta)
+  }
 }
 
 export function texto(valor: unknown): string {

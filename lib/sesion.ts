@@ -14,7 +14,7 @@ export type UsuarioSesion = {
 
 /** Cambia el ID token del cliente por una cookie de sesión httpOnly firmada por Firebase. */
 export async function crearCookieSesion(idToken: string): Promise<void> {
-  const cookieSesion = await authAdmin().createSessionCookie(idToken, { expiresIn: DURACION_MS })
+  const cookieSesion = await (await authAdmin()).createSessionCookie(idToken, { expiresIn: DURACION_MS })
   const almacen = await cookies()
   almacen.set(COOKIE_SESION, cookieSesion, {
     maxAge: DURACION_MS / 1000,
@@ -37,7 +37,7 @@ export async function usuarioSesion(): Promise<UsuarioSesion | undefined> {
   const cookieSesion = almacen.get(COOKIE_SESION)?.value
   if (!cookieSesion) return undefined
   try {
-    const decodificado = await authAdmin().verifySessionCookie(cookieSesion, true)
+    const decodificado = await (await authAdmin()).verifySessionCookie(cookieSesion, true)
     return {
       uid: decodificado.uid,
       nombre: typeof decodificado.name === 'string' ? decodificado.name : decodificado.uid,

@@ -1,4 +1,5 @@
 import 'server-only'
+import type { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore'
 import { db, firebaseListo } from '@/lib/firebase/admin'
 import { esEditor } from '@/lib/editores'
 import { usuarioSesion } from '@/lib/sesion'
@@ -37,9 +38,9 @@ export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmi
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  const instantanea = await db().collection(coleccion).get()
+  const instantanea = await (await db()).collection(coleccion).get()
   return instantanea.docs
-    .map((doc: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>) => {
+    .map((doc: QueryDocumentSnapshot<DocumentData>) => {
       const { cuerpo, ...datos } = doc.data()
       return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
     })
@@ -50,7 +51,7 @@ export async function obtenerDocumento(coleccion: string, slug: string): Promise
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  const doc = await db().collection(coleccion).doc(slug).get()
+  const doc = await (await db()).collection(coleccion).doc(slug).get()
   if (!doc.exists) return undefined
   const { cuerpo, ...datos } = doc.data() ?? {}
   return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }

@@ -80,7 +80,7 @@ export async function guardarDocumento(
     if (!slug) {
       return { ok: false, error: 'El identificador (slug) es obligatorio: solo minúsculas, números y guiones, sin empezar ni terminar en guion.' }
     }
-    const existente = await db().collection(coleccion).doc(slug).get()
+    const existente = await (await db()).collection(coleccion).doc(slug).get()
     if (existente.exists) return { ok: false, error: 'Ya existe un elemento con ese identificador. Elige otro.' }
   }
 
@@ -98,12 +98,12 @@ export async function guardarDocumento(
     if (!esVacio(valor)) asignarAnidado(datos, campo.clave, valor)
   }
 
-  await db().collection(coleccion).doc(slug).set({ ...datos, cuerpo })
+  await (await db()).collection(coleccion).doc(slug).set({ ...datos, cuerpo })
   redirect(`/admin/${coleccion}`)
 }
 
 export async function eliminarDocumento(coleccion: string, slug: string): Promise<void> {
   await requerirEditor()
   if (!esquemaDe(coleccion)) throw new Error('Tipo de contenido desconocido.')
-  await db().collection(coleccion).doc(slug).delete()
+  await (await db()).collection(coleccion).doc(slug).delete()
 }

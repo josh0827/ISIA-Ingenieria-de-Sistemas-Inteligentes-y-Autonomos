@@ -9,6 +9,6 @@ import { db, firebaseListo } from './firebase/admin'
  */
 export async function esEditor(uid: string): Promise<boolean> {
   if (!firebaseListo()) return false
-  const doc = await db().collection('editores').doc(uid).get()
+  const doc = await (await db()).collection('editores').doc(uid).get()
   return doc.exists && doc.data()?.activo !== false
 }
