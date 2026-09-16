@@ -6,7 +6,10 @@ import { esEditor } from '@/lib/editores'
 import { COLECCIONES } from '@/lib/contenido'
 import { ESQUEMAS } from '@/lib/admin/esquemas'
 import CerrarSesionBoton from '@/componentes/admin/CerrarSesionBoton'
+import { esCorreoUnal } from '@/lib/autorizacion'
 import estilos from '../admin.module.css'
+
+export const dynamic = 'force-dynamic'
 
 export default async function LayoutProtegido({ children }: { children: React.ReactNode }) {
   if (!firebaseListo()) {
@@ -25,22 +28,13 @@ export default async function LayoutProtegido({ children }: { children: React.Re
   const usuario = await usuarioSesion()
   if (!usuario) redirect('/admin/iniciar-sesion')
 
+  if (!esCorreoUnal(usuario.correo)) {
+    redirect('/admin/acceso-denegado?motivo=correo')
+  }
+
   const autorizado = await esEditor(usuario.uid)
   if (!autorizado) {
-    return (
-      <div className={estilos.aviso}>
-        <h1>Acceso pendiente de autorización</h1>
-        <p>
-          Iniciaste sesión como <strong>{usuario.correo ?? usuario.nombre}</strong>, pero tu
-          cuenta aún no está en la lista de editores del semillero.
-        </p>
-        <p>
-          Pide a alguien con acceso a la consola de Firebase que agregue tu identificador
-          (<code>{usuario.uid}</code>) a la colección <code>editores</code> de Firestore.
-        </p>
-        <CerrarSesionBoton />
-      </div>
-    )
+    redirect('/admin/acceso-denegado?motivo=editor')
   }
 
   return (

@@ -1,0 +1,12 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // El navegador no accede directamente a Firestore. Todas las lecturas y
+    // mutaciones pasan por el servidor Next.js y Firebase Admin SDK, después
+    // de validar dominio institucional y UID. Admin SDK usa IAM y no estas reglas.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

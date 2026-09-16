@@ -20,11 +20,32 @@ import type { Firestore } from 'firebase-admin/firestore'
  * compilar y no generan ninguna carga en tiempo de ejecución.
  */
 export function firebaseListo(): boolean {
-  return Boolean(
-    process.env.FIREBASE_PROJECT_ID &&
-      process.env.FIREBASE_CLIENT_EMAIL &&
-      process.env.FIREBASE_PRIVATE_KEY,
-  )
+  const { projectId, clientEmail, privateKey } = credencialesServidor()
+  return Boolean(projectId && clientEmail && privateKey)
+}
+
+function variable(nombre: string): string | undefined {
+  const valor = process.env[nombre]?.trim()
+  return valor || undefined
+}
+
+function normalizarClavePrivada(valor: string | undefined): string | undefined {
+  if (!valor) return undefined
+  let clave = valor.trim()
+  const comillasDobles = clave.startsWith('"') && clave.endsWith('"')
+  const comillasSimples = clave.startsWith("'") && clave.endsWith("'")
+  if (comillasDobles || comillasSimples) clave = clave.slice(1, -1)
+  return clave.replace(/\\n/g, '\n')
+}
+
+function credencialesServidor() {
+  return {
+    projectId: variable('FIREBASE_PROJECT_ID'),
+    clientEmail: variable('FIREBASE_CLIENT_EMAIL'),
+    privateKey: normalizarClavePrivada(
+      variable('FIREBASE_PRIVATE_KEY') ?? variable('FIREBASE_ADMIN_PRIVATE_KEY'),
+    ),
+  }
 }
 
 let app: App | undefined
@@ -35,6 +56,7 @@ async function appAdmin(): Promise<App> {
   }
   if (app) return app
   const { cert, getApps, initializeApp } = await import('firebase-admin/app')
+  const credenciales = credencialesServidor()
   const existente = getApps()[0]
   if (existente) {
     app = existente
@@ -42,10 +64,9 @@ async function appAdmin(): Promise<App> {
   }
   app = initializeApp({
     credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      // Las claves privadas llegan con "\n" escapados desde el archivo .env.
-      privateKey: (process.env.FIREBASE_PRIVATE_KEY ?? '').replace(/\n/g, '\n'),
+      projectId: credenciales.projectId,
+      clientEmail: credenciales.clientEmail,
+      privateKey: credenciales.privateKey,
     }),
   })
   return app

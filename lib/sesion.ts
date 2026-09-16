@@ -1,6 +1,8 @@
 import 'server-only'
 import { cookies } from 'next/headers'
 import { authAdmin, firebaseListo } from './firebase/admin'
+import { ErrorAcceso, exigirCorreoUnal } from './autorizacion'
+import { esEditor } from './editores'
 
 const COOKIE_SESION = 'isia_sesion'
 const DURACION_MS = 1000 * 60 * 60 * 24 * 5 // 5 días
@@ -14,7 +16,25 @@ export type UsuarioSesion = {
 
 /** Cambia el ID token del cliente por una cookie de sesión httpOnly firmada por Firebase. */
 export async function crearCookieSesion(idToken: string): Promise<void> {
-  const cookieSesion = await (await authAdmin()).createSessionCookie(idToken, { expiresIn: DURACION_MS })
+  const auth = await authAdmin()
+  const token = await auth.verifyIdToken(idToken, true)
+  exigirCorreoUnal(token.email)
+
+  // Firebase recomienda aceptar únicamente tokens procedentes de un inicio de
+  // sesión reciente al emitir cookies de larga duración.
+  const antiguedadSegundos = Math.floor(Date.now() / 1000) - token.auth_time
+  if (!Number.isFinite(antiguedadSegundos) || antiguedadSegundos < 0 || antiguedadSegundos > 5 * 60) {
+    throw new ErrorAcceso('Debes iniciar sesión nuevamente para acceder al panel.', 401, 'sesion')
+  }
+  if (!(await esEditor(token.uid))) {
+    throw new ErrorAcceso(
+      'Tu cuenta institucional no está autorizada para editar contenido.',
+      403,
+      'editor',
+    )
+  }
+
+  const cookieSesion = await auth.createSessionCookie(idToken, { expiresIn: DURACION_MS })
   const almacen = await cookies()
   almacen.set(COOKIE_SESION, cookieSesion, {
     maxAge: DURACION_MS / 1000,

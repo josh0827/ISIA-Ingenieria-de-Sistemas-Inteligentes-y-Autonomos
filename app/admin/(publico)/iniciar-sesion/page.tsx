@@ -13,7 +13,10 @@ export default function PaginaIniciarSesion() {
         <h1>Panel de administración</h1>
         {firebaseListo() ? (
           <>
-            <p>Inicia sesión con la cuenta de GitHub autorizada para editar el contenido del sitio.</p>
+            <p>
+              Inicia sesión con una cuenta de GitHub cuyo correo sea institucional
+              <strong> @unal.edu.co</strong> y cuyo UID esté autorizado como editor.
+            </p>
             <BotonGithub />
           </>
         ) : (

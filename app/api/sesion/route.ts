@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
-import { crearCookieSesion, cerrarSesion } from '@/lib/sesion'
+import { crearCookieSesion } from '@/lib/sesion'
 import { firebaseListo } from '@/lib/firebase/admin'
+import { ErrorAcceso } from '@/lib/autorizacion'
 
 export async function POST(request: Request) {
   if (!firebaseListo()) {
@@ -12,13 +13,14 @@ export async function POST(request: Request) {
   }
   try {
     await crearCookieSesion(idToken)
-  } catch {
+  } catch (error) {
+    if (error instanceof ErrorAcceso) {
+      return NextResponse.json(
+        { error: error.message, motivo: error.motivo },
+        { status: error.codigo },
+      )
+    }
     return NextResponse.json({ error: 'No se pudo validar la sesión con Firebase.' }, { status: 401 })
   }
-  return NextResponse.json({ ok: true })
-}
-
-export async function DELETE() {
-  await cerrarSesion()
   return NextResponse.json({ ok: true })
 }

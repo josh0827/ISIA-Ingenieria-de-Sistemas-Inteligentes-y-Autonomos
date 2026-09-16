@@ -15,7 +15,8 @@ export default function EliminarBoton({ coleccion, slug, etiqueta }: { coleccion
     setError(undefined)
     iniciarTransicion(async () => {
       try {
-        await eliminarDocumento(coleccion, slug)
+        const resultado = await eliminarDocumento(coleccion, slug)
+        if (!resultado.ok) throw new Error(resultado.error ?? 'No se pudo eliminar el elemento.')
         router.refresh()
       } catch (error_) {
         setError(error_ instanceof Error ? error_.message : 'No se pudo eliminar el elemento.')

@@ -193,12 +193,45 @@
 }
 
 .pantallaSesion {
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   background: var(--fondo);
+}
+
+.tarjetaDenegada {
+  border-top: 5px solid var(--verde-oscuro);
+  box-shadow: 0 1.25rem 3rem rgb(29 29 31 / 10%);
+}
+
+.codigoError {
+  color: var(--verde-oscuro);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.accionesAcceso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.botonInicio {
+  border-radius: var(--r);
+  background: var(--verde-oscuro);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.85rem 1.5rem;
+  text-decoration: none;
+}
+
+.botonInicio:hover {
+  background: var(--verde);
 }
 
 .tarjetaSesion {

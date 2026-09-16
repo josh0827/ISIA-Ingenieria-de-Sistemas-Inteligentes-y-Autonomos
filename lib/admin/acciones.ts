@@ -13,8 +13,9 @@ import {
 } from '@/lib/contenido'
 import { esquemaDe, type CampoEsquema } from '@/lib/admin/esquemas'
 import { asignarAnidado, requerirEditor } from '@/lib/admin/datos'
+import { ErrorAcceso } from '@/lib/autorizacion'
 
-export type EstadoFormulario = { ok: boolean; error?: string }
+export type EstadoFormulario = { ok: boolean; error?: string; codigo?: 401 | 403 }
 
 function validarCampo(campo: CampoEsquema, crudo: FormDataEntryValue | null): unknown {
   switch (campo.tipo) {
@@ -68,7 +69,11 @@ export async function guardarDocumento(
   try {
     await requerirEditor()
   } catch (error) {
-    return { ok: false, error: (error as Error).message }
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : 'No se pudo comprobar la autorización.',
+      codigo: error instanceof ErrorAcceso ? error.codigo : undefined,
+    }
   }
 
   const esquema = esquemaDe(coleccion)
@@ -102,8 +107,20 @@ export async function guardarDocumento(
   redirect(`/admin/${coleccion}`)
 }
 
-export async function eliminarDocumento(coleccion: string, slug: string): Promise<void> {
-  await requerirEditor()
+export async function eliminarDocumento(
+  coleccion: string,
+  slug: string,
+): Promise<EstadoFormulario> {
+  try {
+    await requerirEditor()
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : 'No se pudo comprobar la autorización.',
+      codigo: error instanceof ErrorAcceso ? error.codigo : undefined,
+    }
+  }
   if (!esquemaDe(coleccion)) throw new Error('Tipo de contenido desconocido.')
   await (await db()).collection(coleccion).doc(slug).delete()
+  return { ok: true }
 }

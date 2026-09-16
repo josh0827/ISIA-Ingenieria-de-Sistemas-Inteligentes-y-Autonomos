@@ -4,12 +4,16 @@ import { db, firebaseListo } from '@/lib/firebase/admin'
 import { esEditor } from '@/lib/editores'
 import { usuarioSesion } from '@/lib/sesion'
 import { esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
+import { ErrorAcceso, exigirCorreoUnal } from '@/lib/autorizacion'
 
 export async function requerirEditor() {
   if (!firebaseListo()) throw new Error('Firebase no está configurado en este entorno.')
   const usuario = await usuarioSesion()
-  if (!usuario) throw new Error('No hay una sesión activa.')
-  if (!(await esEditor(usuario.uid))) throw new Error('Tu cuenta no está autorizada para editar contenido.')
+  if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
+  exigirCorreoUnal(usuario.correo)
+  if (!(await esEditor(usuario.uid))) {
+    throw new ErrorAcceso('Tu cuenta institucional no está autorizada para editar contenido.', 403, 'editor')
+  }
   return usuario
 }
 
