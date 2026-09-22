@@ -17,6 +17,10 @@ export default function PanelAdmin() {
         </div>
       </div>
       <div className={estilos.tarjetas}>
+        <Link href="/admin/configuracion" className={estilos.tarjeta}>
+          <h2>Configuración</h2>
+          <p>Mostrar u ocultar secciones de la navegación pública.</p>
+        </Link>
         {COLECCIONES.map((coleccion) => {
           const esquema = ESQUEMAS[coleccion]
           return (

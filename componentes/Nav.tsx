@@ -2,12 +2,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRef, useState } from 'react'
-import { NAVEGACION, SITIO } from '@/lib/sitio'
+import { SITIO, type ItemNavegacion } from '@/lib/sitio'
 import { Menu, Cerrar } from './Iconos'
 import Escudo from './Escudo'
 import estilos from './Nav.module.css'
 
-export default function Nav() {
+export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) {
   const ruta = usePathname()
   const [rutaAbierta, setRutaAbierta] = useState<string | null>(null)
   const boton = useRef<HTMLButtonElement>(null)
@@ -16,7 +16,7 @@ export default function Nav() {
     ruta === href || (href !== '/' && ruta.startsWith(href + '/'))
   const items = [
     { href: '/', texto: 'Inicio' },
-    ...NAVEGACION.filter((item) => item.href !== '/' && item.href !== '/unete'),
+    ...navegacion.filter((item) => item.href !== '/' && item.href !== '/unete'),
   ]
   function cerrar() {
     setRutaAbierta(null)

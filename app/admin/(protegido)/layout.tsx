@@ -52,6 +52,7 @@ export default async function LayoutProtegido({ children }: { children: React.Re
       <div className={estilos.cuerpo}>
         <nav className={estilos.nav} aria-label="Contenido">
           <Link href="/admin" className={estilos.navEnlace}>Panel</Link>
+          <Link href="/admin/configuracion" className={estilos.navEnlace}>Configuración</Link>
           {COLECCIONES.map((coleccion) => (
             <Link key={coleccion} href={`/admin/${coleccion}`} className={estilos.navEnlace}>
               {ESQUEMAS[coleccion].etiqueta}

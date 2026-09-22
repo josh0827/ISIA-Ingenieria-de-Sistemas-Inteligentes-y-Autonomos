@@ -1,7 +1,7 @@
 ---
 titulo: Nodo de medida autónomo
 confirmado: false
-estado: propuesta
+estado: En formulación
 linea: Redes y sistemas embebidos
 resumen: Propuesta ilustrativa para explorar el equilibrio entre frecuencia de medición, transmisión de datos y consumo de energía.
 integrantes: []

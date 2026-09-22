@@ -43,14 +43,14 @@ El frontmatter va entre dos líneas `---`. Después se escribe el cuerpo Markdow
 ---
 titulo: Título de la propuesta ilustrativa
 confirmado: false
-estado: propuesta
+estado: En formulación
 linea: Percepción y visión por computador
 resumen: Descripción explícitamente ilustrativa, sin resultados atribuidos.
 integrantes: []
 ---
 ```
 
-Campos opcionales: `portada`, con ruta local de una imagen real. Los estados admitidos son `propuesta`, `activo`, `en-curso`, `completado` y `pausado`; conserva `propuesta` para los ejemplos actuales.
+Campos opcionales: `portada`, con una imagen real y autorizada. Los estados admitidos son `En formulación`, `Prototipado` y `Fase inicial`; el panel los valida con Zod.
 
 La línea debe coincidir con un título de `LINEAS` en `lib/sitio.ts`. `integrantes` admite slugs de perfiles confirmados. En proyectos ilustrativos no se vinculan participantes ni fotografías.
 
@@ -133,7 +133,7 @@ Parte de [contenido/galeria/_plantilla.md](contenido/galeria/_plantilla.md). Cam
 
 ## Recursos y destinos
 
-Las imágenes editoriales deben existir dentro de `public/imagenes/`. Se aceptan AVIF, WebP, PNG, JPEG y SVG locales. Optimiza las fotografías, conserva sus proporciones y utiliza dimensiones explícitas en los componentes para evitar saltos de disposición.
+Los Markdown pueden conservar imágenes existentes dentro de `public/imagenes/`. Desde el panel se aceptan AVIF, WebP, PNG y JPEG de máximo 8 MB. En desarrollo o VPS se guardan bajo `public/imagenes/`; en Vercel se almacenan en Vercel Blob. Firestore registra únicamente la ruta local o URL pública resultante. Optimiza las fotografías y confirma sus permisos de uso antes de publicarlas.
 
 Los enlaces de contenido admiten HTTPS, páginas internas existentes y archivos PDF reales bajo `public/recursos/`. Las rutas a PDF se escriben como `/recursos/nombre.pdf`. Se descartan protocolos ejecutables, dominios reservados para ejemplos, redes sociales genéricas y archivos locales inexistentes.
 
@@ -158,14 +158,18 @@ Además de editar los archivos Markdown, el sitio incluye un panel protegido en 
 4. En **Configuración del proyecto → Cuentas de servicio**, genera una clave privada nueva para el Admin SDK.
 5. Copia [.env.local.example](.env.local.example) a `.env.local` y completa ambos bloques de variables. `.env.local` ya está excluido por `.gitignore`: nunca lo subas al repositorio.
 6. Añade manualmente en Firestore, colección `editores`, un documento cuyo ID sea el UID de cada persona autorizada a editar (se ve en Authentication tras su primer inicio de sesión), con el campo `activo: true`.
-7. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
+7. Despliega `firestore.rules`. La aplicación no utiliza Firebase Storage; las cargas pasan por Server Actions autenticadas y usan disco local o Vercel Blob según el entorno.
+8. En `configuracion/navegacion`, el mapa `secciones` controla qué enlaces aparecen en el menú público. También puede editarse desde **Panel Admin → Navegación pública**.
+9. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
    ```bash
    npm run migrar-contenido
    ```
    Esto importa `contenido/**/*.md` a Firestore tal cual. Vuelve a ejecutarlo si cambias los Markdown y quieres reflejarlos otra vez (sobrescribe por slug).
-8. Reinicia `npm run dev` (o el despliegue) para que las variables de entorno se carguen. Entra a `/admin/iniciar-sesion`.
+10. Reinicia `npm run dev` (o el despliegue) para que las variables de entorno se carguen. Entra a `/admin/iniciar-sesion`.
 
-La subida de imágenes no está incluida en esta primera versión: los campos de imagen siguen esperando una ruta ya existente en `public/imagenes/` (súbela por Git como hasta ahora). El panel valida que el archivo exista antes de guardar.
+Los campos de imagen usan `lib/storage/upload.ts`. En Vercel requieren un Blob Store vinculado y `BLOB_READ_WRITE_TOKEN`; fuera de Vercel guardan en `public/imagenes/<sección>/`. Para conservar una imagen al editar, deja el selector vacío. En VPS, el proceso Node.js necesita permiso de escritura y un volumen persistente.
+
+La ruta dinámica `app/imagenes/[...ruta]/route.ts` sirve los archivos añadidos después de compilar. Conserva esta ruta: `next start` no incorpora por sí solo archivos nuevos de `public/` a su inventario de recursos estáticos.
 
 
 El cuerpo Markdown pasa por saneamiento HTML y un filtro de recursos. No añadas HTML interactivo, scripts, iframes, formularios ni instrucciones internas de desarrollo a los archivos publicados.

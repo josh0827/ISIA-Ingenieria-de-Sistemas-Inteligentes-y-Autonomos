@@ -15,7 +15,9 @@ export const SITIO = {
   repositorio: 'https://github.com/josh0827/ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos',
 } as const
 
-export const NAVEGACION: { href: string; texto: string }[] = [
+export type ItemNavegacion = { href: string; texto: string }
+
+export const NAVEGACION: ItemNavegacion[] = [
   { href: '/lineas', texto: 'Líneas' },
   { href: '/proyectos', texto: 'Proyectos' },
   { href: '/novedades', texto: 'Novedades' },
@@ -24,6 +26,37 @@ export const NAVEGACION: { href: string; texto: string }[] = [
   { href: '/publicaciones', texto: 'Publicaciones' },
   { href: '/galeria', texto: 'Galería' },
 ]
+
+export type ClaveSeccion =
+  | 'lineas'
+  | 'proyectos'
+  | 'novedades'
+  | 'reuniones'
+  | 'integrantes'
+  | 'publicaciones'
+  | 'galeria'
+
+export const CLAVES_SECCION: readonly ClaveSeccion[] = [
+  'lineas',
+  'proyectos',
+  'novedades',
+  'reuniones',
+  'integrantes',
+  'publicaciones',
+  'galeria',
+]
+
+export type ConfiguracionNavegacion = Record<ClaveSeccion, boolean>
+
+export const NAVEGACION_PREDETERMINADA: ConfiguracionNavegacion = {
+  lineas: true,
+  proyectos: true,
+  novedades: true,
+  reuniones: true,
+  integrantes: true,
+  publicaciones: true,
+  galeria: true,
+}
 
 export const PRESENTACION = {
   titular: 'Comprender, diseñar y explorar sistemas inteligentes',

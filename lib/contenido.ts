@@ -49,7 +49,7 @@ export type Reunion = EstadoEditorial & {
 export type Proyecto = EstadoEditorial & {
   slug: string
   titulo: string
-  estado: 'propuesta' | 'activo' | 'en-curso' | 'completado' | 'pausado'
+  estado: 'En formulación' | 'Prototipado' | 'Fase inicial'
   linea: string
   resumen: string
   portada?: string
@@ -203,13 +203,34 @@ export function enlaceSeguro(valor: unknown): string | undefined {
   }
 }
 
-/** Las fotografías deben existir en el repositorio; no se cargan imágenes remotas. */
+/** Solo se admiten recursos estáticos locales publicados por el servidor. */
 export function imagenLocal(valor: unknown): string | undefined {
   const s = texto(valor)
   if (!/^\/imagenes\/[a-zA-Z0-9/_-]+\.(avif|webp|png|jpe?g|svg)$/i.test(s)) return undefined
   const absoluta = path.resolve(PUBLICO, `.${s}`)
   if (!absoluta.startsWith(`${PUBLICO}${path.sep}`) || !fs.existsSync(absoluta) || !fs.statSync(absoluta).isFile()) return undefined
   return s
+}
+
+export function imagenVercel(valor: unknown): string | undefined {
+  const s = texto(valor)
+  if (!s) return undefined
+  try {
+    const url = new URL(s)
+    if (
+      url.protocol !== 'https:' ||
+      !url.hostname.endsWith('.public.blob.vercel-storage.com')
+    ) {
+      return undefined
+    }
+    return url.href
+  } catch {
+    return undefined
+  }
+}
+
+export function imagenSegura(valor: unknown): string | undefined {
+  return imagenLocal(valor) ?? imagenVercel(valor)
 }
 
 export function correoSeguro(valor: unknown): string | undefined {
@@ -234,7 +255,7 @@ export async function listarNovedades(limite?: number): Promise<Novedad[]> {
       slug, titulo, fecha, ilustrativo, cuerpo,
       tipo: unaDeEstas(datos.tipo, ['convocatoria', 'evento', 'logro', 'publicacion', 'divulgacion'] as const, 'divulgacion'),
       resumen: texto(datos.resumen),
-      imagen: ilustrativo ? undefined : imagenLocal(datos.imagen),
+      imagen: ilustrativo ? undefined : imagenSegura(datos.imagen),
       autor: ilustrativo ? undefined : texto(datos.autor) || undefined,
     })
   }
@@ -285,7 +306,14 @@ export async function reunionesPasadas(): Promise<Reunion[]> {
   return (await listarReuniones()).filter((r) => !r.ilustrativo && r.fecha < hoy).reverse()
 }
 
-const ORDEN_ESTADO = { propuesta: 0, activo: 1, 'en-curso': 2, pausado: 3, completado: 4 } as const
+const ORDEN_ESTADO = { 'En formulación': 0, 'Fase inicial': 1, Prototipado: 2 } as const
+
+function estadoProyecto(valor: unknown): Proyecto['estado'] {
+  const estado = texto(valor).toLocaleLowerCase('es')
+  if (estado === 'prototipado') return 'Prototipado'
+  if (estado === 'fase inicial' || estado === 'activo' || estado === 'en-curso') return 'Fase inicial'
+  return 'En formulación'
+}
 
 export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
   const proyectos: Proyecto[] = []
@@ -299,10 +327,10 @@ export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
     const ilustrativo = datos.confirmado !== true
     proyectos.push({
       slug, titulo, ilustrativo, cuerpo,
-      estado: unaDeEstas(datos.estado, ['propuesta', 'activo', 'en-curso', 'completado', 'pausado'] as const, 'propuesta'),
+      estado: estadoProyecto(datos.estado),
       linea: texto(datos.linea),
       resumen: texto(datos.resumen),
-      portada: ilustrativo ? undefined : imagenLocal(datos.portada),
+      portada: ilustrativo ? undefined : imagenSegura(datos.portada),
       integrantes: !ilustrativo && Array.isArray(datos.integrantes) ? datos.integrantes.map(texto).filter((s) => perfilesConfirmados.has(s)) : [],
     })
   }
@@ -330,7 +358,7 @@ export async function listarIntegrantes(): Promise<Integrante[]> {
       slug, nombre, ilustrativo, cuerpo,
       rol: unaDeEstas(datos.rol, ['director', 'investigador', 'estudiante', 'egresado'] as const, 'estudiante'),
       area: texto(datos.area),
-      foto: ilustrativo ? undefined : imagenLocal(datos.foto),
+      foto: ilustrativo ? undefined : imagenSegura(datos.foto),
       enlaces: ilustrativo ? {} : {
         github: enlaceSeguro(enlaces.github),
         linkedin: enlaceSeguro(enlaces.linkedin),
@@ -366,7 +394,7 @@ export async function listarGaleria(): Promise<FotoGaleria[]> {
   for (const { slug, datos } of await leerFuente('galeria')) {
     if (datos.confirmado !== true) continue
     const titulo = texto(datos.titulo)
-    const imagen = imagenLocal(datos.imagen)
+    const imagen = imagenSegura(datos.imagen)
     const alt = texto(datos.alt)
     const pie = texto(datos.pie)
     if (!titulo || !imagen || !alt || !pie) {
@@ -393,7 +421,7 @@ function filtrarRecursosMarkdown() {
         recorrer(hijo)
         const destino = hijo.url ?? definiciones.get(hijo.identifier ?? '')
         if ((hijo.type === 'link' || hijo.type === 'linkReference') && !enlaceSeguro(destino)) return hijo.children ?? []
-        if ((hijo.type === 'image' || hijo.type === 'imageReference') && !imagenLocal(destino)) return [{ type: 'text', value: hijo.alt ? `Imagen pendiente: ${hijo.alt}` : 'Imagen pendiente de validación' }]
+        if ((hijo.type === 'image' || hijo.type === 'imageReference') && !imagenSegura(destino)) return [{ type: 'text', value: hijo.alt ? `Imagen pendiente: ${hijo.alt}` : 'Imagen pendiente de validación' }]
         return [hijo]
       })
     }

@@ -4,7 +4,10 @@ import Nav from '@/componentes/Nav'
 import Pie from '@/componentes/Pie'
 import Transicion from '@/componentes/Transicion'
 import { SITIO } from '@/lib/sitio'
+import { navegacionVisible } from '@/lib/configuracion'
 import './globals.css'
+
+export const dynamic = 'force-dynamic'
 
 const texto = Geist({
   subsets: ['latin'],
@@ -38,11 +41,13 @@ export const viewport = {
   initialScale: 1,
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const navegacion = await navegacionVisible()
+
   return (
     <html lang="es-CO" className={`${texto.variable} ${mono.variable}`}>
       <body>
@@ -55,11 +60,11 @@ export default function RootLayout({
             <p>Contenido ilustrativo · Pendiente de validación</p>
           </div>
         </aside>
-        <Nav />
+        <Nav items={navegacion} />
         <main id="contenido" tabIndex={-1}>
           <Transicion>{children}</Transicion>
         </main>
-        <Pie />
+        <Pie items={navegacion} />
       </body>
     </html>
   )

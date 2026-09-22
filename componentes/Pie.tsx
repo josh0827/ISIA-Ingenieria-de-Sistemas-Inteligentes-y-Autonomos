@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { NAVEGACION, SITIO } from '@/lib/sitio'
+import { SITIO, type ItemNavegacion } from '@/lib/sitio'
 import Escudo from './Escudo'
 import estilos from './Pie.module.css'
-export default function Pie() {
+export default function Pie({ items }: { items: ItemNavegacion[] }) {
   return (
     <footer className={estilos.pie}>
       <div className="contenedor">
@@ -25,7 +25,7 @@ export default function Pie() {
           <nav aria-label="Secciones del sitio">
             <h2>Explorar</h2>
             <ul className={estilos.enlaces}>
-              {NAVEGACION.filter((i) => i.href !== '/unete').map((item) => (
+              {items.filter((i) => i.href !== '/unete').map((item) => (
                 <li key={item.href}>
                   <Link href={item.href}>{item.texto}</Link>
                 </li>

@@ -1,7 +1,7 @@
 ---
 titulo: Plataforma móvil de pruebas
 confirmado: false
-estado: propuesta
+estado: En formulación
 linea: Control y navegación autónoma
 resumen: Propuesta ilustrativa para comparar estrategias de estimación de posición y seguimiento de trayectorias en una plataforma móvil.
 integrantes: []

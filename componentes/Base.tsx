@@ -134,10 +134,9 @@ export function Boton({
 // contenido, añádelo también aquí y en Base.module.css.
 const COLOR_ETIQUETA: Record<string, string> = {
   // estados de proyecto
-  activo: 'verde',
-  'en-curso': 'verde',
-  pausado: 'rojo',
-  completado: 'neutro',
+  'En formulación': 'neutro',
+  Prototipado: 'verde',
+  'Fase inicial': 'verde',
   // tipos de novedad
   convocatoria: 'rojo',
   evento: 'verde',
@@ -150,12 +149,10 @@ const COLOR_ETIQUETA: Record<string, string> = {
 }
 
 const TEXTO_ETIQUETA: Record<string, string> = {
-  propuesta: 'Propuesta ilustrativa',
+  'En formulación': 'En formulación',
+  Prototipado: 'Prototipado',
+  'Fase inicial': 'Fase inicial',
   divulgacion: 'Divulgación',
-  activo: 'Activo',
-  'en-curso': 'En curso',
-  pausado: 'Pausado',
-  completado: 'Completado',
   convocatoria: 'Convocatoria',
   evento: 'Evento',
   logro: 'Logro',

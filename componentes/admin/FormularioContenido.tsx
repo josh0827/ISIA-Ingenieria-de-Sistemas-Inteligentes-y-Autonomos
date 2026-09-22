@@ -72,6 +72,21 @@ export default function FormularioContenido({ esquema, slugExistente, valoresIni
               <input id={idCampo} name={campo.clave} type="time" defaultValue={valorTexto(valorInicial)} required={campo.requerido} />
             ) : campo.tipo === 'numero' ? (
               <input id={idCampo} name={campo.clave} type="number" defaultValue={valorTexto(valorInicial)} required={campo.requerido} />
+            ) : campo.tipo === 'imagen' ? (
+              <>
+                <input
+                  id={idCampo}
+                  name={campo.clave}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  required={campo.requerido && !valorInicial}
+                />
+                {Boolean(valorInicial) && (
+                  <p className={estilos.archivoActual}>
+                    Ya existe una imagen. Selecciona otra solo si deseas reemplazarla.
+                  </p>
+                )}
+              </>
             ) : (
               <input id={idCampo} name={campo.clave} type="text" defaultValue={valorTexto(valorInicial)} required={campo.requerido} />
             )}

@@ -11,7 +11,7 @@ Este documento resume **todo lo que se implementó** en la rama de trabajo actua
 El sitio es una demo institucional del semillero **ISIA (Ingeniería de Sistemas Inteligentes y Autónomos)** construida con **Next.js 15 (App Router) + React 19 + TypeScript**. Originalmente todo el contenido (proyectos, novedades, reuniones, integrantes, publicaciones, galería) vivía como archivos Markdown estáticos en [contenido/](./contenido). En esta fase de trabajo se hicieron dos grandes bloques de cambios:
 
 1. **Mejoras visuales y de experiencia de usuario** sobre el sitio público existente.
-2. **Un panel de administración web** (`/admin`) que permite crear, editar y borrar todo ese contenido sin tocar código ni Markdown, respaldado por **Firebase (Firestore + Authentication)**.
+2. **Un panel de administración web** (`/admin`) que permite crear, editar y borrar contenido sin tocar código ni Markdown, respaldado por **Firebase (Firestore + Authentication)** y almacenamiento multimedia adaptativo: disco local o Vercel Blob.
 
 Ambos bloques están commiteados por separado en el historial de git:
 
@@ -83,7 +83,7 @@ Antes de esta implementación, agregar o editar un proyecto, una novedad, una re
 - Ventaja: agregar un campo nuevo a cualquier colección en el futuro solo requiere editar ese archivo de esquema, no crear pantallas nuevas.
 
 **Guardado y validación (`lib/admin/acciones.ts`, "server actions"):**
-- `guardarDocumento(...)`: valida cada campo según su tipo (reutilizando las mismas reglas del sitio público, p. ej. fechas ISO válidas, enlaces seguros, imágenes que ya existan en `public/imagenes/`) y, si todo es correcto, escribe el documento en Firestore. Si algo es inválido, no guarda y muestra el error en el formulario.
+- `guardarDocumento(...)`: valida cada campo según su tipo y usa `lib/storage/upload.ts`. En Vercel guarda en Blob; en otros entornos usa `public/imagenes/`. Firestore recibe la URL o ruta resultante y las páginas afectadas se revalidan tras cada mutación.
 - `eliminarDocumento(...)`: borra el documento de Firestore.
 - El **slug** (identificador único de la URL, ej. `nodo-de-medida-autonomo`) solo se puede definir al crear un elemento; una vez creado, no se puede cambiar (evita romper enlaces existentes).
 
@@ -150,7 +150,7 @@ scripts/
 Adicionalmente existe una colección de control de acceso, **`editores`**, que **no se administra desde la interfaz** por seguridad — se gestiona manualmente desde la consola de Firebase (ver sección 5).
 
 ### 3.5 Limitaciones conocidas de esta versión
-- **No hay subida de imágenes** desde el panel: los campos de tipo imagen todavía requieren que el archivo ya exista en `public/imagenes/` (se sigue agregando por Git). Es un candidato claro para una siguiente iteración (ver sección 6).
+- En Vercel, la subida requiere un Blob Store y `BLOB_READ_WRITE_TOKEN`. En Docker o VPS, `public/imagenes/` debe tener permiso de escritura y montarse como volumen persistente.
 - La colección `editores` (quién puede editar) se administra manualmente desde la consola de Firebase, no desde `/admin` — es una decisión de seguridad deliberada para evitar que un editor se autoasigne o quite permisos a otros.
 - El panel aún no se ha probado con un proyecto de Firebase real (solo se validó el camino "no configurado" y la lógica de código); falta la prueba end-to-end una vez exista el proyecto (ver sección 6).
 
@@ -196,7 +196,7 @@ Estos son los pasos que **debe hacer el equipo** (no requieren más código) par
 7. **Ejecutar la migración** una sola vez: `npm run migrar-contenido`, para llevar el contenido Markdown actual a Firestore.
 8. **Agregar manualmente en Firestore** (colección `editores`) los UID de las personas que podrán editar contenido (se obtiene el UID la primera vez que inicien sesión, mostrado en la pantalla de "acceso pendiente").
 9. **Probar el flujo completo en real**: iniciar sesión, crear/editar/eliminar un elemento de prueba en cada colección, y confirmar que se refleja en el sitio público.
-10. *(Opcional, iteración futura)* Evaluar implementar **subida de imágenes** desde el panel (por ejemplo con Firebase Storage) para eliminar la dependencia de agregar imágenes manualmente por Git.
+10. Para Vercel, vincular un Blob Store al proyecto. Para VPS/Docker, configurar un volumen persistente con permisos de escritura para `public/imagenes/`.
 
 El detalle técnico exacto de cada uno de estos pasos (capturas de dónde hacer clic, nombres exactos de variables de entorno, etc.) está documentado en la sección **"Panel de administración (/admin)"** de [CONTRIBUTING.md](./CONTRIBUTING.md).
 

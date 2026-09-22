@@ -3,7 +3,7 @@ import type { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firesto
 import { db, firebaseListo } from '@/lib/firebase/admin'
 import { esEditor } from '@/lib/editores'
 import { usuarioSesion } from '@/lib/sesion'
-import { esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
+import { ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
 import { ErrorAcceso, exigirCorreoUnal } from '@/lib/autorizacion'
 
 export async function requerirEditor() {
@@ -37,6 +37,15 @@ export function asignarAnidado(objeto: Record<string, unknown>, ruta: string, va
 
 export type DocumentoAdmin = { slug: string; datos: Record<string, unknown>; cuerpo: string }
 
+function normalizarDatosAdmin(
+  coleccion: string,
+  datos: Record<string, unknown>,
+): Record<string, unknown> {
+  if (coleccion !== 'proyectos') return datos
+  if (ESTADOS_PROYECTO.includes(datos.estado as (typeof ESTADOS_PROYECTO)[number])) return datos
+  return { ...datos, estado: 'En formulación' }
+}
+
 /** Lectura sin filtrar (a diferencia de lib/contenido.ts) para poblar tablas y formularios de edición. */
 export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmin[]> {
   await requerirEditor()
@@ -46,7 +55,11 @@ export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmi
   return instantanea.docs
     .map((doc: QueryDocumentSnapshot<DocumentData>) => {
       const { cuerpo, ...datos } = doc.data()
-      return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
+      return {
+        slug: doc.id,
+        datos: normalizarDatosAdmin(coleccion, datos),
+        cuerpo: typeof cuerpo === 'string' ? cuerpo : '',
+      }
     })
     .sort((a, b) => a.slug.localeCompare(b.slug))
 }
@@ -58,7 +71,11 @@ export async function obtenerDocumento(coleccion: string, slug: string): Promise
   const doc = await (await db()).collection(coleccion).doc(slug).get()
   if (!doc.exists) return undefined
   const { cuerpo, ...datos } = doc.data() ?? {}
-  return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
+  return {
+    slug: doc.id,
+    datos: normalizarDatosAdmin(coleccion, datos),
+    cuerpo: typeof cuerpo === 'string' ? cuerpo : '',
+  }
 }
 
 export function valorColumna(documento: DocumentoAdmin, clave: string): string {

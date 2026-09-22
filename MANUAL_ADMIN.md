@@ -31,6 +31,14 @@ Antes de marcar una reunión como confirmada, verifica fecha, hora, modalidad, u
 
 - **Sección:** Panel Admin > **Proyectos**.
 - **Campos:** título, slug o URL amigable, línea de investigación, estado, resumen, integrantes, descripción e imagen principal.
-- **Almacenamiento multimedia actual:** el panel guarda en Firestore una ruta relativa como `/imagenes/proyectos/archivo.webp`. El archivo debe incorporarse previamente en `public/imagenes/proyectos/` dentro del servidor; esta versión todavía no sube archivos desde el navegador.
+- **Almacenamiento multimedia:** selecciona una imagen JPG, PNG, WebP o AVIF de máximo 8 MB. En Vercel se guarda en Blob; en el servidor local se guarda en `public/imagenes/proyectos/`. Firestore registra la URL o ruta resultante. Si editas una ficha sin seleccionar otro archivo, conserva la imagen existente.
 
 Utiliza `confirmado: false` mientras el proyecto sea ilustrativo o esté pendiente de revisión. No publiques nombres, resultados o imágenes sin validación y autorización.
+
+## 🧭 5. Navegación pública
+
+- **Sección:** Panel Admin > **Navegación pública**.
+- Activa o desactiva cada sección según exista contenido listo para publicar.
+- Al guardar, el encabezado y el pie del sitio se actualizan con la misma configuración.
+
+Ocultar una sección retira su enlace del menú; no elimina sus documentos de Firestore. Conserva siempre una vía clara hacia **Únete** mientras el portal mantenga su propósito de vinculación.
