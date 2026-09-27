@@ -71,7 +71,10 @@ export async function resolverUsuarioAutorizado(
     .maybeSingle<FilaUsuarioAutorizado>()
 
   if (errorId) {
-    return { vinculadoPorCorreo: false, error: `consulta_id:${errorId.code}` }
+    const causa = errorId.code === 'PGRST301'
+      ? 'clave_servidor_invalida'
+      : `consulta_id:${errorId.code}`
+    return { vinculadoPorCorreo: false, error: causa }
   }
 
   const usuarioPorId = convertirUsuario(porId)
@@ -88,7 +91,10 @@ export async function resolverUsuarioAutorizado(
     .returns<FilaUsuarioAutorizado[]>()
 
   if (errorEmail) {
-    return { vinculadoPorCorreo: false, error: `consulta_email:${errorEmail.code}` }
+    const causa = errorEmail.code === 'PGRST301'
+      ? 'clave_servidor_invalida'
+      : `consulta_email:${errorEmail.code}`
+    return { vinculadoPorCorreo: false, error: causa }
   }
 
   const coincidencias = (candidatos ?? []).filter(
