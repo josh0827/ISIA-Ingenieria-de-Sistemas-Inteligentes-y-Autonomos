@@ -35,7 +35,12 @@ export function clavePublicaSupabase(): string | undefined {
 }
 
 export function claveServicioSupabase(): string | undefined {
-  return variableEntorno('SUPABASE_SERVICE_ROLE_KEY')
+  // Las claves modernas sb_secret_* sustituyen gradualmente al JWT heredado
+  // service_role. Se admite el nombre anterior para instalaciones existentes.
+  return (
+    variableEntorno('SUPABASE_SECRET_KEY') ||
+    variableEntorno('SUPABASE_SERVICE_ROLE_KEY')
+  )
 }
 
 export function supabaseClienteListo(): boolean {

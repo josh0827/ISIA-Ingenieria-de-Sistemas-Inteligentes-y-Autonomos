@@ -16,10 +16,10 @@ Configura las siguientes variables desde **Project Settings → Environment Vari
 | --- | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Sí | Sí | Sí | Pública |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Sí | Sí | Sí | Pública recomendada por Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | Sí | Sí | Sí | Secreto exclusivo del servidor |
+| `SUPABASE_SECRET_KEY` | Sí | Sí | Sí | Secreto moderno `sb_secret_...`; solo servidor |
 | `NEXT_PUBLIC_SITE_URL` | Dominio de producción | URL estable de preview o dominio de pruebas | `http://localhost:3000` | Pública |
 
-Marca `SUPABASE_SERVICE_ROLE_KEY` como **Sensitive** en Production y Preview. Vercel no permite esa clasificación en Development; limita el acceso al proyecto y evita compartir el valor.
+Marca `SUPABASE_SECRET_KEY` como **Sensitive** en Production y Preview. El código conserva compatibilidad con `SUPABASE_SERVICE_ROLE_KEY`, pero la clave moderna es la opción recomendada. Vercel no permite esa clasificación en Development; limita el acceso al proyecto y evita compartir el valor.
 
 El código conserva compatibilidad con `NEXT_PUBLIC_SUPABASE_ANON_KEY` para proyectos antiguos, pero basta con configurar una de las dos claves públicas. En instalaciones nuevas usa `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
