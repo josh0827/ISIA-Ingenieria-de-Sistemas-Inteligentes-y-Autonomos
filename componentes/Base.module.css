@@ -29,6 +29,8 @@
   font-size: 1.05rem;
   line-height: 1.7;
   max-width: 44rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .boton {
   display: inline-flex;
@@ -95,6 +97,7 @@
 .encabezadoPagina {
   padding-bottom: 2.5rem;
   max-width: 55rem;
+  min-width: 0;
 }
 .encabezadoPagina h1 {
   font-size: clamp(2.3rem, 5vw, 3.7rem);

@@ -1,7 +1,7 @@
 ---
 titulo: Exploración de instrumentación inteligente
 confirmado: false
-estado: propuesta
+estado: En formulación
 linea: Instrumentación inteligente
 resumen: Una propuesta ilustrativa para relacionar adquisición de señales, incertidumbre de medición y procesamiento de información.
 integrantes: []

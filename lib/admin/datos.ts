@@ -1,16 +1,30 @@
 import 'server-only'
-import type { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore'
-import { db, firebaseListo } from '@/lib/firebase/admin'
-import { esEditor } from '@/lib/editores'
+import { supabaseServidorListo } from '@/lib/supabase/config'
+import { listarFilasContenido, obtenerFilaContenido } from '@/lib/supabase/contenido'
 import { usuarioSesion } from '@/lib/sesion'
-import { esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
+import { obtenerUsuarioAutorizado, puedeEditarContenido, puedeGestionarPracticas } from '@/lib/usuarios-autorizados'
+import { ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
+import { ErrorAcceso } from '@/lib/autorizacion'
 
 export async function requerirEditor() {
-  if (!firebaseListo()) throw new Error('Firebase no está configurado en este entorno.')
+  if (!supabaseServidorListo()) throw new Error('Supabase no está configurado en este entorno.')
   const usuario = await usuarioSesion()
-  if (!usuario) throw new Error('No hay una sesión activa.')
-  if (!(await esEditor(usuario.uid))) throw new Error('Tu cuenta no está autorizada para editar contenido.')
+  if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
+  if (!puedeEditarContenido(await obtenerUsuarioAutorizado(usuario.id))) {
+    throw new ErrorAcceso('Tu cuenta no está autorizada para editar contenido.', 403, 'editor')
+  }
   return usuario
+}
+
+export async function requerirGestionPracticas() {
+  if (!supabaseServidorListo()) throw new Error('Supabase no está configurado en este entorno.')
+  const usuario = await usuarioSesion()
+  if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
+  const autorizado = await obtenerUsuarioAutorizado(usuario.id)
+  if (!puedeGestionarPracticas(autorizado)) {
+    throw new ErrorAcceso('Tu cuenta no está autorizada para gestionar prácticas.', 403, 'editor')
+  }
+  return { ...usuario, autorizado }
 }
 
 export function obtenerAnidado(objeto: Record<string, unknown>, ruta: string): unknown {
@@ -33,17 +47,26 @@ export function asignarAnidado(objeto: Record<string, unknown>, ruta: string, va
 
 export type DocumentoAdmin = { slug: string; datos: Record<string, unknown>; cuerpo: string }
 
+function normalizarDatosAdmin(
+  coleccion: string,
+  datos: Record<string, unknown>,
+): Record<string, unknown> {
+  if (coleccion !== 'proyectos') return datos
+  if (ESTADOS_PROYECTO.includes(datos.estado as (typeof ESTADOS_PROYECTO)[number])) return datos
+  return { ...datos, estado: 'En formulación' }
+}
+
 /** Lectura sin filtrar (a diferencia de lib/contenido.ts) para poblar tablas y formularios de edición. */
 export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmin[]> {
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  const instantanea = await (await db()).collection(coleccion).get()
-  return instantanea.docs
-    .map((doc: QueryDocumentSnapshot<DocumentData>) => {
-      const { cuerpo, ...datos } = doc.data()
-      return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
-    })
+  return (await listarFilasContenido(coleccion))
+    .map((fila) => ({
+      slug: fila.slug,
+      datos: normalizarDatosAdmin(coleccion, fila.datos),
+      cuerpo: fila.cuerpo,
+    }))
     .sort((a, b) => a.slug.localeCompare(b.slug))
 }
 
@@ -51,10 +74,13 @@ export async function obtenerDocumento(coleccion: string, slug: string): Promise
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  const doc = await (await db()).collection(coleccion).doc(slug).get()
-  if (!doc.exists) return undefined
-  const { cuerpo, ...datos } = doc.data() ?? {}
-  return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
+  const fila = await obtenerFilaContenido(coleccion, slug)
+  if (!fila) return undefined
+  return {
+    slug: fila.slug,
+    datos: normalizarDatosAdmin(coleccion, fila.datos),
+    cuerpo: fila.cuerpo,
+  }
 }
 
 export function valorColumna(documento: DocumentoAdmin, clave: string): string {

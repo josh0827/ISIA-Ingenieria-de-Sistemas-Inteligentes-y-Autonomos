@@ -1,0 +1,15 @@
+.primeraSeccion { padding-top: clamp(2.5rem, 5vw, 4.5rem); }
+.filtros { display: grid; grid-template-columns: minmax(180px, 0.45fr) minmax(240px, 1fr); gap: 1rem; margin: 2.5rem 0; padding: 1.25rem; border: 1px solid var(--linea); background: var(--superficie); }
+.filtros label { display: grid; gap: 0.4rem; color: var(--texto-tenue); font-size: 0.86rem; font-weight: 650; }
+.filtros input, .filtros select { width: 100%; min-height: 2.7rem; border: 1px solid var(--linea-fuerte); border-radius: var(--r-sm); background: white; color: var(--texto); padding: 0.5rem 0.7rem; }
+.rejilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.tarjeta { display: flex; flex-direction: column; gap: 0.9rem; min-width: 0; padding: clamp(1.25rem, 3vw, 1.75rem); border: 1px solid var(--linea); background: var(--superficie); }
+.cabeceraTarjeta { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; color: var(--texto-tenue); font-size: 0.8rem; }
+.tarjeta h2 { font-size: 1.35rem; }
+.tarjeta p { color: var(--texto-tenue); max-width: 100%; overflow-wrap: anywhere; }
+.empresa { color: var(--verde-oscuro) !important; font-weight: 700; }
+.requisitos { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.requisitos li { max-width: 100%; padding: 0.3rem 0.6rem; overflow-wrap: anywhere; background: var(--verde-vel); color: var(--verde-oscuro); border-radius: 999px; font-size: 0.8rem; }
+.acciones { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--linea); color: var(--texto-tenue); font-size: 0.88rem; }
+.acciones a { color: var(--verde-oscuro); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 700px) { .filtros, .rejilla { grid-template-columns: 1fr; } }

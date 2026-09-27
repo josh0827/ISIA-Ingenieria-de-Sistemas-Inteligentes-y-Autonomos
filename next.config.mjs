@@ -1,6 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+  },
   // El Markdown de contenido/ se lee en tiempo de ejecucion. El rastreo
   // automatico de archivos no sigue rutas construidas con process.cwd(), asi
   // que sin esto contenido/ no viaja a las funciones del servidor y el sitio

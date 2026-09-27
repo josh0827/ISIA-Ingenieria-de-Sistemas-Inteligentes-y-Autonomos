@@ -10,19 +10,21 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint app componentes lib",
+    "test": "node --conditions=react-server --experimental-strip-types --test tests/*.test.ts",
     "typecheck": "tsc --noEmit",
     "migrar-contenido": "node --env-file=.env.local scripts/migrar-contenido.mjs"
   },
   "dependencies": {
-    "firebase": "^12.19.0",
-    "firebase-admin": "^14.4.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "gray-matter": "4.0.3",
     "next": "15.5.25",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "remark": "15.0.1",
     "remark-html": "16.0.1",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "zod": "^4.1.0"
   },
   "devDependencies": {
     "@types/node": "22.10.2",

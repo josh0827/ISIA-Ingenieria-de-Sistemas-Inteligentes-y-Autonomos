@@ -3,12 +3,13 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
-import { db, firebaseListo } from './firebase/admin'
+import { supabaseServidorListo } from './supabase/config'
+import { listarFilasContenido } from './supabase/contenido'
 
 const RAIZ = path.join(process.cwd(), 'contenido')
 const PUBLICO = path.join(process.cwd(), 'public')
 
-/** Nombres de colección de Firestore == nombres de carpeta en contenido/. */
+/** Nombres editoriales compartidos por PostgreSQL y las carpetas Markdown. */
 export const COLECCIONES = [
   'proyectos',
   'novedades',
@@ -49,7 +50,7 @@ export type Reunion = EstadoEditorial & {
 export type Proyecto = EstadoEditorial & {
   slug: string
   titulo: string
-  estado: 'propuesta' | 'activo' | 'en-curso' | 'completado' | 'pausado'
+  estado: 'En formulación' | 'Prototipado' | 'Fase inicial'
   linea: string
   resumen: string
   portada?: string
@@ -110,30 +111,26 @@ function leerCarpeta(carpeta: string): Crudo[] {
   return salida
 }
 
-/** Cada documento de Firestore se mapea al mismo formato {slug, datos, cuerpo} que el Markdown. */
+/** Cada fila de PostgreSQL se mapea al formato {slug, datos, cuerpo} del Markdown. */
 async function leerColeccion(nombre: NombreColeccion): Promise<Crudo[]> {
-  const instantanea = await (await db()).collection(nombre).get()
-  return instantanea.docs.map((doc) => {
-    const { cuerpo, ...datos } = doc.data()
-    return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
-  })
+  return listarFilasContenido(nombre)
 }
 
 /**
- * Si hay credenciales de Firebase configuradas, el contenido real vive en
- * Firestore (editable desde /admin). Si no, se usa el Markdown de contenido/
+ * Si hay credenciales de Supabase configuradas, el contenido real vive en
+ * PostgreSQL (editable desde /admin). Si no, se usa el Markdown de contenido/
  * para que el sitio y el desarrollo local sigan funcionando sin ellas.
  */
 async function leerFuente(carpeta: NombreColeccion): Promise<Crudo[]> {
-  if (!firebaseListo()) return leerCarpeta(carpeta)
+  if (!supabaseServidorListo()) return leerCarpeta(carpeta)
   try {
     return await leerColeccion(carpeta)
   } catch (error) {
-    // Si Firestore no responde (credenciales caducadas, permisos, red), el
+    // Si Supabase no responde (credenciales caducadas, permisos, red), el
     // sitio publico no puede quedarse en blanco ni devolver un error 500: se
     // sirve el Markdown de contenido/, que siempre viaja con el despliegue.
     console.error(
-      `[contenido] Firestore no respondio para "${carpeta}" (${(error as Error).message}). Se usa el Markdown de contenido/.`,
+      `[contenido] Supabase no respondio para "${carpeta}" (${(error as Error).message}). Se usa el Markdown de contenido/.`,
     )
     return leerCarpeta(carpeta)
   }
@@ -171,7 +168,7 @@ export function anioValido(valor: unknown): number | undefined {
 /**
  * Se aceptan HTTPS y rutas internas con forma válida; nunca protocolos
  * ejecutables ni dominios de ejemplo. La existencia del archivo Markdown ya
- * no se exige aquí porque el contenido puede vivir en Firestore: en el peor
+ * no se exige aquí porque el contenido puede vivir en PostgreSQL: en el peor
  * caso un slug inexistente lleva a un 404 dentro del propio sitio.
  */
 export function enlaceSeguro(valor: unknown): string | undefined {
@@ -183,8 +180,8 @@ export function enlaceSeguro(valor: unknown): string | undefined {
     if (ruta.includes('..') || ruta.includes('%')) return undefined
     const segmentos = ruta.split('/').filter(Boolean)
     if (segmentos.length === 0) return s
-    if (segmentos.length === 1 && ['lineas', 'proyectos', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'unete'].includes(segmentos[0])) return s
-    if (segmentos.length === 2 && ['proyectos', 'novedades'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
+    if (segmentos.length === 1 && ['lineas', 'proyectos', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'grupos', 'practicas', 'unete'].includes(segmentos[0])) return s
+    if (segmentos.length === 2 && ['proyectos', 'novedades', 'grupos'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
     if (/^\/recursos\/[a-zA-Z0-9/_-]+\.pdf$/i.test(ruta)) {
       const archivo = path.resolve(PUBLICO, `.${ruta}`)
       if (archivo.startsWith(`${PUBLICO}${path.sep}`) && fs.existsSync(archivo) && fs.statSync(archivo).isFile()) return s
@@ -203,13 +200,35 @@ export function enlaceSeguro(valor: unknown): string | undefined {
   }
 }
 
-/** Las fotografías deben existir en el repositorio; no se cargan imágenes remotas. */
+/** Solo se admiten recursos estáticos locales publicados por el servidor. */
 export function imagenLocal(valor: unknown): string | undefined {
   const s = texto(valor)
   if (!/^\/imagenes\/[a-zA-Z0-9/_-]+\.(avif|webp|png|jpe?g|svg)$/i.test(s)) return undefined
   const absoluta = path.resolve(PUBLICO, `.${s}`)
   if (!absoluta.startsWith(`${PUBLICO}${path.sep}`) || !fs.existsSync(absoluta) || !fs.statSync(absoluta).isFile()) return undefined
   return s
+}
+
+export function imagenSupabase(valor: unknown): string | undefined {
+  const s = texto(valor)
+  if (!s) return undefined
+  try {
+    const url = new URL(s)
+    if (
+      url.protocol !== 'https:' ||
+      !url.hostname.endsWith('.supabase.co') ||
+      !url.pathname.startsWith('/storage/v1/object/public/imagenes/')
+    ) {
+      return undefined
+    }
+    return url.href
+  } catch {
+    return undefined
+  }
+}
+
+export function imagenSegura(valor: unknown): string | undefined {
+  return imagenLocal(valor) ?? imagenSupabase(valor)
 }
 
 export function correoSeguro(valor: unknown): string | undefined {
@@ -234,7 +253,7 @@ export async function listarNovedades(limite?: number): Promise<Novedad[]> {
       slug, titulo, fecha, ilustrativo, cuerpo,
       tipo: unaDeEstas(datos.tipo, ['convocatoria', 'evento', 'logro', 'publicacion', 'divulgacion'] as const, 'divulgacion'),
       resumen: texto(datos.resumen),
-      imagen: ilustrativo ? undefined : imagenLocal(datos.imagen),
+      imagen: ilustrativo ? undefined : imagenSegura(datos.imagen),
       autor: ilustrativo ? undefined : texto(datos.autor) || undefined,
     })
   }
@@ -285,7 +304,14 @@ export async function reunionesPasadas(): Promise<Reunion[]> {
   return (await listarReuniones()).filter((r) => !r.ilustrativo && r.fecha < hoy).reverse()
 }
 
-const ORDEN_ESTADO = { propuesta: 0, activo: 1, 'en-curso': 2, pausado: 3, completado: 4 } as const
+const ORDEN_ESTADO = { 'En formulación': 0, 'Fase inicial': 1, Prototipado: 2 } as const
+
+function estadoProyecto(valor: unknown): Proyecto['estado'] {
+  const estado = texto(valor).toLocaleLowerCase('es')
+  if (estado === 'prototipado') return 'Prototipado'
+  if (estado === 'fase inicial' || estado === 'activo' || estado === 'en-curso') return 'Fase inicial'
+  return 'En formulación'
+}
 
 export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
   const proyectos: Proyecto[] = []
@@ -299,10 +325,10 @@ export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
     const ilustrativo = datos.confirmado !== true
     proyectos.push({
       slug, titulo, ilustrativo, cuerpo,
-      estado: unaDeEstas(datos.estado, ['propuesta', 'activo', 'en-curso', 'completado', 'pausado'] as const, 'propuesta'),
+      estado: estadoProyecto(datos.estado),
       linea: texto(datos.linea),
       resumen: texto(datos.resumen),
-      portada: ilustrativo ? undefined : imagenLocal(datos.portada),
+      portada: ilustrativo ? undefined : imagenSegura(datos.portada),
       integrantes: !ilustrativo && Array.isArray(datos.integrantes) ? datos.integrantes.map(texto).filter((s) => perfilesConfirmados.has(s)) : [],
     })
   }
@@ -330,7 +356,7 @@ export async function listarIntegrantes(): Promise<Integrante[]> {
       slug, nombre, ilustrativo, cuerpo,
       rol: unaDeEstas(datos.rol, ['director', 'investigador', 'estudiante', 'egresado'] as const, 'estudiante'),
       area: texto(datos.area),
-      foto: ilustrativo ? undefined : imagenLocal(datos.foto),
+      foto: ilustrativo ? undefined : imagenSegura(datos.foto),
       enlaces: ilustrativo ? {} : {
         github: enlaceSeguro(enlaces.github),
         linkedin: enlaceSeguro(enlaces.linkedin),
@@ -366,7 +392,7 @@ export async function listarGaleria(): Promise<FotoGaleria[]> {
   for (const { slug, datos } of await leerFuente('galeria')) {
     if (datos.confirmado !== true) continue
     const titulo = texto(datos.titulo)
-    const imagen = imagenLocal(datos.imagen)
+    const imagen = imagenSegura(datos.imagen)
     const alt = texto(datos.alt)
     const pie = texto(datos.pie)
     if (!titulo || !imagen || !alt || !pie) {
@@ -393,7 +419,7 @@ function filtrarRecursosMarkdown() {
         recorrer(hijo)
         const destino = hijo.url ?? definiciones.get(hijo.identifier ?? '')
         if ((hijo.type === 'link' || hijo.type === 'linkReference') && !enlaceSeguro(destino)) return hijo.children ?? []
-        if ((hijo.type === 'image' || hijo.type === 'imageReference') && !imagenLocal(destino)) return [{ type: 'text', value: hijo.alt ? `Imagen pendiente: ${hijo.alt}` : 'Imagen pendiente de validación' }]
+        if ((hijo.type === 'image' || hijo.type === 'imageReference') && !imagenSegura(destino)) return [{ type: 'text', value: hijo.alt ? `Imagen pendiente: ${hijo.alt}` : 'Imagen pendiente de validación' }]
         return [hijo]
       })
     }

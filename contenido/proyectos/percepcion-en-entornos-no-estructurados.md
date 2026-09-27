@@ -1,7 +1,7 @@
 ---
 titulo: Percepción en entornos no estructurados
 confirmado: false
-estado: propuesta
+estado: En formulación
 linea: Percepción y visión por computador
 resumen: Una propuesta ilustrativa para estudiar cómo cambian las estimaciones visuales ante variaciones de iluminación, oclusiones y fondos.
 integrantes: []

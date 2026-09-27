@@ -28,11 +28,9 @@ export function FiltrosProyectos({ proyectos }: { proyectos: Proyecto[] }) {
           <span>Estado</span>
           <select value={estado} onChange={(event) => setEstado(event.target.value)}>
             <option value="todos">Todos los estados</option>
-            <option value="propuesta">Propuesta</option>
-            <option value="activo">Activo</option>
-            <option value="en-curso">En curso</option>
-            <option value="pausado">Pausado</option>
-            <option value="completado">Completado</option>
+            <option value="En formulación">En formulación</option>
+            <option value="Prototipado">Prototipado</option>
+            <option value="Fase inicial">Fase inicial</option>
           </select>
         </label>
         <label>

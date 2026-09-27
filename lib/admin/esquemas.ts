@@ -1,10 +1,13 @@
 /**
- * Define, para cada colección de Firestore, los campos que el panel de
+ * Define, para cada tipo de contenido almacenado en PostgreSQL, los campos que el panel de
  * administración debe mostrar en sus formularios y tablas. Un solo
  * formulario y una sola tabla genéricos (ver componentes/admin) se adaptan a
  * estos esquemas en lugar de duplicar una pantalla por tipo de contenido.
  */
 import type { NombreColeccion } from '@/lib/contenido'
+import { ESTADOS_PROYECTO } from '@/lib/validators/schemas'
+
+export { ESTADOS_PROYECTO, esquemaProyectoZod } from '@/lib/validators/schemas'
 
 export type TipoCampo =
   | 'texto'
@@ -55,11 +58,11 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       { clave: 'titulo', etiqueta: 'Título', tipo: 'texto', requerido: true },
       {
         clave: 'estado', etiqueta: 'Estado', tipo: 'select', requerido: true,
-        opciones: ['propuesta', 'activo', 'en-curso', 'completado', 'pausado'],
+        opciones: ESTADOS_PROYECTO,
       },
       { clave: 'linea', etiqueta: 'Línea de investigación', tipo: 'texto', ayuda: 'Debe coincidir exactamente con el título de una línea existente.' },
       { clave: 'resumen', etiqueta: 'Resumen', tipo: 'textarea', requerido: true },
-      { clave: 'portada', etiqueta: 'Imagen de portada', tipo: 'imagen', ayuda: 'Ruta dentro de /public/imagenes; el archivo debe existir ya en el repositorio.' },
+      { clave: 'portada', etiqueta: 'Imagen de portada', tipo: 'imagen', ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
       { clave: 'integrantes', etiqueta: 'Integrantes (slugs separados por comas)', tipo: 'lista', ayuda: 'Usa el slug de cada persona tal como aparece en Integrantes.' },
       { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano' },
       { clave: 'cuerpo', etiqueta: 'Descripción completa (Markdown)', tipo: 'markdown' },
@@ -83,7 +86,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
         opciones: ['convocatoria', 'evento', 'logro', 'publicacion', 'divulgacion'],
       },
       { clave: 'resumen', etiqueta: 'Resumen', tipo: 'textarea', requerido: true },
-      { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', ayuda: 'Ruta dentro de /public/imagenes; el archivo debe existir ya en el repositorio.' },
+      { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
       { clave: 'autor', etiqueta: 'Autor', tipo: 'texto' },
       { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano' },
       { clave: 'cuerpo', etiqueta: 'Contenido completo (Markdown)', tipo: 'markdown' },
@@ -132,7 +135,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
         opciones: ['director', 'investigador', 'estudiante', 'egresado'],
       },
       { clave: 'area', etiqueta: 'Área de interés', tipo: 'texto' },
-      { clave: 'foto', etiqueta: 'Foto', tipo: 'imagen', ayuda: 'Ruta dentro de /public/imagenes; el archivo debe existir ya en el repositorio.' },
+      { clave: 'foto', etiqueta: 'Foto', tipo: 'imagen', ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
       { clave: 'enlaces.github', etiqueta: 'GitHub', tipo: 'url' },
       { clave: 'enlaces.linkedin', etiqueta: 'LinkedIn', tipo: 'url' },
       { clave: 'enlaces.correo', etiqueta: 'Correo de contacto', tipo: 'correo' },
@@ -171,7 +174,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
     ],
     campos: [
       { clave: 'titulo', etiqueta: 'Título', tipo: 'texto', requerido: true },
-      { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', requerido: true, ayuda: 'Ruta dentro de /public/imagenes; el archivo debe existir ya en el repositorio.' },
+      { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', requerido: true, ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
       { clave: 'alt', etiqueta: 'Texto alternativo', tipo: 'texto', requerido: true },
       { clave: 'pie', etiqueta: 'Pie de foto', tipo: 'texto', requerido: true },
       { clave: 'anio', etiqueta: 'Año', tipo: 'numero' },
