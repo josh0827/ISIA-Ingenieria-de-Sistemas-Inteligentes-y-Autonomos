@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server'
 import { crearClienteServidor } from '@/lib/supabase/server'
-import { obtenerUsuarioAutorizado } from '@/lib/usuarios-autorizados'
+import { resolverUsuarioAutorizado } from '@/lib/usuarios-autorizados'
+
+function redireccionError(origen: string, error: string) {
+  return NextResponse.redirect(
+    new URL(`/admin/iniciar-sesion?error=${encodeURIComponent(error)}`, origen),
+  )
+}
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
@@ -11,24 +17,54 @@ export async function GET(request: Request) {
     : '/admin'
 
   if (!codigo) {
-    return NextResponse.redirect(
-      new URL('/admin/iniciar-sesion?error=oauth', url.origin),
-    )
+    console.error('[AUTH CALLBACK] Solicitud rechazada: falta el código OAuth.')
+    return redireccionError(url.origin, 'missing_code')
   }
 
   const supabase = await crearClienteServidor()
   const { data, error } = await supabase.auth.exchangeCodeForSession(codigo)
 
-  if (!error && data.user) {
-    const usuario = await obtenerUsuarioAutorizado(data.user.id)
-    if (usuario?.activo) {
-      const destino = usuario.rol === 'empresa' ? '/admin/practicas' : siguiente
-      return NextResponse.redirect(new URL(destino, url.origin))
-    }
+  if (error || !data.user) {
+    console.error('[AUTH CALLBACK] No fue posible crear la sesión.', {
+      codigo: error?.code ?? 'usuario_ausente',
+      mensaje: error?.message,
+    })
+    await supabase.auth.signOut()
+    return redireccionError(url.origin, 'session_error')
   }
 
+  const email = data.user.email?.trim().toLocaleLowerCase('en-US')
+  console.info('[AUTH CALLBACK] Sesión OAuth verificada.', {
+    usuarioId: data.user.id,
+    dominioCorreo: email?.split('@')[1] ?? 'sin_correo',
+  })
+
+  const resultado = await resolverUsuarioAutorizado({
+    id: data.user.id,
+    email,
+  })
+
+  if (resultado.error) {
+    console.error('[AUTH CALLBACK] Falló la consulta de autorización.', {
+      usuarioId: data.user.id,
+      causa: resultado.error,
+    })
+  }
+
+  if (resultado.usuario?.activo) {
+    console.info('[AUTH CALLBACK] Acceso concedido.', {
+      usuarioId: data.user.id,
+      rol: resultado.usuario.rol,
+      vinculadoPorCorreo: resultado.vinculadoPorCorreo,
+    })
+    const destino = resultado.usuario.rol === 'empresa' ? '/admin/practicas' : siguiente
+    return NextResponse.redirect(new URL(destino, url.origin))
+  }
+
+  console.warn('[AUTH CALLBACK] Acceso denegado.', {
+    usuarioId: data.user.id,
+    motivo: resultado.usuario ? 'usuario_inactivo' : 'usuario_no_registrado',
+  })
   await supabase.auth.signOut()
-  return NextResponse.redirect(
-    new URL('/admin/iniciar-sesion?error=unauthorized', url.origin),
-  )
+  return redireccionError(url.origin, 'unauthorized')
 }
