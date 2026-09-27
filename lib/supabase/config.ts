@@ -16,6 +16,18 @@ export function urlSupabase(): string | undefined {
   }
 }
 
+export function urlSitio(): string | undefined {
+  const valor = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+  if (!valor) return undefined
+  try {
+    const url = new URL(valor)
+    if (!['http:', 'https:'].includes(url.protocol)) return undefined
+    return url.origin
+  } catch {
+    return undefined
+  }
+}
+
 export function clavePublicaSupabase(): string | undefined {
   const publicable = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim()
   const anonima = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()

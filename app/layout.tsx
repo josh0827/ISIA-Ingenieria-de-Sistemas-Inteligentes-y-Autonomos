@@ -5,6 +5,7 @@ import Pie from '@/componentes/Pie'
 import Transicion from '@/componentes/Transicion'
 import { SITIO } from '@/lib/sitio'
 import { navegacionVisible } from '@/lib/configuracion'
+import { urlSitio } from '@/lib/supabase/config'
 import './globals.css'
 
 export const dynamic = 'force-dynamic'
@@ -20,7 +21,10 @@ const mono = Geist_Mono({
   display: 'swap',
 })
 
+const sitioBase = urlSitio()
+
 export const metadata: Metadata = {
+  metadataBase: sitioBase ? new URL(sitioBase) : undefined,
   title: {
     default: 'ISIA · Semillero de investigación · DEMO',
     template: '%s · ISIA DEMO',
