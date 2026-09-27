@@ -31,7 +31,7 @@ En Google Cloud, el cliente OAuth Web debe tener:
 
 ```text
 Origen autorizado:
-https://isia-gamma.vercel.app
+https://isia-ingenieria-de-sistemas-intelig.vercel.app
 
 URI de redirección autorizada:
 https://PROJECT_REF_AQUI.supabase.co/auth/v1/callback
@@ -41,10 +41,10 @@ En **Supabase → Authentication → URL Configuration**:
 
 ```text
 Site URL:
-https://isia-gamma.vercel.app
+https://isia-ingenieria-de-sistemas-intelig.vercel.app
 
 Redirect URLs:
-https://isia-gamma.vercel.app/api/auth/callback
+https://isia-ingenieria-de-sistemas-intelig.vercel.app/api/auth/callback
 http://localhost:3000/api/auth/callback
 ```
 
