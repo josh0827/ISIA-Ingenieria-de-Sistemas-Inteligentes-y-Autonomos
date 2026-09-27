@@ -32,6 +32,11 @@ export default async function PaginaIniciarSesion({ searchParams }: Props) {
                 No fue posible completar el inicio de sesión con Google.
               </p>
             )}
+            {(error === 'missing_code' || error === 'session_error') && (
+              <p role="alert" className={estilos.errorSesion}>
+                Google no pudo completar la sesión. Intenta iniciar sesión nuevamente.
+              </p>
+            )}
             <BotonGoogle siguiente={siguiente} />
           </>
         ) : (

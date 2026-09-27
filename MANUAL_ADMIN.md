@@ -14,11 +14,12 @@ El servidor verifica la sesión con Supabase Auth y la autorización en la base 
 ## 👥 2. Gestión de usuarios autorizados
 
 - **Ubicación:** Supabase Dashboard > Table Editor > tabla `usuarios_autorizados`.
-- **Añadir usuario:** crear una fila con `id` igual al UUID del usuario en **Authentication > Users**, su correo, el rol (`admin`, `editor` o `empresa`) y `activo` igual a `true`.
+- **Añadir usuario antes de su primer acceso:** después de aplicar la migración `202609260004_autorizacion_por_email.sql`, crear una fila con su correo, el rol (`admin`, `editor` o `empresa`) y `activo` igual a `true`; dejar `id` vacío. En el primer inicio de sesión, el servidor vincula automáticamente el UUID verificado por Supabase Auth.
+- **Añadir usuario existente:** también es posible copiar el UUID desde **Authentication > Users** al campo `id`. El correo debe coincidir con el de la cuenta de Google.
 - **Empresa:** completa `nombre_empresa_o_usuario` para identificarla al publicar prácticas. Las empresas solo pueden consultar y modificar sus propias ofertas.
 - **Revocar acceso:** cambiar `activo` a `false` o eliminar la fila. La siguiente comprobación de sesión bloqueará las mutaciones.
 
-La tabla se administra fuera del portal para impedir la autoasignación de permisos.
+La tabla se administra fuera del portal para impedir la autoasignación de permisos. La vinculación automática solo se ejecuta después de que Supabase valida la sesión de Google y no activa registros ni cambia roles.
 
 ## 📅 3. Gestión de agenda y reuniones
 
