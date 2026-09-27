@@ -63,6 +63,8 @@ public/imagenes/           recursos gráficos locales
 
 El contenido se edita en Markdown. Las instrucciones y formatos completos están en [CONTRIBUTING.md](CONTRIBUTING.md).
 
+La entrega de Supabase, Vercel y Google OAuth a una cuenta institucional está documentada en [TRANSFERENCIA_INSTITUCIONAL.md](TRANSFERENCIA_INSTITUCIONAL.md). La guía incluye inventario, permisos, pruebas de aceptación y reversión; no contiene secretos reales.
+
 ## Identidad y movimiento
 
 La paleta está centralizada en `app/globals.css`. El verde provisional `#456A3E` coincide con el relleno `.st2` del escudo SVG disponible; `#35522F` sirve de apoyo. Estos valores **no constituyen un manual institucional oficial**. La tipografía principal es Geist.

@@ -76,6 +76,9 @@ h4 {
 p {
   margin: 0;
   text-wrap: pretty;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 a {
   color: inherit;

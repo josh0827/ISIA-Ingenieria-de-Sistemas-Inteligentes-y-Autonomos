@@ -133,7 +133,7 @@ Parte de [contenido/galeria/_plantilla.md](contenido/galeria/_plantilla.md). Cam
 
 ## Recursos y destinos
 
-Los Markdown pueden conservar imágenes existentes dentro de `public/imagenes/`. Desde el panel se aceptan AVIF, WebP, PNG y JPEG de máximo 8 MB. En desarrollo o VPS se guardan bajo `public/imagenes/`; en Vercel se almacenan en Vercel Blob. Firestore registra únicamente la ruta local o URL pública resultante. Optimiza las fotografías y confirma sus permisos de uso antes de publicarlas.
+Los Markdown pueden conservar imágenes existentes dentro de `public/imagenes/`. Desde el panel se aceptan AVIF, WebP, PNG y JPEG de máximo 8 MB; las cargas se guardan en el bucket público `imagenes` de Supabase Storage y PostgreSQL registra su URL pública. Optimiza las fotografías y confirma sus permisos de uso antes de publicarlas.
 
 Los enlaces de contenido admiten HTTPS, páginas internas existentes y archivos PDF reales bajo `public/recursos/`. Las rutas a PDF se escriben como `/recursos/nombre.pdf`. Se descartan protocolos ejecutables, dominios reservados para ejemplos, redes sociales genéricas y archivos locales inexistentes.
 
@@ -141,35 +141,31 @@ Esta validación comprueba el formato y la existencia local; no garantiza que un
 
 ## Panel de administración (/admin)
 
-Además de editar los archivos Markdown, el sitio incluye un panel protegido en `/admin` para crear, editar y eliminar proyectos, novedades, reuniones, integrantes, publicaciones y galería desde el navegador, con inicio de sesión mediante GitHub.
+Además de editar los archivos Markdown, el sitio incluye un panel protegido en `/admin` para crear, editar y eliminar proyectos, novedades, reuniones, integrantes, publicaciones y galería desde el navegador, con inicio de sesión mediante Google.
 
 ### Cómo funciona
 
-- El contenido se guarda en **Firestore** (una colección por tipo de contenido, con el mismo `slug` como ID de documento). Las validaciones de `lib/contenido.ts` (fechas, enlaces, imágenes locales, etc.) se aplican igual que con Markdown.
-- Si el entorno **no** tiene configuradas las credenciales de Firebase, el sitio sigue funcionando leyendo `contenido/*.md` como hasta ahora, y `/admin` muestra un aviso de configuración pendiente en vez de fallar.
-- Iniciar sesión con GitHub no basta para editar: el UID de la cuenta debe estar en la colección `editores` de Firestore (documento `editores/<uid>` con, por ejemplo, `{ activo: true }`). Esa colección se administra a mano desde la consola de Firebase, nunca desde el sitio, para controlar quién puede publicar.
+- El contenido se guarda en la tabla **`contenido` de PostgreSQL**. Cada fila se identifica mediante `coleccion` y `slug`, y conserva los datos editables en JSONB.
+- Si Supabase no está configurado o no responde, el sitio público sigue leyendo `contenido/*.md`; `/admin` muestra un aviso de configuración pendiente.
+- Iniciar sesión con Google no basta para editar: el UUID de Supabase Auth debe estar activo en la tabla `editores`. Esta tabla se administra desde Supabase Dashboard, fuera del sitio.
 - Las páginas que muestran contenido (`/`, `/proyectos`, `/novedades`, `/lineas`, `/integrantes`, `/publicaciones`, `/galeria`, `/reuniones` y sus fichas) se renderizan de forma dinámica (`export const dynamic = 'force-dynamic'`) para que lo publicado desde `/admin` aparezca de inmediato, sin necesidad de un nuevo despliegue.
 
 ### Puesta en marcha (una sola vez por entorno)
 
-1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com/) y habilita **Firestore** (modo nativo).
-2. En **Authentication → Sign-in method**, habilita el proveedor **GitHub**. Necesitas una GitHub OAuth App (Settings → Developer settings → OAuth Apps) con el *Authorization callback URL* que Firebase indica en esa misma pantalla; pega ahí el *Client ID* y *Client secret* de esa OAuth App.
-3. En **Configuración del proyecto → Tus apps**, registra una Web app para obtener la configuración pública (`apiKey`, `authDomain`, etc.).
-4. En **Configuración del proyecto → Cuentas de servicio**, genera una clave privada nueva para el Admin SDK.
-5. Copia [.env.local.example](.env.local.example) a `.env.local` y completa ambos bloques de variables. `.env.local` ya está excluido por `.gitignore`: nunca lo subas al repositorio.
-6. Añade manualmente en Firestore, colección `editores`, un documento cuyo ID sea el UID de cada persona autorizada a editar (se ve en Authentication tras su primer inicio de sesión), con el campo `activo: true`.
-7. Despliega `firestore.rules`. La aplicación no utiliza Firebase Storage; las cargas pasan por Server Actions autenticadas y usan disco local o Vercel Blob según el entorno.
-8. En `configuracion/navegacion`, el mapa `secciones` controla qué enlaces aparecen en el menú público. También puede editarse desde **Panel Admin → Navegación pública**.
-9. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
+1. Crea un proyecto en [Supabase](https://supabase.com/dashboard).
+2. Ejecuta en orden los archivos de `supabase/migrations/` desde SQL Editor o con Supabase CLI. Crean las tablas, activan RLS, preparan el bucket `imagenes` y normalizan la clave `editores.id`.
+3. En **Authentication → Providers**, habilita Google. Crea un cliente OAuth de tipo web en Google Cloud, registra el callback de Supabase y configura en Supabase las URLs autorizadas del sitio, incluida `/api/auth/callback`.
+4. Copia [.env.local.example](.env.local.example) a `.env.local` y completa la URL, la clave pública y la `service_role`. `.env.local` está excluido por `.gitignore`; nunca lo subas.
+5. Inicia sesión una vez para crear el usuario. Luego copia su UUID desde **Authentication → Users** e insértalo en `public.editores` con `activo = true`.
+6. En la fila `configuracion/navegacion`, el mapa `secciones` controla qué enlaces aparecen en el menú público. También puede editarse desde **Panel Admin → Navegación pública**.
+7. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
    ```bash
    npm run migrar-contenido
    ```
-   Esto importa `contenido/**/*.md` a Firestore tal cual. Vuelve a ejecutarlo si cambias los Markdown y quieres reflejarlos otra vez (sobrescribe por slug).
-10. Reinicia `npm run dev` (o el despliegue) para que las variables de entorno se carguen. Entra a `/admin/iniciar-sesion`.
+   Esto importa `contenido/**/*.md` a PostgreSQL. Vuelve a ejecutarlo si cambias los Markdown y quieres reflejarlos otra vez; la operación actualiza por colección y slug.
+8. Reinicia `npm run dev` (o el despliegue) para cargar las variables. Entra a `/admin/iniciar-sesion`.
 
-Los campos de imagen usan `lib/storage/upload.ts`. En Vercel requieren un Blob Store vinculado y `BLOB_READ_WRITE_TOKEN`; fuera de Vercel guardan en `public/imagenes/<sección>/`. Para conservar una imagen al editar, deja el selector vacío. En VPS, el proceso Node.js necesita permiso de escritura y un volumen persistente.
-
-La ruta dinámica `app/imagenes/[...ruta]/route.ts` sirve los archivos añadidos después de compilar. Conserva esta ruta: `next start` no incorpora por sí solo archivos nuevos de `public/` a su inventario de recursos estáticos.
+Los campos de imagen usan `lib/storage/upload.ts` y el bucket público `imagenes`. Para conservar una imagen al editar, deja el selector vacío. No expongas `SUPABASE_SERVICE_ROLE_KEY` al navegador.
 
 
 El cuerpo Markdown pasa por saneamiento HTML y un filtro de recursos. No añadas HTML interactivo, scripts, iframes, formularios ni instrucciones internas de desarrollo a los archivos publicados.

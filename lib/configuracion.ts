@@ -1,5 +1,6 @@
 import 'server-only'
-import { db, firebaseListo } from '@/lib/firebase/admin'
+import { supabaseServidorListo } from '@/lib/supabase/config'
+import { obtenerConfiguracion } from '@/lib/supabase/contenido'
 import {
   CLAVES_SECCION,
   NAVEGACION,
@@ -17,10 +18,9 @@ export function claveDesdeHref(href: string): ClaveSeccion | undefined {
 }
 
 export async function obtenerConfiguracionNavegacion(): Promise<ConfiguracionNavegacion> {
-  if (!firebaseListo()) return NAVEGACION_PREDETERMINADA
+  if (!supabaseServidorListo()) return NAVEGACION_PREDETERMINADA
   try {
-    const documento = await (await db()).collection('configuracion').doc('navegacion').get()
-    const datos = documento.data()?.secciones
+    const datos = (await obtenerConfiguracion('navegacion'))?.secciones
     if (!datos || typeof datos !== 'object') return NAVEGACION_PREDETERMINADA
     return Object.fromEntries(
       CLAVES_SECCION.map((clave) => [

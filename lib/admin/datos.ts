@@ -1,20 +1,30 @@
 import 'server-only'
-import type { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore'
-import { db, firebaseListo } from '@/lib/firebase/admin'
-import { esEditor } from '@/lib/editores'
+import { supabaseServidorListo } from '@/lib/supabase/config'
+import { listarFilasContenido, obtenerFilaContenido } from '@/lib/supabase/contenido'
 import { usuarioSesion } from '@/lib/sesion'
+import { obtenerUsuarioAutorizado, puedeEditarContenido, puedeGestionarPracticas } from '@/lib/usuarios-autorizados'
 import { ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
-import { ErrorAcceso, exigirCorreoUnal } from '@/lib/autorizacion'
+import { ErrorAcceso } from '@/lib/autorizacion'
 
 export async function requerirEditor() {
-  if (!firebaseListo()) throw new Error('Firebase no está configurado en este entorno.')
+  if (!supabaseServidorListo()) throw new Error('Supabase no está configurado en este entorno.')
   const usuario = await usuarioSesion()
   if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
-  exigirCorreoUnal(usuario.correo)
-  if (!(await esEditor(usuario.uid))) {
-    throw new ErrorAcceso('Tu cuenta institucional no está autorizada para editar contenido.', 403, 'editor')
+  if (!puedeEditarContenido(await obtenerUsuarioAutorizado(usuario.id))) {
+    throw new ErrorAcceso('Tu cuenta no está autorizada para editar contenido.', 403, 'editor')
   }
   return usuario
+}
+
+export async function requerirGestionPracticas() {
+  if (!supabaseServidorListo()) throw new Error('Supabase no está configurado en este entorno.')
+  const usuario = await usuarioSesion()
+  if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
+  const autorizado = await obtenerUsuarioAutorizado(usuario.id)
+  if (!puedeGestionarPracticas(autorizado)) {
+    throw new ErrorAcceso('Tu cuenta no está autorizada para gestionar prácticas.', 403, 'editor')
+  }
+  return { ...usuario, autorizado }
 }
 
 export function obtenerAnidado(objeto: Record<string, unknown>, ruta: string): unknown {
@@ -51,16 +61,12 @@ export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmi
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  const instantanea = await (await db()).collection(coleccion).get()
-  return instantanea.docs
-    .map((doc: QueryDocumentSnapshot<DocumentData>) => {
-      const { cuerpo, ...datos } = doc.data()
-      return {
-        slug: doc.id,
-        datos: normalizarDatosAdmin(coleccion, datos),
-        cuerpo: typeof cuerpo === 'string' ? cuerpo : '',
-      }
-    })
+  return (await listarFilasContenido(coleccion))
+    .map((fila) => ({
+      slug: fila.slug,
+      datos: normalizarDatosAdmin(coleccion, fila.datos),
+      cuerpo: fila.cuerpo,
+    }))
     .sort((a, b) => a.slug.localeCompare(b.slug))
 }
 
@@ -68,13 +74,12 @@ export async function obtenerDocumento(coleccion: string, slug: string): Promise
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  const doc = await (await db()).collection(coleccion).doc(slug).get()
-  if (!doc.exists) return undefined
-  const { cuerpo, ...datos } = doc.data() ?? {}
+  const fila = await obtenerFilaContenido(coleccion, slug)
+  if (!fila) return undefined
   return {
-    slug: doc.id,
-    datos: normalizarDatosAdmin(coleccion, datos),
-    cuerpo: typeof cuerpo === 'string' ? cuerpo : '',
+    slug: fila.slug,
+    datos: normalizarDatosAdmin(coleccion, fila.datos),
+    cuerpo: fila.cuerpo,
   }
 }
 

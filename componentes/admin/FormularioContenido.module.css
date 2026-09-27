@@ -25,6 +25,8 @@
 .campo input[type='date'],
 .campo input[type='time'],
 .campo input[type='number'],
+.campo input[type='email'],
+.campo input[type='url'],
 .campo input[type='file'],
 .campo textarea,
 .campo select {
@@ -86,6 +88,16 @@
 .etiquetaFija {
   font-weight: 700;
   font-size: 0.92rem;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .fila { grid-template-columns: 1fr; }
 }
 
 .valorFijo {

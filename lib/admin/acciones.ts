@@ -2,7 +2,11 @@
 
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { db } from '@/lib/firebase/admin'
+import {
+  eliminarFilaContenido,
+  guardarFilaContenido,
+  obtenerFilaContenido,
+} from '@/lib/supabase/contenido'
 import {
   anioValido,
   correoSeguro,
@@ -114,12 +118,12 @@ export async function guardarDocumento(
     if (!slug) {
       return { ok: false, error: 'El identificador (slug) es obligatorio: solo minúsculas, números y guiones, sin empezar ni terminar en guion.' }
     }
-    const existente = await (await db()).collection(coleccion).doc(slug).get()
-    if (existente.exists) return { ok: false, error: 'Ya existe un elemento con ese identificador. Elige otro.' }
+    const existente = await obtenerFilaContenido(coleccion, slug)
+    if (existente) return { ok: false, error: 'Ya existe un elemento con ese identificador. Elige otro.' }
   } else {
-    const existente = await (await db()).collection(coleccion).doc(slug).get()
-    if (!existente.exists) return { ok: false, error: 'El elemento que intentas editar ya no existe.' }
-    datosExistentes = existente.data() ?? {}
+    const existente = await obtenerFilaContenido(coleccion, slug)
+    if (!existente) return { ok: false, error: 'El elemento que intentas editar ya no existe.' }
+    datosExistentes = existente.datos
   }
 
   const datos: Record<string, unknown> = {}
@@ -192,7 +196,7 @@ export async function guardarDocumento(
     }
   }
 
-  await (await db()).collection(coleccion).doc(slug).set({ ...datos, cuerpo })
+  await guardarFilaContenido(coleccion, slug, datos, cuerpo)
   revalidarContenido(coleccion, slug)
   redirect(`/admin/${coleccion}`)
 }
@@ -211,7 +215,7 @@ export async function eliminarDocumento(
     }
   }
   if (!esquemaDe(coleccion)) throw new Error('Tipo de contenido desconocido.')
-  await (await db()).collection(coleccion).doc(slug).delete()
+  await eliminarFilaContenido(coleccion, slug)
   revalidarContenido(coleccion, slug)
   return { ok: true }
 }

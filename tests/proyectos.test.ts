@@ -41,17 +41,17 @@ test('las imágenes solo admiten rutas estáticas bajo /imagenes/', () => {
     true,
   )
   assert.equal(
-    rutaImagenLocalSchema.safeParse('https://firebasestorage.googleapis.com/archivo').success,
+    rutaImagenLocalSchema.safeParse('https://cdn.example.com/archivo').success,
     false,
   )
   assert.equal(rutaImagenLocalSchema.safeParse('/recursos/imagen.webp').success, false)
   assert.equal(rutaImagenLocalSchema.safeParse('/imagenes/../secreto.png').success, false)
 })
 
-test('el almacenamiento adaptativo admite URLs públicas de Vercel Blob', () => {
+test('el almacenamiento admite URLs públicas del bucket de Supabase', () => {
   assert.equal(
     imagenUrlSchema.safeParse(
-      'https://sitio.public.blob.vercel-storage.com/imagenes/proyectos/demo.webp',
+      'https://proyecto.supabase.co/storage/v1/object/public/imagenes/proyectos/demo.webp',
     ).success,
     true,
   )

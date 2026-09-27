@@ -15,9 +15,8 @@
     "migrar-contenido": "node --env-file=.env.local scripts/migrar-contenido.mjs"
   },
   "dependencies": {
-    "@vercel/blob": "^2.8.0",
-    "firebase": "^12.19.0",
-    "firebase-admin": "^14.4.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "gray-matter": "4.0.3",
     "next": "15.5.25",
     "react": "19.1.1",

@@ -19,6 +19,8 @@ export type ItemNavegacion = { href: string; texto: string }
 
 export const NAVEGACION: ItemNavegacion[] = [
   { href: '/lineas', texto: 'Líneas' },
+  { href: '/grupos', texto: 'Grupos' },
+  { href: '/practicas', texto: 'Prácticas' },
   { href: '/proyectos', texto: 'Proyectos' },
   { href: '/novedades', texto: 'Novedades' },
   { href: '/reuniones', texto: 'Reuniones' },
@@ -29,6 +31,8 @@ export const NAVEGACION: ItemNavegacion[] = [
 
 export type ClaveSeccion =
   | 'lineas'
+  | 'grupos'
+  | 'practicas'
   | 'proyectos'
   | 'novedades'
   | 'reuniones'
@@ -38,6 +42,8 @@ export type ClaveSeccion =
 
 export const CLAVES_SECCION: readonly ClaveSeccion[] = [
   'lineas',
+  'grupos',
+  'practicas',
   'proyectos',
   'novedades',
   'reuniones',
@@ -50,6 +56,8 @@ export type ConfiguracionNavegacion = Record<ClaveSeccion, boolean>
 
 export const NAVEGACION_PREDETERMINADA: ConfiguracionNavegacion = {
   lineas: true,
+  grupos: true,
+  practicas: true,
   proyectos: true,
   novedades: true,
   reuniones: true,

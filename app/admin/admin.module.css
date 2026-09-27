@@ -258,6 +258,14 @@
   font-size: 0.92rem;
 }
 
+.tarjetaSesion .errorSesion {
+  color: #8f2d24;
+  background: #fff2ef;
+  border: 1px solid #e7b8b1;
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
 .tarjetaSesion code {
   background: var(--fondo-2);
   padding: 0.15rem 0.4rem;

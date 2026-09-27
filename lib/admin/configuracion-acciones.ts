@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { db } from '@/lib/firebase/admin'
+import { guardarConfiguracion } from '@/lib/supabase/contenido'
 import { CLAVES_SECCION, type ConfiguracionNavegacion } from '@/lib/sitio'
 import { requerirEditor } from '@/lib/admin/datos'
 import { ErrorAcceso } from '@/lib/autorizacion'
@@ -31,10 +31,7 @@ export async function guardarConfiguracionNavegacion(
     CLAVES_SECCION.map((clave) => [clave, formData.get(clave) === 'on']),
   ) as ConfiguracionNavegacion
 
-  await (await db())
-    .collection('configuracion')
-    .doc('navegacion')
-    .set({ secciones }, { merge: true })
+  await guardarConfiguracion('navegacion', { secciones })
   revalidatePath('/', 'layout')
   return { ok: true, mensaje: 'La navegación pública se actualizó correctamente.' }
 }

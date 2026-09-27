@@ -146,6 +146,9 @@ const COLOR_ETIQUETA: Record<string, string> = {
   presencial: 'verde',
   virtual: 'neutro',
   hibrida: 'rojo',
+  Presencial: 'verde',
+  Híbrida: 'neutro',
+  Remota: 'rojo',
 }
 
 const TEXTO_ETIQUETA: Record<string, string> = {

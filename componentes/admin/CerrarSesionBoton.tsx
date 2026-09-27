@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import estilos from './BotonGithub.module.css'
+import estilos from './BotonAcceso.module.css'
 
 export default function CerrarSesionBoton() {
   const router = useRouter()

@@ -16,23 +16,24 @@ export const rutaImagenLocalSchema = z
     'La ruta de la imagen local no tiene un formato válido.',
   )
 
-export const urlImagenVercelSchema = z
+export const urlImagenSupabaseSchema = z
   .url('La URL de la imagen no es válida.')
   .refine((valor) => {
     try {
       const url = new URL(valor)
       return (
         url.protocol === 'https:' &&
-        url.hostname.endsWith('.public.blob.vercel-storage.com')
+        url.hostname.endsWith('.supabase.co') &&
+        url.pathname.startsWith('/storage/v1/object/public/imagenes/')
       )
     } catch {
       return false
     }
-  }, 'La URL debe pertenecer al almacenamiento público de Vercel Blob.')
+  }, 'La URL debe pertenecer al bucket público de imágenes de Supabase.')
 
 export const imagenUrlSchema = z.union([
   rutaImagenLocalSchema,
-  urlImagenVercelSchema,
+  urlImagenSupabaseSchema,
 ])
 
 export const esquemaProyectoZod = z

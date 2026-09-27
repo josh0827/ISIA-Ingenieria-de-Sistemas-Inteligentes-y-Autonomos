@@ -3,12 +3,13 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
-import { db, firebaseListo } from './firebase/admin'
+import { supabaseServidorListo } from './supabase/config'
+import { listarFilasContenido } from './supabase/contenido'
 
 const RAIZ = path.join(process.cwd(), 'contenido')
 const PUBLICO = path.join(process.cwd(), 'public')
 
-/** Nombres de colección de Firestore == nombres de carpeta en contenido/. */
+/** Nombres editoriales compartidos por PostgreSQL y las carpetas Markdown. */
 export const COLECCIONES = [
   'proyectos',
   'novedades',
@@ -110,30 +111,26 @@ function leerCarpeta(carpeta: string): Crudo[] {
   return salida
 }
 
-/** Cada documento de Firestore se mapea al mismo formato {slug, datos, cuerpo} que el Markdown. */
+/** Cada fila de PostgreSQL se mapea al formato {slug, datos, cuerpo} del Markdown. */
 async function leerColeccion(nombre: NombreColeccion): Promise<Crudo[]> {
-  const instantanea = await (await db()).collection(nombre).get()
-  return instantanea.docs.map((doc) => {
-    const { cuerpo, ...datos } = doc.data()
-    return { slug: doc.id, datos, cuerpo: typeof cuerpo === 'string' ? cuerpo : '' }
-  })
+  return listarFilasContenido(nombre)
 }
 
 /**
- * Si hay credenciales de Firebase configuradas, el contenido real vive en
- * Firestore (editable desde /admin). Si no, se usa el Markdown de contenido/
+ * Si hay credenciales de Supabase configuradas, el contenido real vive en
+ * PostgreSQL (editable desde /admin). Si no, se usa el Markdown de contenido/
  * para que el sitio y el desarrollo local sigan funcionando sin ellas.
  */
 async function leerFuente(carpeta: NombreColeccion): Promise<Crudo[]> {
-  if (!firebaseListo()) return leerCarpeta(carpeta)
+  if (!supabaseServidorListo()) return leerCarpeta(carpeta)
   try {
     return await leerColeccion(carpeta)
   } catch (error) {
-    // Si Firestore no responde (credenciales caducadas, permisos, red), el
+    // Si Supabase no responde (credenciales caducadas, permisos, red), el
     // sitio publico no puede quedarse en blanco ni devolver un error 500: se
     // sirve el Markdown de contenido/, que siempre viaja con el despliegue.
     console.error(
-      `[contenido] Firestore no respondio para "${carpeta}" (${(error as Error).message}). Se usa el Markdown de contenido/.`,
+      `[contenido] Supabase no respondio para "${carpeta}" (${(error as Error).message}). Se usa el Markdown de contenido/.`,
     )
     return leerCarpeta(carpeta)
   }
@@ -171,7 +168,7 @@ export function anioValido(valor: unknown): number | undefined {
 /**
  * Se aceptan HTTPS y rutas internas con forma válida; nunca protocolos
  * ejecutables ni dominios de ejemplo. La existencia del archivo Markdown ya
- * no se exige aquí porque el contenido puede vivir en Firestore: en el peor
+ * no se exige aquí porque el contenido puede vivir en PostgreSQL: en el peor
  * caso un slug inexistente lleva a un 404 dentro del propio sitio.
  */
 export function enlaceSeguro(valor: unknown): string | undefined {
@@ -183,8 +180,8 @@ export function enlaceSeguro(valor: unknown): string | undefined {
     if (ruta.includes('..') || ruta.includes('%')) return undefined
     const segmentos = ruta.split('/').filter(Boolean)
     if (segmentos.length === 0) return s
-    if (segmentos.length === 1 && ['lineas', 'proyectos', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'unete'].includes(segmentos[0])) return s
-    if (segmentos.length === 2 && ['proyectos', 'novedades'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
+    if (segmentos.length === 1 && ['lineas', 'proyectos', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'grupos', 'practicas', 'unete'].includes(segmentos[0])) return s
+    if (segmentos.length === 2 && ['proyectos', 'novedades', 'grupos'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
     if (/^\/recursos\/[a-zA-Z0-9/_-]+\.pdf$/i.test(ruta)) {
       const archivo = path.resolve(PUBLICO, `.${ruta}`)
       if (archivo.startsWith(`${PUBLICO}${path.sep}`) && fs.existsSync(archivo) && fs.statSync(archivo).isFile()) return s
@@ -212,14 +209,15 @@ export function imagenLocal(valor: unknown): string | undefined {
   return s
 }
 
-export function imagenVercel(valor: unknown): string | undefined {
+export function imagenSupabase(valor: unknown): string | undefined {
   const s = texto(valor)
   if (!s) return undefined
   try {
     const url = new URL(s)
     if (
       url.protocol !== 'https:' ||
-      !url.hostname.endsWith('.public.blob.vercel-storage.com')
+      !url.hostname.endsWith('.supabase.co') ||
+      !url.pathname.startsWith('/storage/v1/object/public/imagenes/')
     ) {
       return undefined
     }
@@ -230,7 +228,7 @@ export function imagenVercel(valor: unknown): string | undefined {
 }
 
 export function imagenSegura(valor: unknown): string | undefined {
-  return imagenLocal(valor) ?? imagenVercel(valor)
+  return imagenLocal(valor) ?? imagenSupabase(valor)
 }
 
 export function correoSeguro(valor: unknown): string | undefined {
