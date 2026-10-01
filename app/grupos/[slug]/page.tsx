@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Seccion } from '@/componentes/Base'
 import { obtenerGrupoTrabajo } from '@/lib/grupos'
+import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../grupos.module.css'
 
 type Props = { params: Promise<{ slug: string }> }
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const grupo = await obtenerGrupoTrabajo((await params).slug)
@@ -17,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function DetalleGrupo({ params }: Props) {
+  if (!(await seccionVisible('grupos'))) notFound()
   const grupo = await obtenerGrupoTrabajo((await params).slug)
   if (!grupo) notFound()
   return (

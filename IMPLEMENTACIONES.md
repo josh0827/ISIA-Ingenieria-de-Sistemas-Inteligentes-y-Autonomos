@@ -9,8 +9,12 @@ La rama `Prueba` mantiene la interfaz pública y el panel `/admin` en Next.js Ap
 - **Supabase Storage:** bucket público `imagenes` para las cargas del panel.
 - **Server Actions:** validación con Zod, autorización y escritura desde el servidor.
 - **Actualización pública:** `revalidatePath` después de cada mutación.
+- **Disponibilidad pública:** una sección desactivada desaparece de los menús y sus rutas de listado y detalle responden como no disponibles.
+- **Contenido ilustrativo:** los ejemplos se conservan y pueden ocultarse globalmente desde la configuración sin eliminarlos del panel.
+- **Rendimiento público:** las páginas usan regeneración cada cinco minutos y revalidación inmediata tras las mutaciones; se eliminó la transición de opacidad entre rutas.
 - **Grupos de trabajo:** tabla dedicada, páginas públicas y CRUD con integrantes, repositorios, documentos e imágenes.
 - **Prácticas e iniciativas:** listado público filtrable, gestión por empresas autorizadas y administración global por roles ISIA.
+- **Permisos de prácticas:** solo `admin` puede eliminar definitivamente; `editor` y `empresa` pueden desactivar dentro de su alcance.
 
 El contenido Markdown de `contenido/` continúa como respaldo de lectura si Supabase no está configurado o no responde. Las mutaciones del panel requieren la configuración completa y nunca escriben directamente desde componentes de cliente.
 
@@ -45,7 +49,9 @@ Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta a
 - Configurar el proyecto real y sus secretos en cada entorno.
 - Probar inicio con un usuario sin registro, uno inactivo, un editor y una empresa activa en `usuarios_autorizados`.
 - Confirmar una carga real a Storage y la publicación de un proyecto.
-- Verificar que desactivar Galería en el panel la retire del menú público.
+- Verificar que desactivar Galería la retire del menú y que `/galeria` responda como no disponible después de recargar.
+- Probar que el botón de eliminación de prácticas solo aparezca para `admin` y que la acción rechace a `editor` y `empresa`.
+- Confirmar que una publicación no confirmada aparezca marcada como ilustrativa cuando la demostración esté activa y desaparezca al desactivarla.
 
 ## Plan futuro de búsqueda
 

@@ -134,6 +134,17 @@
   text-decoration: underline;
 }
 
+.enlaceSuperior {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.enlaceSuperior:hover {
+  text-decoration: underline;
+}
+
 .tarjetas {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

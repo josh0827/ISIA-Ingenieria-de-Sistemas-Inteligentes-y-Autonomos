@@ -43,6 +43,13 @@
   justify-content: flex-end;
 }
 
+.accionConError {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
 .enlaceEditar {
   color: var(--verde-oscuro);
   font-weight: 700;

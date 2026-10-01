@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import { obtenerVisibilidadContenidoIlustrativo } from './configuracion'
 import { supabaseServidorListo } from './supabase/config'
 import { listarFilasContenido } from './supabase/contenido'
 
@@ -68,7 +69,7 @@ export type Integrante = EstadoEditorial & {
   cuerpo: string
 }
 
-export type Publicacion = {
+export type Publicacion = EstadoEditorial & {
   slug: string
   titulo: string
   anio: number
@@ -76,7 +77,6 @@ export type Publicacion = {
   tipo: string
   enlace?: string
   cuerpo: string
-  ilustrativo: false
 }
 
 export type FotoGaleria = {
@@ -241,6 +241,7 @@ export function correoSeguro(valor: unknown): string | undefined {
 
 export async function listarNovedades(limite?: number): Promise<Novedad[]> {
   const novedades: Novedad[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('novedades')) {
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
@@ -249,6 +250,7 @@ export async function listarNovedades(limite?: number): Promise<Novedad[]> {
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     novedades.push({
       slug, titulo, fecha, ilustrativo, cuerpo,
       tipo: unaDeEstas(datos.tipo, ['convocatoria', 'evento', 'logro', 'publicacion', 'divulgacion'] as const, 'divulgacion'),
@@ -267,6 +269,7 @@ export async function obtenerNovedad(slug: string): Promise<Novedad | undefined>
 
 export async function listarReuniones(): Promise<Reunion[]> {
   const reuniones: Reunion[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('reuniones')) {
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
@@ -275,6 +278,7 @@ export async function listarReuniones(): Promise<Reunion[]> {
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     reuniones.push({
       slug, titulo, fecha, ilustrativo, cuerpo,
       hora: /^([01]\d|2[0-3]):[0-5]\d$/.test(texto(datos.hora)) ? texto(datos.hora) : '',
@@ -315,6 +319,7 @@ function estadoProyecto(valor: unknown): Proyecto['estado'] {
 
 export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
   const proyectos: Proyecto[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   const perfilesConfirmados = new Set((await listarIntegrantes()).filter((i) => !i.ilustrativo).map((i) => i.slug))
   for (const { slug, datos, cuerpo } of await leerFuente('proyectos')) {
     const titulo = texto(datos.titulo)
@@ -323,6 +328,7 @@ export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     proyectos.push({
       slug, titulo, ilustrativo, cuerpo,
       estado: estadoProyecto(datos.estado),
@@ -344,6 +350,7 @@ const ORDEN_ROL = { director: 0, investigador: 1, estudiante: 2, egresado: 3 } a
 
 export async function listarIntegrantes(): Promise<Integrante[]> {
   const integrantes: Integrante[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('integrantes')) {
     const nombre = texto(datos.nombre)
     if (!nombre) {
@@ -351,6 +358,7 @@ export async function listarIntegrantes(): Promise<Integrante[]> {
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     const enlaces = datos.enlaces && typeof datos.enlaces === 'object' ? datos.enlaces as Record<string, unknown> : {}
     integrantes.push({
       slug, nombre, ilustrativo, cuerpo,
@@ -368,11 +376,13 @@ export async function listarIntegrantes(): Promise<Integrante[]> {
   return integrantes
 }
 
-/** No se fabrican referencias bibliográficas: los borradores quedan fuera del listado. */
+/** Los ejemplos se muestran con una marca explícita y nunca activan enlaces ficticios. */
 export async function listarPublicaciones(): Promise<Publicacion[]> {
   const publicaciones: Publicacion[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('publicaciones')) {
-    if (datos.confirmado !== true) continue
+    const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     const titulo = texto(datos.titulo)
     const anio = anioValido(datos.anio)
     const autores = Array.isArray(datos.autores) ? datos.autores.map(texto).filter(Boolean) : []
@@ -381,7 +391,16 @@ export async function listarPublicaciones(): Promise<Publicacion[]> {
       avisar('publicaciones', `${slug}.md`, 'faltan título, año válido, autores o tipo de recurso')
       continue
     }
-    publicaciones.push({ slug, titulo, anio, autores, tipo, enlace: enlaceSeguro(datos.enlace), cuerpo, ilustrativo: false })
+    publicaciones.push({
+      slug,
+      titulo,
+      anio,
+      autores,
+      tipo,
+      enlace: ilustrativo ? undefined : enlaceSeguro(datos.enlace),
+      cuerpo,
+      ilustrativo,
+    })
   }
   return publicaciones.sort((a, b) => b.anio - a.anio || a.titulo.localeCompare(b.titulo, 'es'))
 }

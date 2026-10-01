@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Boton, EncabezadoPagina, Seccion } from '@/componentes/Base'
 import { Correo, Pin } from '@/componentes/Iconos'
 import { SITIO } from '@/lib/sitio'
+import { obtenerConfiguracionNavegacion } from '@/lib/configuracion'
 import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
   description: 'Información sobre participación en el semillero ISIA. Procedimiento de vinculación y canal de contacto pendientes de confirmación en esta demo.',
 }
 
-export default function PaginaUnete() {
+export const revalidate = 300
+
+export default async function PaginaUnete() {
+  const configuracion = await obtenerConfiguracionNavegacion()
   return (
     <>
       <Seccion className={estilos.primeraSeccion}>
@@ -25,8 +29,8 @@ export default function PaginaUnete() {
             <p>ISIA es el semillero de investigación en Ingeniería de Sistemas Inteligentes y Autónomos de la Universidad Nacional de Colombia, sede Manizales.</p>
             <p>Esta demo presenta sus posibles temas de trabajo y ejemplos de proyectos para que puedas explorar tus intereses. Las líneas y los contenidos ilustrativos están pendientes de validación.</p>
             <div className={estilos.enlacesParticipacion}>
-              <Boton href="/lineas" variante="sutil">Explorar líneas de investigación</Boton>
-              <Boton href="/proyectos" variante="sutil">Ver los proyectos</Boton>
+              {configuracion.lineas && <Boton href="/lineas" variante="sutil">Explorar líneas de investigación</Boton>}
+              {configuracion.proyectos && <Boton href="/proyectos" variante="sutil">Ver los proyectos</Boton>}
             </div>
           </div>
 
@@ -58,7 +62,7 @@ export default function PaginaUnete() {
             <article>
               <h3>¿Dónde y cuándo se reúne ISIA?</h3>
               <p>Los horarios, la modalidad y el espacio de reunión están pendientes de confirmación. Puedes consultar el estado de la agenda en la sección de reuniones.</p>
-              <Boton href="/reuniones" variante="sutil">Consultar reuniones</Boton>
+              {configuracion.reuniones && <Boton href="/reuniones" variante="sutil">Consultar reuniones</Boton>}
             </article>
           </div>
         </div>

@@ -16,3 +16,7 @@ export function puedeEditarContenido(usuario: UsuarioAutorizado | undefined): us
 export function puedeGestionarPracticas(usuario: UsuarioAutorizado | undefined): usuario is UsuarioAutorizado {
   return Boolean(usuario?.activo && ROLES_USUARIO.includes(usuario.rol))
 }
+
+export function puedeEliminarPracticas(usuario: UsuarioAutorizado | undefined): usuario is UsuarioAutorizado {
+  return Boolean(usuario?.activo && usuario.rol === 'admin')
+}

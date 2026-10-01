@@ -2,7 +2,12 @@ import 'server-only'
 import { supabaseServidorListo } from '@/lib/supabase/config'
 import { listarFilasContenido, obtenerFilaContenido } from '@/lib/supabase/contenido'
 import { usuarioSesion } from '@/lib/sesion'
-import { obtenerUsuarioAutorizado, puedeEditarContenido, puedeGestionarPracticas } from '@/lib/usuarios-autorizados'
+import {
+  obtenerUsuarioAutorizado,
+  puedeEditarContenido,
+  puedeEliminarPracticas,
+  puedeGestionarPracticas,
+} from '@/lib/usuarios-autorizados'
 import { ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
 import { ErrorAcceso } from '@/lib/autorizacion'
 
@@ -23,6 +28,17 @@ export async function requerirGestionPracticas() {
   const autorizado = await obtenerUsuarioAutorizado(usuario.id)
   if (!puedeGestionarPracticas(autorizado)) {
     throw new ErrorAcceso('Tu cuenta no está autorizada para gestionar prácticas.', 403, 'editor')
+  }
+  return { ...usuario, autorizado }
+}
+
+export async function requerirAdministrador() {
+  if (!supabaseServidorListo()) throw new Error('Supabase no está configurado en este entorno.')
+  const usuario = await usuarioSesion()
+  if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
+  const autorizado = await obtenerUsuarioAutorizado(usuario.id)
+  if (!puedeEliminarPracticas(autorizado)) {
+    throw new ErrorAcceso('Solo una cuenta administradora puede eliminar prácticas.', 403, 'editor')
   }
   return { ...usuario, autorizado }
 }

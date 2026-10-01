@@ -63,6 +63,8 @@ public/imagenes/           recursos gráficos locales
 
 El contenido se edita en Markdown. Las instrucciones y formatos completos están en [CONTRIBUTING.md](CONTRIBUTING.md).
 
+La información pendiente que debe solicitarse al semillero está organizada en [PLANTILLA_INFORMACION_SEMILLERO.md](PLANTILLA_INFORMACION_SEMILLERO.md). El uso del panel y la matriz de permisos se describen en [MANUAL_ADMIN.md](MANUAL_ADMIN.md).
+
 La entrega de Supabase, Vercel y Google OAuth a una cuenta institucional está documentada en [TRANSFERENCIA_INSTITUCIONAL.md](TRANSFERENCIA_INSTITUCIONAL.md). La guía incluye inventario, permisos, pruebas de aceptación y reversión; no contiene secretos reales.
 
 La configuración y comprobación del despliegue continuo se describe en [DESPLIEGUE_VERCEL.md](DESPLIEGUE_VERCEL.md).
@@ -79,7 +81,7 @@ No se utilizan apariciones, fade-in, desplazamientos, zoom ni parallax asociados
 
 El campo `confirmado: true` indica que una ficha ha sido validada editorialmente. No se debe cambiar como trámite para ocultar la etiqueta DEMO: primero hay que reemplazar el contenido, revisar sus fuentes y comprobar los datos.
 
-Si falta el campo o no es el booleano `true`, proyectos, novedades, reuniones e integrantes se consideran ilustrativos. Las reuniones ilustrativas nunca aparecen como próximas reuniones reales ni como encuentros ya celebrados. Las publicaciones y fotografías sin confirmación no se listan.
+Si falta el campo o no es el booleano `true`, proyectos, novedades, reuniones, integrantes y publicaciones se consideran ilustrativos. Las reuniones ilustrativas nunca aparecen como próximas reuniones reales ni como encuentros ya celebrados. Las publicaciones ilustrativas se identifican y no activan enlaces externos. Todo el contenido ilustrativo puede ocultarse desde la configuración sin eliminar los registros. Las fotografías sin confirmación no se listan.
 
 Falta confirmar para preparar una versión FULL:
 

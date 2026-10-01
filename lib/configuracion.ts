@@ -1,4 +1,5 @@
 import 'server-only'
+import { cache } from 'react'
 import { supabaseServidorListo } from '@/lib/supabase/config'
 import { obtenerConfiguracion } from '@/lib/supabase/contenido'
 import {
@@ -17,7 +18,7 @@ export function claveDesdeHref(href: string): ClaveSeccion | undefined {
   return CLAVES_SECCION.includes(clave as ClaveSeccion) ? clave as ClaveSeccion : undefined
 }
 
-export async function obtenerConfiguracionNavegacion(): Promise<ConfiguracionNavegacion> {
+export const obtenerConfiguracionNavegacion = cache(async (): Promise<ConfiguracionNavegacion> => {
   if (!supabaseServidorListo()) return NAVEGACION_PREDETERMINADA
   try {
     const datos = (await obtenerConfiguracion('navegacion'))?.secciones
@@ -31,6 +32,20 @@ export async function obtenerConfiguracionNavegacion(): Promise<ConfiguracionNav
   } catch {
     return NAVEGACION_PREDETERMINADA
   }
+})
+
+export const obtenerVisibilidadContenidoIlustrativo = cache(async (): Promise<boolean> => {
+  if (!supabaseServidorListo()) return true
+  try {
+    const datos = await obtenerConfiguracion('contenido_demo')
+    return datos?.mostrar !== false
+  } catch {
+    return true
+  }
+})
+
+export async function seccionVisible(clave: ClaveSeccion): Promise<boolean> {
+  return (await obtenerConfiguracionNavegacion())[clave]
 }
 
 export async function navegacionVisible(): Promise<ItemNavegacion[]> {

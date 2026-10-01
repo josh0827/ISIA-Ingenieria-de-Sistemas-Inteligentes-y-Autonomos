@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import {
   AvisoDemo,
   EncabezadoPagina,
@@ -7,15 +8,17 @@ import {
 } from '@/componentes/Base'
 import { FiltrosProyectos } from '@/componentes/FiltrosContenido'
 import { listarProyectos } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../listados.module.css'
 export const metadata: Metadata = {
   title: 'Proyectos',
   description:
     'Explora las fichas de proyectos de la demo académica de ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.',
 }
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function PaginaProyectos() {
+  if (!(await seccionVisible('proyectos'))) notFound()
   const proyectos = await listarProyectos()
   return (
     <Seccion className={estilos.primeraSeccion}>

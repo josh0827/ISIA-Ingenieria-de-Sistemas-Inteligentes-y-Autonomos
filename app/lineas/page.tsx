@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { AvisoDemo, Boton, EncabezadoPagina, Seccion } from '@/componentes/Base'
 import { Antena, Brazo, Brujula, Flecha, Ojo, Onda, Red } from '@/componentes/Iconos'
 import { listarProyectos } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import { LINEAS } from '@/lib/sitio'
 import estilos from '../secundarias.module.css'
 
@@ -13,9 +15,11 @@ export const metadata: Metadata = {
 
 const ICONOS = { ojo: Ojo, brujula: Brujula, antena: Antena, red: Red, brazo: Brazo, onda: Onda }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function PaginaLineas() {
+  if (!(await seccionVisible('lineas'))) notFound()
+  const proyectosVisibles = await seccionVisible('proyectos')
   const proyectos = await listarProyectos()
 
   return (
@@ -74,7 +78,7 @@ export default async function PaginaLineas() {
             <h2>De las preguntas a los proyectos</h2>
             <p>Conoce ejemplos de cómo estos temas pueden convertirse en preguntas de investigación.</p>
           </div>
-          <Boton href="/proyectos">Ver los proyectos</Boton>
+          {proyectosVisibles && <Boton href="/proyectos">Ver los proyectos</Boton>}
         </div>
       </Seccion>
     </>

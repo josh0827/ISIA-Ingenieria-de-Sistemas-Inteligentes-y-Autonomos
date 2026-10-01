@@ -147,7 +147,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
     coleccion: 'publicaciones',
     etiqueta: 'Publicaciones',
     etiquetaSingular: 'publicación',
-    descripcion: 'Artículos, informes y otros recursos académicos. Solo se publican si están marcados como confirmados.',
+    descripcion: 'Artículos, informes y otros recursos académicos. Los no confirmados se muestran como ejemplos mientras el contenido ilustrativo esté activo.',
     columnas: [
       { clave: 'titulo', etiqueta: 'Título' },
       { clave: 'anio', etiqueta: 'Año' },
@@ -159,7 +159,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       { clave: 'autores', etiqueta: 'Autores (separados por comas)', tipo: 'lista', requerido: true },
       { clave: 'tipo', etiqueta: 'Tipo de recurso', tipo: 'texto', requerido: true },
       { clave: 'enlace', etiqueta: 'Enlace', tipo: 'url' },
-      { clave: 'confirmado', etiqueta: 'Confirmado', tipo: 'booleano', ayuda: 'Sin marcar, esta publicación se guarda pero no aparece en el sitio.' },
+      { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano', ayuda: 'Sin marcar, se mostrará como ejemplo y sin enlace mientras el contenido ilustrativo esté activo.' },
       { clave: 'cuerpo', etiqueta: 'Detalle (Markdown)', tipo: 'markdown' },
     ],
   },

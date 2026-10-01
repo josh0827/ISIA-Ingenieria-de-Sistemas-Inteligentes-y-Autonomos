@@ -1,17 +1,20 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { EncabezadoPagina, Seccion } from '@/componentes/Base'
 import { listarGruposTrabajo } from '@/lib/grupos'
+import { seccionVisible } from '@/lib/configuracion'
 import estilos from './grupos.module.css'
 
 export const metadata: Metadata = {
   title: 'Grupos de trabajo',
   description: 'Conoce los grupos de trabajo, sus temas y recursos dentro del semillero ISIA.',
 }
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function PaginaGrupos() {
+  if (!(await seccionVisible('grupos'))) notFound()
   const grupos = await listarGruposTrabajo()
   return (
     <Seccion className={estilos.primeraSeccion}>

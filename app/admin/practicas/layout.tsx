@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import CerrarSesionBoton from '@/componentes/admin/CerrarSesionBoton'
+import PanelAdminShell from '@/componentes/admin/PanelAdminShell'
 import { supabaseServidorListo } from '@/lib/supabase/config'
 import { usuarioSesion } from '@/lib/sesion'
 import { obtenerUsuarioAutorizado, puedeGestionarPracticas } from '@/lib/usuarios-autorizados'
@@ -14,8 +13,12 @@ export default async function LayoutPracticasAdmin({ children }: { children: Rea
   if (!usuario) redirect('/admin/iniciar-sesion?next=/admin/practicas')
   const autorizado = await obtenerUsuarioAutorizado(usuario.id)
   if (!puedeGestionarPracticas(autorizado)) redirect('/admin/acceso-denegado?motivo=editor')
-  return <div className={estilos.envoltorio}>
-    <header className={estilos.barraSuperior}><div className={estilos.marca}><Link href="/admin/practicas">Prácticas e iniciativas</Link><span>Sesión de {usuario.correo ?? usuario.nombre}</span></div><div className={estilos.usuario}>{autorizado.rol !== 'empresa' && <Link href="/admin" className={estilos.enlaceVolver}>Panel ISIA</Link>}<Link href="/" className={estilos.enlaceVolver}>Ver el sitio</Link><CerrarSesionBoton /></div></header>
-    <main className={`${estilos.cuerpo} ${estilos.contenido}`}>{children}</main>
-  </div>
+  return (
+    <PanelAdminShell
+      usuario={usuario.correo ?? usuario.nombre}
+      soloPracticas={autorizado.rol === 'empresa'}
+    >
+      {children}
+    </PanelAdminShell>
+  )
 }

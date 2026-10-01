@@ -2,13 +2,12 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import Nav from '@/componentes/Nav'
 import Pie from '@/componentes/Pie'
-import Transicion from '@/componentes/Transicion'
 import { SITIO } from '@/lib/sitio'
 import { navegacionVisible } from '@/lib/configuracion'
 import { urlSitio } from '@/lib/supabase/config'
 import './globals.css'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 const texto = Geist({
   subsets: ['latin'],
@@ -65,9 +64,7 @@ export default async function RootLayout({
           </div>
         </aside>
         <Nav items={navegacion} />
-        <main id="contenido" tabIndex={-1}>
-          <Transicion>{children}</Transicion>
-        </main>
+        <main id="contenido" tabIndex={-1}>{children}</main>
         <Pie items={navegacion} />
       </body>
     </html>

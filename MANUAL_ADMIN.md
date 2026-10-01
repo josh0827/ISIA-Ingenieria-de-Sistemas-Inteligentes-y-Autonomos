@@ -1,64 +1,118 @@
-# 📖 Manual de Administración - Sitio Web ISIA (UNAL)
+# Manual de administración del sitio web ISIA
 
-## 🔑 1. Acceso y autenticación
+## 1. Acceso y autenticación
 
-- **Requisito:** autenticarse con Google y tener un usuario activo en la tabla `usuarios_autorizados` de Supabase.
-- **Pasos:**
-  1. Ingresar a `/admin`.
-  2. Hacer clic en **Iniciar sesión con Google**.
-  3. Autenticarse con la cuenta de Google autorizada.
-  4. Para terminar, usar **Cerrar sesión** en la barra superior.
+1. Ingresa a `/admin`.
+2. Selecciona **Iniciar sesión con Google**.
+3. Usa la cuenta registrada en la tabla `usuarios_autorizados` de Supabase.
+4. Al terminar, selecciona **Cerrar sesión**.
 
-El servidor verifica la sesión con Supabase Auth y la autorización en la base de datos antes de cada mutación. Las cuentas con rol `admin` o `editor` acceden al panel general; las cuentas con rol `empresa` se dirigen a la gestión de sus prácticas.
+La autenticación de Google no concede permisos por sí sola. El usuario debe existir en `usuarios_autorizados`, tener `activo = true` y un rol válido.
 
-## 👥 2. Gestión de usuarios autorizados
+## 2. Roles y permisos
 
-- **Ubicación:** Supabase Dashboard > Table Editor > tabla `usuarios_autorizados`.
-- **Añadir usuario antes de su primer acceso:** después de aplicar la migración `202609260004_autorizacion_por_email.sql`, crear una fila con su correo, el rol (`admin`, `editor` o `empresa`) y `activo` igual a `true`; dejar `id` vacío. En el primer inicio de sesión, el servidor vincula automáticamente el UUID verificado por Supabase Auth.
-- **Añadir usuario existente:** también es posible copiar el UUID desde **Authentication > Users** al campo `id`. El correo debe coincidir con el de la cuenta de Google.
-- **Empresa:** completa `nombre_empresa_o_usuario` para identificarla al publicar prácticas. Las empresas solo pueden consultar y modificar sus propias ofertas.
-- **Revocar acceso:** cambiar `activo` a `false` o eliminar la fila. La siguiente comprobación de sesión bloqueará las mutaciones.
+| Acción | Admin | Editor | Empresa |
+| --- | :---: | :---: | :---: |
+| Acceder al panel general | Sí | Sí | No |
+| Configurar secciones públicas | Sí | Sí | No |
+| Gestionar proyectos, novedades, reuniones, integrantes, publicaciones y galería | Sí | Sí | No |
+| Gestionar grupos de trabajo | Sí | Sí | No |
+| Ver todas las prácticas | Sí | Sí | No |
+| Crear, editar y activar prácticas | Sí | Sí | Solo las propias |
+| Eliminar definitivamente una práctica | Sí | No | No |
 
-La tabla se administra fuera del portal para impedir la autoasignación de permisos. La vinculación automática solo se ejecuta después de que Supabase valida la sesión de Google y no activa registros ni cambia roles.
+El rol `empresa` entra a un panel limitado a sus propias prácticas. El servidor comprueba los permisos en cada operación; ocultar un botón no sustituye esa validación.
 
-## 📅 3. Gestión de agenda y reuniones
+## 3. Gestión de usuarios autorizados
 
-- **Sección:** Panel Admin > **Reuniones**.
-- **Campos:** título, fecha, hora, modalidad, lugar o enlace y descripción.
-- **Efecto:** las reuniones confirmadas se reflejan en la agenda pública y, cuando corresponde, en la portada.
+La gestión de usuarios se realiza en **Supabase Dashboard > Table Editor > usuarios_autorizados**.
 
-Antes de confirmar una reunión, verifica fecha, hora, modalidad, ubicación y autorización para publicar los datos.
+- Para habilitar una cuenta, registra su correo, asigna el rol y usa `activo = true`.
+- El campo `id` puede quedar vacío antes del primer acceso. La callback lo vincula con el UUID validado por Supabase Auth cuando existe una única coincidencia por correo.
+- Para revocar el acceso, cambia `activo` a `false` o elimina la fila.
+- Para una empresa, completa `nombre_empresa_o_usuario`.
 
-## 🚀 4. Gestión de proyectos
+## 4. Configuración pública
 
-- **Sección:** Panel Admin > **Proyectos**.
-- **Campos:** título, slug, línea de investigación, estado, resumen, integrantes, descripción e imagen principal.
-- **Estados permitidos:** `En formulación`, `Prototipado` y `Fase inicial`.
-- **Multimedia:** las imágenes JPG, PNG, WebP o AVIF de máximo 8 MB se guardan en el bucket público `imagenes` de Supabase Storage. La tabla conserva su URL pública. Al editar sin seleccionar otro archivo se mantiene la imagen existente.
+En **Panel > Configuración** se controla lo siguiente:
 
-Utiliza `confirmado: false` mientras el proyecto sea ilustrativo o esté pendiente de revisión.
+- **Secciones visibles:** al desactivar una sección, desaparece del encabezado y del pie. Su ruta pública y sus páginas de detalle responden como no disponibles después de la siguiente navegación o recarga.
+- **Contenido ilustrativo:** permanece activo durante el montaje. Al desactivarlo, los registros no confirmados dejan de verse en el sitio público y continúan disponibles para edición en el panel.
 
-## 🧭 5. Navegación pública
+La versión mínima actual no mantiene una conexión en tiempo real con pestañas públicas abiertas. Una pestaña que ya muestra una sección debe navegar o recargarse para recibir la nueva configuración.
 
-- **Sección:** Panel Admin > **Navegación pública**.
-- Activa o desactiva cada sección según exista contenido listo para publicar.
-- Al guardar, el encabezado y el pie se actualizan mediante `revalidatePath`.
+## 5. Flujo editorial general
 
-Ocultar una sección retira su enlace del menú y conserva sus filas en PostgreSQL.
+Las colecciones **Proyectos**, **Novedades**, **Reuniones**, **Integrantes**, **Publicaciones** y **Galería** comparten este flujo:
 
-## 🧩 6. Grupos de trabajo
+1. Abre la colección desde el menú lateral.
+2. Selecciona **Añadir**.
+3. Define un `slug` con minúsculas, números y guiones. El slug no se cambia después.
+4. Completa los campos obligatorios.
+5. Mantén desmarcado **Contenido confirmado** cuando el registro sea un ejemplo.
+6. Guarda y revisa el resultado público.
+7. Marca el contenido como confirmado únicamente después de validar datos, permisos y enlaces.
 
-- **Sección:** Panel Admin > **Grupos de trabajo**.
-- Registra el nombre, descripción e integrantes confirmados, uno por línea.
-- Los repositorios y documentos se escriben como `Nombre | https://url`.
-- La portada y las imágenes nuevas de galería se almacenan en Supabase Storage.
-- Las URLs existentes de la galería pueden retirarse eliminando su línea antes de guardar.
+Los ejemplos pueden conservarse durante el desarrollo y ocultarse juntos desde **Configuración > Contenido de demostración**. Las publicaciones ilustrativas se muestran con una advertencia y sin enlace externo activo.
 
-## 💼 7. Prácticas e iniciativas
+## 6. Proyectos
 
-- **Sección pública:** `/practicas`. Solo presenta ofertas activas.
-- **Panel de empresa:** `/admin/practicas`. Permite crear, editar y desactivar únicamente las ofertas vinculadas a la empresa autenticada.
-- **Panel ISIA:** administradores y editores ven todas las ofertas y pueden gestionarlas.
-- **Campos:** título, empresa, ubicación, modalidad, descripción, temas o requisitos, correo de contacto y URL HTTPS de postulación si existe.
+Campos principales: título, estado, línea, resumen, integrantes, descripción e imagen. Los estados válidos son **En formulación**, **Fase inicial** y **Prototipado**.
 
-Antes de activar una oferta, confirma con la entidad responsable que el contacto, el proceso de postulación y la disponibilidad siguen vigentes.
+Los integrantes se relacionan mediante sus slugs. Verifica que los perfiles existan y estén confirmados antes de presentar un equipo como real.
+
+## 7. Novedades
+
+Registra título, fecha, tipo, resumen y contenido. Antes de confirmar una convocatoria o evento, comprueba su vigencia. Los ejemplos deben permanecer sin confirmar para que la interfaz los identifique como ilustrativos.
+
+## 8. Reuniones
+
+Registra fecha, hora de Colombia, modalidad, lugar, resumen y detalle. La página pública presenta las reuniones futuras confirmadas en la agenda y las tres reuniones confirmadas más recientes que ya finalizaron.
+
+Las reuniones ilustrativas aparecen en un bloque separado y nunca se anuncian como próximas actividades reales.
+
+## 9. Integrantes
+
+Publica únicamente nombres, perfiles, fotografías y enlaces autorizados. El correo es opcional. Los perfiles no confirmados se consideran ejemplos y no activan información de contacto.
+
+## 10. Publicaciones y galería
+
+Una publicación necesita título, año, autores y tipo. Los registros ilustrativos aparecen como demostración cuando esa opción está activa; los enlaces solo se habilitan para contenido confirmado.
+
+La galería se reserva para fotografías reales y autorizadas. Cada imagen requiere título, texto alternativo y pie de foto. No uses imágenes generadas o de stock como registro de actividades del semillero.
+
+## 11. Grupos de trabajo
+
+Para crear un grupo solo son obligatorios el slug, el nombre y la descripción.
+
+- Integrantes: opcionales.
+- Repositorios: opcionales, con formato `Nombre | https://url`.
+- Documentos: opcionales, con el mismo formato.
+- Portada y galería: opcionales.
+
+Si no se agregan recursos o imágenes, la página pública muestra un estado neutro. Pueden incorporarse después desde **Editar**.
+
+## 12. Prácticas e iniciativas
+
+Los roles `admin` y `editor` conservan el menú completo al entrar a Prácticas. El rol `empresa` recibe un panel limitado.
+
+- **Admin:** crea, edita, activa, desactiva y elimina cualquier oferta.
+- **Editor:** crea, edita, activa y desactiva; no puede eliminar.
+- **Empresa:** crea, edita, activa y desactiva únicamente sus propias ofertas; no puede eliminar.
+
+Eliminar es permanente. Cuando una oferta solo ha dejado de estar vigente, utiliza **Desactivar**.
+
+## 13. Imágenes
+
+Las imágenes admitidas son JPG, PNG, WebP y AVIF, con un máximo de 8 MB. Se guardan en el bucket público `imagenes` de Supabase Storage y la base de datos conserva la URL. Al editar sin seleccionar un archivo nuevo se mantiene la imagen existente.
+
+Antes de cargar una imagen, confirma su autoría, autorización de uso y texto alternativo.
+
+## 14. Comprobación antes de publicar contenido real
+
+- Verifica ortografía, fechas, nombres y enlaces.
+- Confirma la autorización de fotografías y datos personales.
+- Revisa la vista pública en escritorio y móvil.
+- Comprueba que una sección desactivada no abra mediante URL directa.
+- Mantén el contenido ilustrativo activo hasta que cada sección tenga información suficiente.
+- Usa la lista `PLANTILLA_INFORMACION_SEMILLERO.md` para solicitar y validar los datos faltantes.

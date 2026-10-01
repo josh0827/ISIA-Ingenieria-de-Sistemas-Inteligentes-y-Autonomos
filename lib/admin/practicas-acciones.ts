@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { requerirGestionPracticas } from '@/lib/admin/datos'
+import { requerirAdministrador, requerirGestionPracticas } from '@/lib/admin/datos'
 import { ErrorAcceso } from '@/lib/autorizacion'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { practicaOfertaSchema, type PracticaOfertaEntrada } from '@/lib/validators/practicas'
@@ -86,6 +86,26 @@ export async function cambiarEstadoPractica(id: string, activa: boolean): Promis
   }
   const { error } = await supabase.from('practicas_ofertas').update({ activa, actualizado_en: new Date().toISOString() }).eq('id', id)
   if (error) return { ok: false, error: `No se pudo actualizar la oferta: ${error.message}` }
+  revalidarPracticas()
+  return { ok: true }
+}
+
+export async function eliminarPractica(id: string): Promise<EstadoPractica> {
+  try {
+    await requerirAdministrador()
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : 'No se pudo comprobar la autorización.',
+      codigo: error instanceof ErrorAcceso ? error.codigo : undefined,
+    }
+  }
+
+  const { error } = await crearClienteAdmin()
+    .from('practicas_ofertas')
+    .delete()
+    .eq('id', id)
+  if (error) return { ok: false, error: `No se pudo eliminar la oferta: ${error.message}` }
   revalidarPracticas()
   return { ok: true }
 }

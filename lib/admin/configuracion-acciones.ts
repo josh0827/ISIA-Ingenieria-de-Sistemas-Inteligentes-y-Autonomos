@@ -32,6 +32,9 @@ export async function guardarConfiguracionNavegacion(
   ) as ConfiguracionNavegacion
 
   await guardarConfiguracion('navegacion', { secciones })
+  await guardarConfiguracion('contenido_demo', {
+    mostrar: formData.get('mostrarContenidoIlustrativo') === 'on',
+  })
   revalidatePath('/', 'layout')
-  return { ok: true, mensaje: 'La navegación pública se actualizó correctamente.' }
+  return { ok: true, mensaje: 'La configuración pública se actualizó correctamente.' }
 }
