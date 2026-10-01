@@ -1,0 +1,24 @@
+   ▲ Next.js 15.5.25
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+
+ ✓ Starting...
+ ✓ Ready in 4.3s
+ ○ Compiling / ...
+ ✓ Compiled / in 4.5s (1102 modules)
+ GET / 200 in 5936ms
+ ○ Compiling /icon.svg ...
+ ✓ Compiled /icon.svg in 546ms (751 modules)
+ GET /icon.svg?503e6788dfe929d7 200 in 746ms
+ ✓ Compiled in 192ms (751 modules)
+ GET / 200 in 311ms
+ ✓ Compiled in 931ms (1008 modules)
+ GET / 200 in 896ms
+ GET / 200 in 1104ms
+ ✓ Compiled /icon.svg in 228ms (751 modules)
+ GET /icon.svg?503e6788dfe929d7 200 in 366ms
+ ✓ Compiled in 1267ms (1075 modules)
+ GET / 200 in 814ms
+ GET / 200 in 1974ms
+ ✓ Compiled /icon.svg in 242ms (751 modules)
+ GET /icon.svg?503e6788dfe929d7 200 in 1522ms
