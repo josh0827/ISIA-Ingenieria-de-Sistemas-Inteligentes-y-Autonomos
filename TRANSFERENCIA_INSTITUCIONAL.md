@@ -103,10 +103,10 @@ Este proyecto no guarda secretos en `vercel.json`. Las variables requeridas debe
 | Variable | Exposición | Uso |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Pública | URL del proyecto Supabase |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Pública | Cliente web y Auth SSR |
-| `SUPABASE_SERVICE_ROLE_KEY` | Solo servidor | Operaciones administrativas |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Pública | Cliente web y Auth SSR (`sb_publishable_...`) |
+| `SUPABASE_SECRET_KEY` | Solo servidor | Operaciones administrativas (`sb_secret_...`) |
 
-La clave `SUPABASE_SERVICE_ROLE_KEY` nunca debe llevar el prefijo `NEXT_PUBLIC_`. Después de modificar variables, crea un nuevo despliegue; los despliegues anteriores no reciben cambios retroactivos.
+La clave `SUPABASE_SECRET_KEY` nunca debe llevar el prefijo `NEXT_PUBLIC_`. Después de modificar variables, crea un nuevo despliegue; los despliegues anteriores no reciben cambios retroactivos.
 
 ## 5. Google Cloud y OAuth
 

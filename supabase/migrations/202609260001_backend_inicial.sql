@@ -51,4 +51,4 @@ to anon, authenticated
 using (bucket_id = 'imagenes');
 
 -- No se crean políticas de escritura para clientes. Las Server Actions usan
--- SUPABASE_SERVICE_ROLE_KEY después de validar la sesión y el editor activo.
+-- SUPABASE_SECRET_KEY después de validar la sesión y el editor activo.

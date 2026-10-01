@@ -21,7 +21,7 @@ El acceso administrativo exige dos comprobaciones:
 1. Una sesión válida de Supabase Auth.
 2. Una fila activa en `public.usuarios_autorizados` cuyo `id` coincida con el usuario autenticado. Si el registro se preparó solo con correo, la callback vincula el UID verificado durante el primer acceso.
 
-Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta autenticada leer únicamente su propia fila; la callback usa el cliente administrativo del servidor para resolver y vincular el registro por correo sin abrir la lista completa. El servidor utiliza `SUPABASE_SECRET_KEY` o, por compatibilidad, `SUPABASE_SERVICE_ROLE_KEY`; ninguna debe exponerse con el prefijo `NEXT_PUBLIC_`. Las cargas verifican extensión, MIME, tamaño y firma binaria antes de llegar a Storage.
+Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta autenticada leer únicamente su propia fila; la callback usa el cliente administrativo del servidor para resolver y vincular el registro por correo sin abrir la lista completa. El servidor utiliza `SUPABASE_SECRET_KEY` (`sb_secret_...`), que nunca debe exponerse con el prefijo `NEXT_PUBLIC_`. Las cargas verifican extensión, MIME, tamaño y firma binaria antes de llegar a Storage.
 
 ## Puesta en marcha
 

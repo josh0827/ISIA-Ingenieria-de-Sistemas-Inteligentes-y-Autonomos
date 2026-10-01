@@ -19,9 +19,9 @@ Configura las siguientes variables desde **Project Settings → Environment Vari
 | `SUPABASE_SECRET_KEY` | Sí | Sí | Sí | Secreto moderno `sb_secret_...`; solo servidor |
 | `NEXT_PUBLIC_SITE_URL` | Dominio de producción | URL estable de preview o dominio de pruebas | `http://localhost:3000` | Pública |
 
-Marca `SUPABASE_SECRET_KEY` como **Sensitive** en Production y Preview. El código conserva compatibilidad con `SUPABASE_SERVICE_ROLE_KEY`, pero la clave moderna es la opción recomendada. Vercel no permite esa clasificación en Development; limita el acceso al proyecto y evita compartir el valor.
+Marca `SUPABASE_SECRET_KEY` como **Sensitive** en Production y Preview. Las claves Legacy (`SUPABASE_SERVICE_ROLE_KEY`) ya no se leen. Vercel no permite esa clasificación en Development; limita el acceso al proyecto y evita compartir el valor.
 
-El código conserva compatibilidad con `NEXT_PUBLIC_SUPABASE_ANON_KEY` para proyectos antiguos, pero basta con configurar una de las dos claves públicas. En instalaciones nuevas usa `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+La clave pública Legacy (`NEXT_PUBLIC_SUPABASE_ANON_KEY`) ya no se lee: configura `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (`sb_publishable_...`) y elimina la variable antigua.
 
 Los previews no deberían escribir en la base de producción. Cuando sea posible, usa un proyecto Supabase separado o variables de Preview limitadas a una rama de pruebas.
 

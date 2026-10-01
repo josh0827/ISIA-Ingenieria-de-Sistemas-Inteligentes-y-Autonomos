@@ -155,7 +155,7 @@ Además de editar los archivos Markdown, el sitio incluye un panel protegido en 
 1. Crea un proyecto en [Supabase](https://supabase.com/dashboard).
 2. Ejecuta en orden los archivos de `supabase/migrations/` desde SQL Editor o con Supabase CLI. Crean las tablas, activan RLS, preparan el bucket `imagenes` y normalizan la clave `editores.id`.
 3. En **Authentication → Providers**, habilita Google. Crea un cliente OAuth de tipo web en Google Cloud, registra el callback de Supabase y configura en Supabase las URLs autorizadas del sitio, incluida `/api/auth/callback`.
-4. Copia [.env.local.example](.env.local.example) a `.env.local` y completa la URL, la clave pública y la `service_role`. `.env.local` está excluido por `.gitignore`; nunca lo subas.
+4. Copia [.env.local.example](.env.local.example) a `.env.local` y completa la URL, la clave publishable (`sb_publishable_...`) y la secret (`sb_secret_...`). `.env.local` está excluido por `.gitignore`; nunca lo subas.
 5. Inicia sesión una vez para crear el usuario. Luego copia su UUID desde **Authentication → Users** e insértalo en `public.editores` con `activo = true`.
 6. En la fila `configuracion/navegacion`, el mapa `secciones` controla qué enlaces aparecen en el menú público. También puede editarse desde **Panel Admin → Navegación pública**.
 7. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
@@ -165,7 +165,7 @@ Además de editar los archivos Markdown, el sitio incluye un panel protegido en 
    Esto importa `contenido/**/*.md` a PostgreSQL. Vuelve a ejecutarlo si cambias los Markdown y quieres reflejarlos otra vez; la operación actualiza por colección y slug.
 8. Reinicia `npm run dev` (o el despliegue) para cargar las variables. Entra a `/admin/iniciar-sesion`.
 
-Los campos de imagen usan `lib/storage/upload.ts` y el bucket público `imagenes`. Para conservar una imagen al editar, deja el selector vacío. No expongas `SUPABASE_SERVICE_ROLE_KEY` al navegador.
+Los campos de imagen usan `lib/storage/upload.ts` y el bucket público `imagenes`. Para conservar una imagen al editar, deja el selector vacío. No expongas `SUPABASE_SECRET_KEY` al navegador.
 
 
 El cuerpo Markdown pasa por saneamiento HTML y un filtro de recursos. No añadas HTML interactivo, scripts, iframes, formularios ni instrucciones internas de desarrollo a los archivos publicados.

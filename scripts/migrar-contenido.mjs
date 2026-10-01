@@ -19,7 +19,7 @@ const RAIZ = path.join(process.cwd(), 'contenido')
 const COLECCIONES = ['proyectos', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria']
 
 function credencialesListas() {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SECRET_KEY)
 }
 
 function leerCarpeta(carpeta) {
@@ -37,7 +37,7 @@ function leerCarpeta(carpeta) {
 async function main() {
   if (!credencialesListas()) {
     console.error(
-      'Faltan variables de entorno de Supabase (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY).\n' +
+      'Faltan variables de entorno de Supabase (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY).\n' +
         'Ejecuta este script con: node --env-file=.env.local scripts/migrar-contenido.mjs',
     )
     process.exit(1)
@@ -45,7 +45,7 @@ async function main() {
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    process.env.SUPABASE_SECRET_KEY,
     {
       auth: { autoRefreshToken: false, persistSession: false },
     },
