@@ -88,6 +88,36 @@
   gap: 1.5rem;
 }
 
+.cargandoPanel {
+  min-height: 12rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--texto-tenue);
+  font-size: 0.92rem;
+}
+
+.indicadorCarga {
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--linea);
+  border-top-color: var(--verde-oscuro);
+  border-radius: 50%;
+  animation: giroCarga 0.7s linear infinite;
+}
+
+@keyframes giroCarga {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicadorCarga {
+    animation: none;
+    border-color: var(--verde-oscuro);
+  }
+}
+
 .cabeceraPagina {
   display: flex;
   align-items: flex-start;

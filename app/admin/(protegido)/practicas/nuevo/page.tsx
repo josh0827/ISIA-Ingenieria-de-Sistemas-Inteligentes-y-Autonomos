@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import FormularioPractica from '@/componentes/admin/FormularioPractica'
 import { requerirGestionPracticas } from '@/lib/admin/datos'
-import estilos from '../../admin.module.css'
+import estilos from '../../../admin.module.css'
 
 export const metadata: Metadata = { title: 'Publicar oferta de práctica' }
 

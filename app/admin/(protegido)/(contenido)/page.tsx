@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { COLECCIONES } from '@/lib/contenido'
 import { ESQUEMAS } from '@/lib/admin/esquemas'
-import estilos from '../admin.module.css'
+import estilos from '../../admin.module.css'
 
 export const metadata: Metadata = { title: 'Panel' }
 export const dynamic = 'force-dynamic'

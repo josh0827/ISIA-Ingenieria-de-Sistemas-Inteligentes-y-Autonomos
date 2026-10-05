@@ -1,6 +1,6 @@
 import 'server-only'
 import { supabaseServidorListo } from '@/lib/supabase/config'
-import { listarFilasContenido, obtenerFilaContenido } from '@/lib/supabase/contenido'
+import { listarResumenesContenido, obtenerFilaContenido } from '@/lib/supabase/contenido'
 import { usuarioSesion } from '@/lib/sesion'
 import {
   obtenerUsuarioAutorizado,
@@ -77,11 +77,11 @@ export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmi
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  return (await listarFilasContenido(coleccion))
+  return (await listarResumenesContenido(coleccion))
     .map((fila) => ({
       slug: fila.slug,
       datos: normalizarDatosAdmin(coleccion, fila.datos),
-      cuerpo: fila.cuerpo,
+      cuerpo: '',
     }))
     .sort((a, b) => a.slug.localeCompare(b.slug))
 }

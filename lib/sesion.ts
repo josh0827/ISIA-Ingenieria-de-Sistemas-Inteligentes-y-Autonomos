@@ -1,4 +1,5 @@
 import 'server-only'
+import { cache } from 'react'
 import { supabaseClienteListo } from './supabase/config'
 import { crearClienteServidor } from './supabase/server'
 
@@ -15,22 +16,30 @@ export async function cerrarSesion(): Promise<void> {
   await supabase.auth.signOut()
 }
 
-/** Devuelve el usuario autenticado validando el JWT con Supabase Auth. */
-export async function usuarioSesion(): Promise<UsuarioSesion | undefined> {
+/**
+ * Devuelve el usuario autenticado validando criptograficamente el JWT.
+ * React cache evita repetir esta verificacion entre el layout y la pagina
+ * durante una misma navegacion del App Router.
+ */
+export const usuarioSesion = cache(async (): Promise<UsuarioSesion | undefined> => {
   if (!supabaseClienteListo()) return undefined
   const supabase = await crearClienteServidor()
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data.user) return undefined
-  const metadatos = data.user.user_metadata as Record<string, unknown>
+  const { data, error } = await supabase.auth.getClaims()
+  if (error || !data?.claims) return undefined
+
+  const claims = data.claims
+  const metadatos = claims.user_metadata && typeof claims.user_metadata === 'object'
+    ? claims.user_metadata as Record<string, unknown>
+    : {}
   const nombre =
     (typeof metadatos.full_name === 'string' && metadatos.full_name) ||
     (typeof metadatos.user_name === 'string' && metadatos.user_name) ||
-    data.user.email ||
-    data.user.id
+    claims.email ||
+    claims.sub
   return {
-    id: data.user.id,
+    id: claims.sub,
     nombre,
-    correo: data.user.email,
+    correo: claims.email,
     foto: typeof metadatos.avatar_url === 'string' ? metadatos.avatar_url : undefined,
   }
-}
+})

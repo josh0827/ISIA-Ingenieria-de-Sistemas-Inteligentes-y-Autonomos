@@ -28,6 +28,24 @@ export async function listarFilasContenido(coleccion: string): Promise<FilaConte
   }))
 }
 
+/** Lectura liviana para tablas administrativas que no muestran el cuerpo Markdown. */
+export async function listarResumenesContenido(
+  coleccion: string,
+): Promise<Omit<FilaContenido, 'cuerpo'>[]> {
+  const { data, error } = await crearClienteAdmin()
+    .from('contenido')
+    .select('slug, datos')
+    .eq('coleccion', coleccion)
+    .order('slug')
+  lanzarSiError(error)
+  return (data ?? []).map((fila) => ({
+    slug: String(fila.slug),
+    datos: fila.datos && typeof fila.datos === 'object'
+      ? fila.datos as Record<string, unknown>
+      : {},
+  }))
+}
+
 export async function obtenerFilaContenido(
   coleccion: string,
   slug: string,

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FormularioGrupo from '@/componentes/admin/FormularioGrupo'
 import { obtenerGrupoTrabajo } from '@/lib/grupos'
-import estilos from '../../../admin.module.css'
+import estilos from '../../../../admin.module.css'
 
 type Props = { params: Promise<{ slug: string }> }
 export const metadata: Metadata = { title: 'Editar grupo de trabajo' }

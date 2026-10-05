@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { supabaseServidorListo } from '@/lib/supabase/config'
 import { usuarioSesion } from '@/lib/sesion'
-import { obtenerUsuarioAutorizado, puedeEditarContenido } from '@/lib/usuarios-autorizados'
+import { obtenerUsuarioAutorizado } from '@/lib/usuarios-autorizados'
 import PanelAdminShell from '@/componentes/admin/PanelAdminShell'
 import estilos from '../admin.module.css'
 
@@ -25,15 +25,15 @@ export default async function LayoutProtegido({ children }: { children: React.Re
   if (!usuario) redirect('/admin/iniciar-sesion')
 
   const autorizado = await obtenerUsuarioAutorizado(usuario.id)
-  if (autorizado?.activo && autorizado.rol === 'empresa') {
-    redirect('/admin/practicas')
-  }
-  if (!puedeEditarContenido(autorizado)) {
+  if (!autorizado?.activo) {
     redirect('/admin/acceso-denegado?motivo=editor')
   }
 
   return (
-    <PanelAdminShell usuario={usuario.correo ?? usuario.nombre}>
+    <PanelAdminShell
+      usuario={usuario.correo ?? usuario.nombre}
+      soloPracticas={autorizado.rol === 'empresa'}
+    >
       {children}
     </PanelAdminShell>
   )

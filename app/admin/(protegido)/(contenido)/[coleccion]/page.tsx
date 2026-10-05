@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { esquemaDe } from '@/lib/admin/esquemas'
 import { listarDocumentos } from '@/lib/admin/datos'
 import TablaAdmin from '@/componentes/admin/TablaAdmin'
-import estilos from '../../admin.module.css'
+import estilos from '../../../admin.module.css'
 
 type Props = { params: Promise<{ coleccion: string }> }
 

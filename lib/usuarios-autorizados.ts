@@ -1,4 +1,5 @@
 import 'server-only'
+import { cache } from 'react'
 
 import { supabaseServidorListo } from '@/lib/supabase/config'
 import { crearClienteAdmin } from '@/lib/supabase/server'
@@ -38,7 +39,7 @@ function convertirUsuario(
   }
 }
 
-export async function obtenerUsuarioAutorizado(id: string): Promise<UsuarioAutorizado | undefined> {
+export const obtenerUsuarioAutorizado = cache(async (id: string): Promise<UsuarioAutorizado | undefined> => {
   if (!supabaseServidorListo()) return undefined
   const { data, error } = await crearClienteAdmin()
     .from('usuarios_autorizados')
@@ -48,7 +49,7 @@ export async function obtenerUsuarioAutorizado(id: string): Promise<UsuarioAutor
 
   if (error) return undefined
   return convertirUsuario(data)
-}
+})
 
 /**
  * Resuelve el acceso por UID y, como respaldo, por correo normalizado. El

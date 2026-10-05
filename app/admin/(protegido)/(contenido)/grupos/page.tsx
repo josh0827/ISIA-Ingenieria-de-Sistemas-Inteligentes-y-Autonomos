@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { listarGruposTrabajo } from '@/lib/grupos'
+import { listarGruposTrabajoAdmin } from '@/lib/grupos'
 import EliminarGrupoBoton from '@/componentes/admin/EliminarGrupoBoton'
-import estilos from '../../admin.module.css'
+import estilos from '../../../admin.module.css'
 import tabla from '@/componentes/admin/TablaAdmin.module.css'
 
 export const metadata: Metadata = { title: 'Grupos de trabajo' }
 export const dynamic = 'force-dynamic'
 
 export default async function AdminGrupos() {
-  const grupos = await listarGruposTrabajo()
+  const grupos = await listarGruposTrabajoAdmin()
   return (
     <>
       <div className={estilos.cabeceraPagina}>

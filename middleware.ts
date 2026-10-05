@@ -23,7 +23,10 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  await supabase.auth.getUser()
+  // Verifica la firma del JWT y refresca las cookies cuando sea necesario.
+  // Con claves asimetricas, getClaims reutiliza el JWKS y evita una solicitud
+  // a Supabase Auth en cada cambio de pagina del panel.
+  await supabase.auth.getClaims()
   return respuesta
 }
 

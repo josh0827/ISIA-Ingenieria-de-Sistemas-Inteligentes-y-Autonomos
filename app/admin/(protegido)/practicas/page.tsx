@@ -3,8 +3,8 @@ import Link from 'next/link'
 import EstadoPracticaBoton from '@/componentes/admin/EstadoPracticaBoton'
 import EliminarPracticaBoton from '@/componentes/admin/EliminarPracticaBoton'
 import { requerirGestionPracticas } from '@/lib/admin/datos'
-import { listarPracticasAdmin } from '@/lib/practicas'
-import estilos from '../admin.module.css'
+import { listarResumenPracticasAdmin } from '@/lib/practicas'
+import estilos from '../../admin.module.css'
 import tabla from '@/componentes/admin/TablaAdmin.module.css'
 
 export const metadata: Metadata = { title: 'Prácticas e iniciativas' }
@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function AdminPracticas() {
   const sesion = await requerirGestionPracticas()
-  const ofertas = await listarPracticasAdmin(sesion.id, sesion.autorizado.rol)
+  const ofertas = await listarResumenPracticasAdmin(sesion.id, sesion.autorizado.rol)
   const esEmpresa = sesion.autorizado.rol === 'empresa'
   const esAdmin = sesion.autorizado.rol === 'admin'
   return <>

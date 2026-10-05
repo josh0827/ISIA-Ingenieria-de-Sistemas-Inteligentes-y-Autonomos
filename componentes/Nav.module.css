@@ -11,36 +11,21 @@
 .marca {
   display: flex;
   align-items: center;
-  gap: 1.15rem;
   flex-shrink: 0;
-}
-.identidad {
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid var(--linea);
-  padding-left: 1.15rem;
-}
-.identidad strong {
-  font-size: clamp(0.92rem, 1.35vw, 1.15rem);
-  letter-spacing: 0.01em;
-  font-weight: 650;
-  line-height: 1.25;
-  max-width: 15rem;
-  display: block;
-}
-.identidad > span {
-  font-size: 0.68rem;
-  color: var(--texto-tenue);
-  margin-top: 0.3rem;
 }
 .institucion {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
   margin-left: auto;
+}
+.institucionTexto {
+  display: flex;
+  flex-direction: column;
   font-size: 0.78rem;
   line-height: 1.6;
 }
-.institucion > span:last-child {
+.institucionTexto > span:last-child {
   color: var(--texto-tenue);
   font-size: 0.72rem;
 }
@@ -149,13 +134,8 @@
     margin-left: auto;
     flex-shrink: 0;
   }
-  .marca {
-    gap: 0.8rem;
-  }
-  .identidad {
-    padding-left: 0.8rem;
-  }
-  .identidad > span {
-    font-size: 0.62rem;
+  .marca > span {
+    height: 48px !important;
+    width: 184px !important;
   }
 }

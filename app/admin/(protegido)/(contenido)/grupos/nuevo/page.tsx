@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import FormularioGrupo from '@/componentes/admin/FormularioGrupo'
-import estilos from '../../../admin.module.css'
+import estilos from '../../../../admin.module.css'
 
 export const metadata: Metadata = { title: 'Nuevo grupo de trabajo' }
 

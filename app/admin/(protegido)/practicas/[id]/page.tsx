@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import FormularioPractica from '@/componentes/admin/FormularioPractica'
 import { requerirGestionPracticas } from '@/lib/admin/datos'
 import { obtenerPracticaAdmin } from '@/lib/practicas'
-import estilos from '../../admin.module.css'
+import estilos from '../../../admin.module.css'
 
 export const metadata: Metadata = { title: 'Editar oferta de práctica' }
 

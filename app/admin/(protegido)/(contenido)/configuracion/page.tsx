@@ -4,7 +4,7 @@ import {
   obtenerConfiguracionNavegacion,
   obtenerVisibilidadContenidoIlustrativo,
 } from '@/lib/configuracion'
-import estilos from '../../admin.module.css'
+import estilos from '../../../admin.module.css'
 
 export const metadata: Metadata = { title: 'Configuración' }
 export const dynamic = 'force-dynamic'

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { esquemaDe } from '@/lib/admin/esquemas'
 import { obtenerDocumento, obtenerAnidado } from '@/lib/admin/datos'
 import FormularioContenido from '@/componentes/admin/FormularioContenido'
-import estilos from '../../../admin.module.css'
+import estilos from '../../../../admin.module.css'
 
 type Props = { params: Promise<{ coleccion: string; id: string }> }
 
