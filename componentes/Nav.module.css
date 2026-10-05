@@ -24,14 +24,14 @@
   box-shadow: none;
 }
 .fila {
-  min-height: 96px;
+  min-height: 80px;
   display: flex;
   align-items: center;
   gap: 2rem;
   transition: min-height 220ms var(--curva);
 }
 .barra[data-desplazada='true'] .fila {
-  min-height: 88px;
+  min-height: 72px;
 }
 .marca {
   display: flex;
@@ -193,11 +193,11 @@
 }
 @media (max-width: 900px) {
   .fila {
-    min-height: 88px;
+    min-height: 72px;
     gap: 1rem;
   }
   .barra[data-desplazada='true'] .fila {
-    min-height: 80px;
+    min-height: 64px;
   }
   .navBorde {
     display: none;
@@ -211,7 +211,12 @@
 }
 @media (max-width: 540px) {
   .fila {
-    min-height: 88px;
+    min-height: 72px;
+  }
+  .marca > span {
+    width: auto !important;
+    height: 36px !important;
+    aspect-ratio: var(--proporcion-marca);
   }
   .cta {
     display: none;

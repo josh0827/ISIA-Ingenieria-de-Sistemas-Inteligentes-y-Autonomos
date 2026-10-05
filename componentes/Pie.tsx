@@ -9,7 +9,7 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
         <div className={estilos.rejilla}>
           <div>
             <Link href="/" className={estilos.marca} aria-label="ISIA, ir al inicio">
-              <MarcaIsia variante="completa" alto={104} decorativa />
+              <MarcaIsia variante="simbolo" alto={34} decorativa />
             </Link>
             <p className={estilos.ubicacion}>
               {SITIO.universidad}

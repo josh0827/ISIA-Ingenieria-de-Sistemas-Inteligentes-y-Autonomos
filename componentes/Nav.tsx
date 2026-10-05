@@ -80,7 +80,7 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
     >
       <div className={`contenedor ${estilos.fila}`}>
         <Link href="/" className={estilos.marca} onClick={cerrar} aria-label="ISIA, ir al inicio">
-          <MarcaIsia variante="simbolo" alto={56} decorativa prioridad />
+          <MarcaIsia variante="simbolo" alto={40} decorativa prioridad />
         </Link>
         <Link href="/unete" className={estilos.cta} aria-current={activa('/unete') ? 'page' : undefined}>
           Quiero participar <span aria-hidden>↗</span>

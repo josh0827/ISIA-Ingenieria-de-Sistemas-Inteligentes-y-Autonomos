@@ -39,7 +39,7 @@ export default async function Inicio() {
             <h1 className={estilos.marcaPortada}>
               <MarcaIsia
                 variante="completa"
-                alto={230}
+                alto={180}
                 prioridad
                 className={estilos.marcaPortadaImagen}
               />

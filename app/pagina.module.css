@@ -53,7 +53,7 @@
   margin-bottom: 1.4rem;
 }
 .marcaPortada {
-  width: min(32rem, 100%);
+  width: min(25rem, 100%);
   line-height: 0;
 }
 .marcaPortadaImagen {
@@ -334,6 +334,9 @@
   }
 }
 @media (max-width: 420px) {
+  .marcaPortada {
+    width: min(19rem, 100%);
+  }
   .objetivos {
     grid-template-columns: 1fr;
     gap: 1.5rem;
