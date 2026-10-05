@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { COLECCIONES } from '@/lib/contenido'
 import { ESQUEMAS } from '@/lib/admin/esquemas'
 import CerrarSesionBoton from './CerrarSesionBoton'
+import NotificacionesAdmin from './NotificacionesAdmin'
 import estilos from '@/app/admin/admin.module.css'
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 export default function PanelAdminShell({ children, usuario, soloPracticas = false }: Props) {
   return (
     <div className={estilos.envoltorio}>
+      <NotificacionesAdmin />
       <header className={estilos.barraSuperior}>
         <div className={estilos.marca}>
           <Link href={soloPracticas ? '/admin/practicas' : '/admin'}>

@@ -1,0 +1,35 @@
+.pista {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1000;
+  height: 3px;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms var(--curva);
+}
+
+.pista[data-visible='true'] {
+  opacity: 1;
+}
+
+.pista span {
+  display: block;
+  width: 38%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--verde), var(--rojo));
+  box-shadow: 0 0 10px rgb(69 106 62 / 45%);
+  animation: recorrerRuta 1.05s ease-in-out infinite;
+}
+
+@keyframes recorrerRuta {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(370%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pista span {
+    width: 100%;
+    animation: none;
+  }
+}

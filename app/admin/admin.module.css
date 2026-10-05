@@ -5,6 +5,56 @@
   flex-direction: column;
 }
 
+.notificacion {
+  position: fixed;
+  z-index: 1100;
+  top: 1rem;
+  right: 1rem;
+  max-width: min(24rem, calc(100vw - 2rem));
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--verde);
+  border-radius: var(--r);
+  background: var(--superficie);
+  color: var(--verde-oscuro);
+  box-shadow: 0 1rem 2.5rem rgb(29 29 31 / 16%);
+  font-size: 0.88rem;
+  font-weight: 650;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.65rem);
+  pointer-events: none;
+  transition: opacity 180ms var(--curva), transform 180ms var(--curva), visibility 0s linear 180ms;
+}
+
+.notificacion[data-visible='true'] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
+.notificacion[data-tipo='error'] {
+  border-color: var(--rojo);
+  color: var(--rojo);
+}
+
+.notificacion > span {
+  width: 1.4rem;
+  height: 1.4rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--verde);
+}
+
+.notificacion[data-tipo='error'] > span {
+  background: var(--rojo);
+}
+
 .barraSuperior {
   display: flex;
   align-items: center;
@@ -70,10 +120,12 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 0.92rem;
+  transition: background-color 180ms var(--curva), color 180ms var(--curva), transform 180ms var(--curva);
 }
 
 .navEnlace:hover {
   background: var(--fondo-2);
+  transform: translateX(0.18rem);
 }
 
 .navEnlaceActivo {
@@ -193,6 +245,9 @@
   color: var(--texto);
   transition: border-color 0.2s var(--curva), transform 0.2s var(--curva);
 }
+.tarjeta:active {
+  transform: translateY(0) scale(0.99);
+}
 
 .tarjeta:hover {
   border-color: var(--verde);
@@ -311,4 +366,11 @@
   background: var(--fondo-2);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navEnlace:hover,
+  .tarjeta:active {
+    transform: none;
+  }
 }

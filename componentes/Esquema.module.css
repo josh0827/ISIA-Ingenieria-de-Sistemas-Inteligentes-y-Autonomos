@@ -15,4 +15,47 @@
 }
 .nodo {
   fill: var(--verde-vel);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.esquema[data-pausado='true'] *,
+.compacto[data-pausado='true'] * {
+  animation-play-state: paused !important;
+}
+.flujo {
+  color: var(--rojo);
+  stroke-dasharray: 7 17;
+  opacity: 0.58;
+}
+.latido {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flujo {
+    animation: recorrerFlujo 4.2s linear infinite;
+  }
+  .nodo {
+    animation: pulsoNodo 3.2s ease-in-out infinite;
+  }
+  .nodoDos { animation-delay: -2.1s; }
+  .nodoTres { animation-delay: -1.05s; }
+  .latido {
+    animation: pulsoLinea 3.2s ease-in-out infinite;
+  }
+}
+
+@keyframes recorrerFlujo {
+  to { stroke-dashoffset: -48; }
+}
+
+@keyframes pulsoNodo {
+  0%, 72%, 100% { transform: scale(1); fill: var(--verde-vel); }
+  82% { transform: scale(1.22); fill: var(--superficie-2); }
+}
+
+@keyframes pulsoLinea {
+  0%, 55%, 100% { opacity: 0.55; stroke-dashoffset: 0; }
+  68% { opacity: 1; stroke-dashoffset: -48; }
 }

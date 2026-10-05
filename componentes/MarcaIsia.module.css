@@ -14,4 +14,9 @@
   width: var(--imagen-ancho);
   height: var(--imagen-alto);
   max-width: none;
+  transition: filter 220ms var(--curva);
+}
+
+.marco:hover .imagen {
+  filter: saturate(1.06) contrast(1.015);
 }

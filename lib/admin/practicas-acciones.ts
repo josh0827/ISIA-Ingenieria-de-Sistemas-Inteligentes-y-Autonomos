@@ -69,7 +69,7 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
   if (error) return { ok: false, error: `No se pudo guardar la oferta: ${error.message}` }
 
   revalidarPracticas()
-  redirect('/admin/practicas')
+  redirect('/admin/practicas?guardado=1')
 }
 
 export async function cambiarEstadoPractica(id: string, activa: boolean): Promise<EstadoPractica> {

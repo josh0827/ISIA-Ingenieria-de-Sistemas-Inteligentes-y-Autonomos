@@ -42,7 +42,9 @@
   min-height: 46px;
   transition:
     background 0.18s,
-    color 0.18s;
+    color 0.18s,
+    box-shadow 0.18s,
+    transform 0.18s;
 }
 .botonPrincipal {
   padding: 0.75rem 1.35rem;
@@ -52,6 +54,7 @@
 }
 .botonPrincipal:hover {
   background: var(--verde-oscuro);
+  box-shadow: 0 0.65rem 1.4rem rgb(53 82 47 / 18%);
 }
 .botonSutil {
   color: var(--verde);
@@ -61,8 +64,16 @@
   text-decoration: underline;
   text-underline-offset: 5px;
 }
+.boton:active {
+  transform: scale(0.975);
+}
 .botonFlecha {
   flex-shrink: 0;
+  transition: transform 180ms var(--curva);
+}
+.boton:hover .botonFlecha,
+.boton:focus-visible .botonFlecha {
+  transform: translateX(0.28rem);
 }
 .etiqueta {
   display: inline-flex;
@@ -112,6 +123,12 @@
 .miga:hover {
   text-decoration: underline;
 }
+.miga a {
+  transition: color 180ms var(--curva);
+}
+.miga a:hover {
+  color: var(--verde-oscuro);
+}
 .aviso {
   display: flex;
   align-items: flex-start;
@@ -152,4 +169,12 @@
 }
 .estadoAccion {
   margin-top: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton:active,
+  .boton:hover .botonFlecha,
+  .boton:focus-visible .botonFlecha {
+    transform: none;
+  }
 }

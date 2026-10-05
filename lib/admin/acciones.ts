@@ -198,7 +198,7 @@ export async function guardarDocumento(
 
   await guardarFilaContenido(coleccion, slug, datos, cuerpo)
   revalidarContenido(coleccion, slug)
-  redirect(`/admin/${coleccion}`)
+  redirect(`/admin/${coleccion}?guardado=1`)
 }
 
 export async function eliminarDocumento(

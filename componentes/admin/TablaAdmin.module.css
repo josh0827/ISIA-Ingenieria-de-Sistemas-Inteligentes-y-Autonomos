@@ -27,6 +27,15 @@
   border-bottom: none;
 }
 
+.tabla tbody tr {
+  transition: background-color 180ms var(--curva);
+}
+
+.tabla tbody tr:hover,
+.tabla tbody tr:focus-within {
+  background: var(--verde-vel);
+}
+
 .celdaSlug {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   color: var(--texto-tenue);
@@ -54,6 +63,7 @@
   color: var(--verde-oscuro);
   font-weight: 700;
   text-decoration: none;
+  transition: color 160ms var(--curva), transform 160ms var(--curva);
 }
 
 .enlaceEditar:hover {
@@ -69,11 +79,17 @@
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
+  transition: background-color 180ms var(--curva), color 180ms var(--curva), transform 160ms var(--curva);
 }
 
 .botonEliminar:hover:not(:disabled) {
   background: var(--rojo);
   color: #fff;
+}
+
+.botonEliminar:active:not(:disabled),
+.enlaceEditar:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .botonEliminar:disabled {
@@ -93,4 +109,11 @@
   border-radius: var(--r);
   padding: 1.5rem;
   text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botonEliminar:active:not(:disabled),
+  .enlaceEditar:active:not(:disabled) {
+    transform: none;
+  }
 }

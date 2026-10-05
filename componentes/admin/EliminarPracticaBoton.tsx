@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { eliminarPractica } from '@/lib/admin/practicas-acciones'
+import { notificarAdmin } from './notificar'
 import estilos from './TablaAdmin.module.css'
 
 export default function EliminarPracticaBoton({ id, titulo }: { id: string; titulo: string }) {
@@ -16,7 +17,10 @@ export default function EliminarPracticaBoton({ id, titulo }: { id: string; titu
     iniciarTransicion(async () => {
       const resultado = await eliminarPractica(id)
       if (!resultado.ok) setError(resultado.error ?? 'No se pudo eliminar la práctica.')
-      else router.refresh()
+      else {
+        notificarAdmin('La práctica se eliminó correctamente.')
+        router.refresh()
+      }
     })
   }
 

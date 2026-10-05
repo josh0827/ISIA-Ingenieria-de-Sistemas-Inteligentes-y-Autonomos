@@ -104,7 +104,7 @@ export async function guardarGrupo(
   if (error) return { ok: false, error: `No se pudo guardar el grupo: ${error.message}` }
 
   revalidarGrupo(slug)
-  redirect('/admin/grupos')
+  redirect('/admin/grupos?guardado=1')
 }
 
 export async function eliminarGrupo(slug: string): Promise<EstadoGrupo> {

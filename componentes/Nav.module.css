@@ -13,6 +13,12 @@
   align-items: center;
   flex-shrink: 0;
 }
+.marca :global(img) {
+  transition: filter 220ms var(--curva);
+}
+.marca:hover :global(img) {
+  filter: saturate(1.08) brightness(1.03);
+}
 .cta {
   margin-left: auto;
   padding: 0.65rem 1rem;
@@ -30,11 +36,21 @@
 .cta:hover {
   background: var(--verde-oscuro);
 }
+.cta span {
+  transition: transform 180ms var(--curva);
+}
+.cta:hover span {
+  transform: translate(0.18rem, -0.12rem);
+}
+.cta:active {
+  transform: scale(0.98);
+}
 .navBorde {
   background: var(--gris-nav);
   border-top: 1px solid var(--linea-suave);
 }
 .enlaces {
+  position: relative;
   display: flex;
   justify-content: space-between;
   gap: 1.5rem;
@@ -52,8 +68,22 @@
 }
 .enlace[aria-current='page'] {
   color: var(--verde-oscuro);
-  border-color: var(--verde-oscuro);
   font-weight: 700;
+}
+.indicador {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background: var(--verde-oscuro);
+  opacity: 0;
+  transition:
+    left 260ms var(--curva),
+    width 260ms var(--curva),
+    opacity 160ms var(--curva);
+  pointer-events: none;
+}
+.indicador[data-visible='true'] {
+  opacity: 1;
 }
 .hamburguesa {
   display: none;
@@ -65,12 +95,36 @@
   align-items: center;
   justify-content: center;
 }
-.panel {
-  padding: 0 var(--gutter) 1.25rem;
-  background: var(--fondo);
+.hamburguesa svg {
+  transition: transform 200ms var(--curva);
 }
-.panel[hidden] {
-  display: none;
+.hamburguesa[aria-expanded='true'] svg {
+  transform: rotate(90deg);
+}
+.panel {
+  max-height: 0;
+  padding: 0 var(--gutter);
+  background: var(--fondo);
+  opacity: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transform: translateY(-0.45rem);
+  pointer-events: none;
+  transition:
+    max-height 260ms var(--curva),
+    padding 260ms var(--curva),
+    opacity 180ms var(--curva),
+    transform 220ms var(--curva),
+    visibility 0s linear 260ms;
+}
+.panel[data-abierto='true'] {
+  max-height: min(75dvh, 42rem);
+  padding-bottom: 1.25rem;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 .panel a {
   display: flex;
@@ -86,6 +140,11 @@
 }
 .panel span {
   color: var(--verde);
+  transition: transform 180ms var(--curva);
+}
+.panel a:hover span,
+.panel a:focus-visible span {
+  transform: translateX(0.2rem);
 }
 @media (min-width: 901px) {
   .panel {
@@ -117,5 +176,15 @@
   .hamburguesa {
     margin-left: auto;
     flex-shrink: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta:active,
+  .cta:hover span,
+  .hamburguesa[aria-expanded='true'] svg,
+  .panel a:hover span,
+  .panel a:focus-visible span {
+    transform: none;
   }
 }

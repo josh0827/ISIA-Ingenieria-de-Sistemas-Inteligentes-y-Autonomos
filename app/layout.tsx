@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import Nav from '@/componentes/Nav'
 import Pie from '@/componentes/Pie'
+import ProgresoNavegacion from '@/componentes/ProgresoNavegacion'
 import { SITIO } from '@/lib/sitio'
 import { navegacionVisible } from '@/lib/configuracion'
 import { urlSitio } from '@/lib/supabase/config'
@@ -54,6 +55,7 @@ export default async function RootLayout({
   return (
     <html lang="es-CO" className={`${texto.variable} ${mono.variable}`}>
       <body>
+        <ProgresoNavegacion />
         <a href="#contenido" className="saltar">
           Saltar al contenido
         </a>
