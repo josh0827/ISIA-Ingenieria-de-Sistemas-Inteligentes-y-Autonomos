@@ -8,7 +8,7 @@ import {
   puedeEliminarPracticas,
   puedeGestionarPracticas,
 } from '@/lib/usuarios-autorizados'
-import { ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
+import { ESTADOS_EDITORIALES, ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
 import { ErrorAcceso } from '@/lib/autorizacion'
 
 export async function requerirEditor() {
@@ -67,9 +67,12 @@ function normalizarDatosAdmin(
   coleccion: string,
   datos: Record<string, unknown>,
 ): Record<string, unknown> {
-  if (coleccion !== 'proyectos') return datos
-  if (ESTADOS_PROYECTO.includes(datos.estado as (typeof ESTADOS_PROYECTO)[number])) return datos
-  return { ...datos, estado: 'En formulación' }
+  const normalizados = ESTADOS_EDITORIALES.includes(datos.estadoEditorial as (typeof ESTADOS_EDITORIALES)[number])
+    ? datos
+    : { ...datos, estadoEditorial: 'Publicado' }
+  if (coleccion !== 'proyectos') return normalizados
+  if (ESTADOS_PROYECTO.includes(normalizados.estado as (typeof ESTADOS_PROYECTO)[number])) return normalizados
+  return { ...normalizados, estado: 'En formulación' }
 }
 
 /** Lectura sin filtrar (a diferencia de lib/contenido.ts) para poblar tablas y formularios de edición. */

@@ -11,7 +11,7 @@ Esta lista reúne la información que el semillero debe validar y entregar para 
 - [ ] Objetivos aprobados.
 - [ ] Facultad, departamento, campus y espacio físico confirmados.
 - [ ] Nombre y cargo de la persona responsable del contenido.
-- [ ] Correo o canal institucional de contacto.
+- [x] Correo institucional de contacto: `isia_man@unal.edu.co`.
 - [ ] Redes sociales oficiales, si existen.
 - [ ] Escudo o recurso institucional autorizado y sus condiciones de uso.
 - [ ] Fecha de última validación.
@@ -136,12 +136,24 @@ Completar una ficha por oportunidad vigente:
 
 - [ ] Procedimiento de vinculación al semillero.
 - [ ] Fechas o periodos de recepción, si existen.
-- [ ] Canal institucional de contacto.
+- [x] Canal institucional de contacto: `isia_man@unal.edu.co`.
 - [ ] Persona o rol responsable de responder.
 - [ ] Temas de interés que se desean destacar.
 - [ ] Texto de privacidad si se incorpora un formulario en el futuro.
+- [ ] Responsable y plazo de conservación de las manifestaciones de interés recibidas por el formulario.
 
-## 12. Entrega de archivos
+## 12. Dominio y publicación institucional
+
+- [ ] Unidad académica responsable del sitio.
+- [ ] Docente responsable del trámite.
+- [ ] Responsable técnico durante la vigencia del sitio.
+- [ ] Dirección `unal.edu.co` asignada por la Universidad.
+- [ ] Autorización o instrucción sobre alojamiento en Vercel y uso de Supabase.
+- [ ] Asesoría y aval de UNIMEDIOS.
+- [ ] Plantilla institucional recibida y aplicada.
+- [ ] Tratamiento de datos personales aprobado.
+
+## 13. Entrega de archivos
 
 - [ ] Usar nombres descriptivos para las imágenes y documentos.
 - [ ] Indicar el apartado del sitio al que pertenece cada archivo.

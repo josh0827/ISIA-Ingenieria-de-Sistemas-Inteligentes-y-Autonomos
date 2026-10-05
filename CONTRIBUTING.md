@@ -1,6 +1,6 @@
 # Mantenimiento de la demo ISIA
 
-Esta guía describe cómo editar la demo académica en la rama local **Prueba**. El contenido publicado debe utilizar **semillero de investigación**. El proyecto conserva Next.js, TypeScript, CSS modular y Markdown.
+Esta guía describe cómo editar la demo académica. El contenido publicado debe utilizar **semillero de investigación**. El proyecto conserva Next.js, TypeScript, CSS modular, PostgreSQL y Markdown como respaldo.
 
 ## Flujo local
 
@@ -11,7 +11,7 @@ npm run typecheck
 npm run build
 ```
 
-La rama de este trabajo debe ser `Prueba`. Revisa los cambios con `git diff` y prueba la navegación antes de dar por terminada una edición. No hagas push, merges a `main` ni despliegues sin una solicitud posterior. Esta demo no presupone un flujo automático de publicación.
+Trabaja en una rama de cambio y valida su Preview antes de integrarla a la rama de producción. Revisa los cambios con `git diff` y prueba la navegación antes de dar por terminada una edición. No publiques cambios sin completar la revisión funcional y editorial.
 
 Coordina los archivos compartidos cuando varias personas trabajen a la vez. La configuración general vive en `lib/sitio.ts`; las reglas de lectura y los tipos, en `lib/contenido.ts`.
 
@@ -170,7 +170,9 @@ Los campos de imagen usan `lib/storage/upload.ts` y el bucket público `imagenes
 
 El cuerpo Markdown pasa por saneamiento HTML y un filtro de recursos. No añadas HTML interactivo, scripts, iframes, formularios ni instrucciones internas de desarrollo a los archivos publicados.
 
-El canal de contacto permanece como **Canal de contacto pendiente de confirmar**. El enlace al repositorio debe identificarse como **Repositorio del sitio**, sin atribuirle un carácter institucional no verificado.
+El correo de contacto confirmado es `isia_man@unal.edu.co`. El enlace al repositorio debe identificarse como **Repositorio del sitio**, sin atribuirle un carácter institucional no verificado.
+
+Las manifestaciones de interés se gestionan desde `/admin/solicitudes`. No exportes ni reutilices estos datos fuera del propósito informado en el formulario. Los originales de fotografías y respaldos editoriales pueden conservarse en el Drive institucional; las copias publicadas deben permanecer en Supabase Storage.
 
 ## Presentación y accesibilidad
 

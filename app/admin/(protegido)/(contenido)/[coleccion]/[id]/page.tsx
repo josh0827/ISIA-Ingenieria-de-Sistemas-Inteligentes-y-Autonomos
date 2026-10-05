@@ -36,7 +36,10 @@ export default async function PaginaEditarElemento({ params }: Props) {
           <h1>Editar {esquema.etiquetaSingular}</h1>
           <p>Los campos marcados con * son obligatorios.</p>
         </div>
-        <Link href={`/admin/${coleccion}`} className={estilos.enlaceVolver}>← Volver a {esquema.etiqueta.toLowerCase()}</Link>
+        <div className={estilos.accionesCabecera}>
+          <Link href={`/admin/${coleccion}/${id}/vista-previa`} className={estilos.botonNuevo}>Vista previa</Link>
+          <Link href={`/admin/${coleccion}`} className={estilos.enlaceVolver}>← Volver a {esquema.etiqueta.toLowerCase()}</Link>
+        </div>
       </div>
       <FormularioContenido
         esquema={esquema}

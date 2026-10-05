@@ -20,6 +20,12 @@ La autenticación de Google no concede permisos por sí sola. El usuario debe ex
 | Ver todas las prácticas | Sí | Sí | No |
 | Crear, editar y activar prácticas | Sí | Sí | Solo las propias |
 | Eliminar definitivamente una práctica | Sí | No | No |
+| Consultar y responder solicitudes de participación | Sí | Sí | No |
+| Eliminar datos de una solicitud | Sí | No | No |
+| Consultar la biblioteca multimedia | Sí | Sí | No |
+| Eliminar archivos multimedia sin uso | Sí | No | No |
+| Descargar respaldo editorial | Sí | Sí | No |
+| Consultar la auditoría administrativa | Sí | No | No |
 
 El rol `empresa` entra a un panel limitado a sus propias prácticas. El servidor comprueba los permisos en cada operación; ocultar un botón no sustituye esa validación.
 
@@ -50,8 +56,13 @@ Las colecciones **Proyectos**, **Novedades**, **Reuniones**, **Integrantes**, **
 3. Define un `slug` con minúsculas, números y guiones. El slug no se cambia después.
 4. Completa los campos obligatorios.
 5. Mantén desmarcado **Contenido confirmado** cuando el registro sea un ejemplo.
-6. Guarda y revisa el resultado público.
-7. Marca el contenido como confirmado únicamente después de validar datos, permisos y enlaces.
+6. Selecciona un estado editorial: **Borrador**, **Publicado** o **Programado**. Para programar debes indicar una fecha.
+7. Guarda y revisa el resultado público.
+8. Marca el contenido como confirmado únicamente después de validar datos, permisos y enlaces.
+
+Después del primer guardado puedes usar **Vista previa** dentro del editor. Esta vista privada permite revisar borradores; los cambios del formulario deben guardarse antes de aparecer allí.
+
+Los registros antiguos sin estado editorial explícito se tratan como publicados. Un borrador permanece en el panel pero no aparece en listados ni fichas públicas. El contenido programado aparece a partir de la fecha indicada, usando la fecha de Colombia.
 
 Los ejemplos pueden conservarse durante el desarrollo y ocultarse juntos desde **Configuración > Contenido de demostración**. Las publicaciones ilustrativas se muestran con una advertencia y sin enlace externo activo.
 
@@ -106,9 +117,31 @@ Eliminar es permanente. Cuando una oferta solo ha dejado de estar vigente, utili
 
 Las imágenes admitidas son JPG, PNG, WebP y AVIF, con un máximo de 8 MB. Se guardan en el bucket público `imagenes` de Supabase Storage y la base de datos conserva la URL. Al editar sin seleccionar un archivo nuevo se mantiene la imagen existente.
 
-Antes de cargar una imagen, confirma su autoría, autorización de uso y texto alternativo.
+Antes de cargar una imagen, confirma su autoría, autorización de uso y texto alternativo. Proyectos, novedades, integrantes y galería solicitan una descripción accesible. Cuando una imagen editorial se reemplaza o el registro se elimina, el panel intenta retirar el archivo anterior de Storage para evitar archivos huérfanos.
 
-## 14. Comprobación antes de publicar contenido real
+En **Panel > Multimedia** puedes consultar los archivos del bucket y cuántos registros los utilizan. Solo admin puede eliminar un archivo marcado como **Sin uso**; la acción vuelve a comprobar las referencias antes de borrarlo. Conserva en el Drive institucional los originales de alta resolución y utiliza Supabase Storage para las copias publicadas en la web.
+
+## 14. Solicitudes de participación
+
+La sección pública **Únete** permite manifestar interés en el semillero. No representa una inscripción ni una admisión.
+
+1. Abre **Panel > Solicitudes**.
+2. Revisa nombre, correo, programa, intereses y mensaje.
+3. Cambia el estado entre **Nueva**, **En revisión**, **Contactada** y **Cerrada**.
+4. Responde desde el correo institucional.
+5. Cuando los datos ya no deban conservarse, un administrador puede eliminarlos.
+
+Admin y editor pueden consultar y actualizar solicitudes. Solo admin puede eliminarlas. Los datos no son públicos y deben usarse únicamente para responder a la persona interesada.
+
+El formulario limita envíos repetidos desde el mismo correo durante quince minutos e incluye un campo trampa antispam. La notificación automática requiere `RESEND_API_KEY` y `RESEND_FROM_EMAIL`; si el proveedor no está configurado, la solicitud continúa guardándose en Supabase.
+
+## 15. Auditoría y respaldos
+
+Cada creación, edición, eliminación, cambio de configuración y gestión de solicitudes genera un evento de auditoría cuando la migración correspondiente está aplicada. Solo admin puede consultar **Panel > Auditoría**.
+
+Admin y editor pueden seleccionar **Descargar respaldo** en el menú. El archivo JSON contiene contenido, configuración, grupos y prácticas. No incluye credenciales, usuarios autorizados ni solicitudes de participación. Guarda periódicamente este archivo en el Drive institucional del semillero.
+
+## 16. Comprobación antes de publicar contenido real
 
 - Verifica ortografía, fechas, nombres y enlaces.
 - Confirma la autorización de fotografías y datos personales.
@@ -116,3 +149,9 @@ Antes de cargar una imagen, confirma su autoría, autorización de uso y texto a
 - Comprueba que una sección desactivada no abra mediante URL directa.
 - Mantén el contenido ilustrativo activo hasta que cada sección tenga información suficiente.
 - Usa la lista `PLANTILLA_INFORMACION_SEMILLERO.md` para solicitar y validar los datos faltantes.
+
+## 17. Contacto y dominio institucional
+
+El correo público configurado es `isia_man@unal.edu.co`. Si cambia, actualiza `lib/sitio.ts` y vuelve a desplegar.
+
+El procedimiento para solicitar una dirección bajo `unal.edu.co` está documentado en `SOLICITUD_DOMINIO_UNAL.md`. No agregues un dominio a Vercel ni recursos gráficos oficiales antes de recibir las instrucciones y el aval de la Universidad.

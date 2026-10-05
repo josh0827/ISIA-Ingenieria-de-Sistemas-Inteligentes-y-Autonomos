@@ -9,9 +9,10 @@ type Props = {
   children: React.ReactNode
   usuario: string
   soloPracticas?: boolean
+  esAdmin?: boolean
 }
 
-export default function PanelAdminShell({ children, usuario, soloPracticas = false }: Props) {
+export default function PanelAdminShell({ children, usuario, soloPracticas = false, esAdmin = false }: Props) {
   return (
     <div className={estilos.envoltorio}>
       <NotificacionesAdmin />
@@ -37,11 +38,15 @@ export default function PanelAdminShell({ children, usuario, soloPracticas = fal
               <Link href="/admin/configuracion" className={estilos.navEnlace}>Configuración</Link>
               <Link href="/admin/grupos" className={estilos.navEnlace}>Grupos de trabajo</Link>
               <Link href="/admin/practicas" className={estilos.navEnlace}>Prácticas e iniciativas</Link>
+              <Link href="/admin/solicitudes" className={estilos.navEnlace}>Solicitudes</Link>
+              <Link href="/admin/multimedia" className={estilos.navEnlace}>Multimedia</Link>
               {COLECCIONES.map((coleccion) => (
                 <Link key={coleccion} href={`/admin/${coleccion}`} className={estilos.navEnlace}>
                   {ESQUEMAS[coleccion].etiqueta}
                 </Link>
               ))}
+              {esAdmin && <Link href="/admin/auditoria" className={estilos.navEnlace}>Auditoría</Link>}
+              <a href="/api/admin/exportar" className={estilos.navEnlace}>Descargar respaldo</a>
             </>
           )}
         </nav>

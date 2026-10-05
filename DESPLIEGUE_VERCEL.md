@@ -18,10 +18,14 @@ Configura las siguientes variables desde **Project Settings → Environment Vari
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Sí | Sí | Sí | Pública recomendada por Supabase |
 | `SUPABASE_SECRET_KEY` | Sí | Sí | Sí | Secreto moderno `sb_secret_...`; solo servidor |
 | `NEXT_PUBLIC_SITE_URL` | Dominio de producción | URL estable de preview o dominio de pruebas | `http://localhost:3000` | Pública |
+| `RESEND_API_KEY` | Opcional | Opcional | Opcional | Secreto; activa avisos del formulario |
+| `RESEND_FROM_EMAIL` | Opcional | Opcional | Opcional | Remitente de un dominio verificado en Resend |
 
 Marca `SUPABASE_SECRET_KEY` como **Sensitive** en Production y Preview. Las claves Legacy (`SUPABASE_SERVICE_ROLE_KEY`) ya no se leen. Vercel no permite esa clasificación en Development; limita el acceso al proyecto y evita compartir el valor.
 
 La clave pública Legacy (`NEXT_PUBLIC_SUPABASE_ANON_KEY`) ya no se lee: configura `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (`sb_publishable_...`) y elimina la variable antigua.
+
+El formulario de participación guarda solicitudes aunque Resend no esté configurado. Para activar avisos, el remitente debe pertenecer a un dominio verificado; no uses la contraseña del correo institucional como variable de entorno.
 
 Los previews no deberían escribir en la base de producción. Cuando sea posible, usa un proyecto Supabase separado o variables de Preview limitadas a una rama de pruebas.
 
@@ -62,6 +66,8 @@ npm test
 npm run build
 ```
 
+Antes del despliegue aplica en Supabase, en orden, las migraciones de `supabase/migrations/`. La migración `202610050001_solicitudes_auditoria_editorial.sql` crea las solicitudes privadas y la auditoría del panel.
+
 Después del despliegue verifica:
 
 - `/` y `/practicas` en móvil y escritorio.
@@ -70,6 +76,9 @@ Después del despliegue verifica:
 - Redirección de `empresa` hacia `/admin/practicas`.
 - Creación, edición y desactivación de contenido.
 - Carga de imágenes en Supabase Storage.
+- Envío del formulario de Únete y aparición en `/admin/solicitudes`.
+- Estados Borrador, Publicado y Programado.
+- Descarga del respaldo administrativo.
 - Ausencia de errores relevantes en Runtime Logs.
 
 ## 5. CI/CD
@@ -80,7 +89,7 @@ Con la integración Git de Vercel:
 - Los cambios en la rama de producción generan Production Deployments.
 - Las nuevas variables solo llegan a despliegues creados después de guardarlas.
 
-Valida primero el Preview de la rama `Prueba`. Promueve ese mismo artefacto o integra la rama después de completar la prueba funcional.
+Valida primero un Preview de la rama de trabajo. Promueve ese mismo artefacto o integra la rama después de completar la prueba funcional.
 
 ## 6. Reversión
 

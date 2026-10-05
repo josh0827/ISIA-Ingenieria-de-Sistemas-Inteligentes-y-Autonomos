@@ -6,6 +6,7 @@ import { requerirAdministrador, requerirGestionPracticas } from '@/lib/admin/dat
 import { ErrorAcceso } from '@/lib/autorizacion'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { practicaOfertaSchema, type PracticaOfertaEntrada } from '@/lib/validators/practicas'
+import { registrarAuditoria } from '@/lib/admin/auditoria'
 
 export type EstadoPractica = { ok: boolean; error?: string; codigo?: 401 | 403 }
 
@@ -68,6 +69,15 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
     : await supabase.from('practicas_ofertas').insert(datos)
   if (error) return { ok: false, error: `No se pudo guardar la oferta: ${error.message}` }
 
+  await registrarAuditoria({
+    usuarioId: sesion.id,
+    usuarioEmail: sesion.correo,
+    accion: idExistente ? 'actualizar' : 'crear',
+    recursoTipo: 'practica',
+    recursoId: idExistente ?? oferta.titulo,
+    detalle: { activa: oferta.activa },
+  })
+
   revalidarPracticas()
   redirect('/admin/practicas?guardado=1')
 }
@@ -86,13 +96,21 @@ export async function cambiarEstadoPractica(id: string, activa: boolean): Promis
   }
   const { error } = await supabase.from('practicas_ofertas').update({ activa, actualizado_en: new Date().toISOString() }).eq('id', id)
   if (error) return { ok: false, error: `No se pudo actualizar la oferta: ${error.message}` }
+  await registrarAuditoria({
+    usuarioId: sesion.id,
+    usuarioEmail: sesion.correo,
+    accion: activa ? 'activar' : 'desactivar',
+    recursoTipo: 'practica',
+    recursoId: id,
+  })
   revalidarPracticas()
   return { ok: true }
 }
 
 export async function eliminarPractica(id: string): Promise<EstadoPractica> {
+  let sesion: Awaited<ReturnType<typeof requerirAdministrador>>
   try {
-    await requerirAdministrador()
+    sesion = await requerirAdministrador()
   } catch (error) {
     return {
       ok: false,
@@ -106,6 +124,13 @@ export async function eliminarPractica(id: string): Promise<EstadoPractica> {
     .delete()
     .eq('id', id)
   if (error) return { ok: false, error: `No se pudo eliminar la oferta: ${error.message}` }
+  await registrarAuditoria({
+    usuarioId: sesion.id,
+    usuarioEmail: sesion.correo,
+    accion: 'eliminar',
+    recursoTipo: 'practica',
+    recursoId: id,
+  })
   revalidarPracticas()
   return { ok: true }
 }

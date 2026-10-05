@@ -10,7 +10,7 @@ Antes de empezar, registra estos responsables:
 
 | Responsabilidad | Cuenta o persona | Confirmado |
 | --- | --- | --- |
-| Cuenta institucional principal | `CORREO_INSTITUCIONAL_AQUI` | ☐ |
+| Cuenta institucional principal | `isia_man@unal.edu.co` | ☑ |
 | Responsable técnico ISIA | Pendiente | ☐ |
 | Responsable de contenido | Pendiente | ☐ |
 | Contacto OTIC | Pendiente | ☐ |
@@ -105,6 +105,8 @@ Este proyecto no guarda secretos en `vercel.json`. Las variables requeridas debe
 | `NEXT_PUBLIC_SUPABASE_URL` | Pública | URL del proyecto Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Pública | Cliente web y Auth SSR (`sb_publishable_...`) |
 | `SUPABASE_SECRET_KEY` | Solo servidor | Operaciones administrativas (`sb_secret_...`) |
+| `RESEND_API_KEY` | Solo servidor | Avisos opcionales de nuevas solicitudes |
+| `RESEND_FROM_EMAIL` | Solo servidor | Remitente de un dominio verificado en Resend |
 
 La clave `SUPABASE_SECRET_KEY` nunca debe llevar el prefijo `NEXT_PUBLIC_`. Después de modificar variables, crea un nuevo despliegue; los despliegues anteriores no reciben cambios retroactivos.
 
@@ -145,6 +147,7 @@ El Client ID y Client Secret de Google se almacenan en la configuración del pro
 1. Otorga a la cuenta o equipo institucional acceso administrativo al repositorio Git.
 2. Verifica que Vercel pueda seguir leyendo el repositorio después del cambio de equipo.
 3. Coordina con OTIC el subdominio, registros DNS y certificados requeridos.
+   El procedimiento completo está en `SOLICITUD_DOMINIO_UNAL.md`.
 4. Conserva la rama `Prueba` hasta que el flujo institucional defina la rama de producción.
 5. Documenta quién puede aprobar despliegues, migraciones y cambios de secretos.
 
@@ -168,6 +171,8 @@ La transferencia se considera terminada cuando la cuenta institucional puede rea
 - [ ] Crear y desactivar una oferta de prueba identificada claramente como prueba.
 - [ ] Crear o editar contenido y comprobar `revalidatePath` en la web pública.
 - [ ] Subir una imagen de prueba al bucket `imagenes` y comprobar su URL pública.
+- [ ] Enviar una manifestación de interés y gestionarla desde `/admin/solicitudes`.
+- [ ] Descargar un respaldo JSON y guardarlo en el Drive institucional.
 - [ ] Cerrar sesión y confirmar que las rutas administrativas quedan bloqueadas.
 - [ ] Revisar errores de funciones y compilación en el nuevo equipo Vercel.
 - [ ] Confirmar dominio, HTTPS, callback OAuth y política `noindex` de la demo.

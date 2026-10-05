@@ -29,6 +29,14 @@ export default function PanelAdmin() {
           <h2>Prácticas e iniciativas</h2>
           <p>Consulta y administra las ofertas publicadas por organizaciones autorizadas.</p>
         </Link>
+        <Link href="/admin/solicitudes" className={estilos.tarjeta}>
+          <h2>Solicitudes de participación</h2>
+          <p>Consulta y gestiona las manifestaciones de interés enviadas desde Únete.</p>
+        </Link>
+        <Link href="/admin/multimedia" className={estilos.tarjeta}>
+          <h2>Biblioteca multimedia</h2>
+          <p>Consulta las imágenes almacenadas, sus referencias y archivos sin uso.</p>
+        </Link>
         {COLECCIONES.map((coleccion) => {
           const esquema = ESQUEMAS[coleccion]
           return (

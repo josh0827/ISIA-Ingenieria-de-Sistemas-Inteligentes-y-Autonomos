@@ -52,9 +52,13 @@
   background: var(--verde);
   color: white;
 }
-.botonPrincipal:hover {
+.botonPrincipal:hover,
+.botonPrincipal:focus-visible {
   background: var(--verde-oscuro);
-  box-shadow: 0 0.65rem 1.4rem rgb(53 82 47 / 18%);
+  box-shadow:
+    0 0.75rem 1.65rem rgb(53 82 47 / 22%),
+    0 0 0 1px rgb(255 255 255 / 18%) inset;
+  transform: translateY(-2px);
 }
 .botonSutil {
   color: var(--verde);
@@ -172,6 +176,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .botonPrincipal:hover,
+  .botonPrincipal:focus-visible,
   .boton:active,
   .boton:hover .botonFlecha,
   .boton:focus-visible .botonFlecha {

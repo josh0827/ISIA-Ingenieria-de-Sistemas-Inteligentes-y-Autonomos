@@ -31,6 +31,7 @@ export type Novedad = EstadoEditorial & {
   tipo: 'convocatoria' | 'evento' | 'logro' | 'publicacion' | 'divulgacion'
   resumen: string
   imagen?: string
+  imagenAlt?: string
   autor?: string
   cuerpo: string
 }
@@ -55,6 +56,7 @@ export type Proyecto = EstadoEditorial & {
   linea: string
   resumen: string
   portada?: string
+  portadaAlt?: string
   integrantes: string[]
   cuerpo: string
 }
@@ -65,6 +67,7 @@ export type Integrante = EstadoEditorial & {
   rol: 'director' | 'investigador' | 'estudiante' | 'egresado'
   area: string
   foto?: string
+  fotoAlt?: string
   enlaces: { github?: string; linkedin?: string; correo?: string }
   cuerpo: string
 }
@@ -239,10 +242,22 @@ export function correoSeguro(valor: unknown): string | undefined {
   return s
 }
 
+/** Registros antiguos sin estado explícito continúan publicados. */
+function contenidoPublicado(datos: Record<string, unknown>): boolean {
+  const estado = texto(datos.estadoEditorial)
+  if (estado === 'Borrador') return false
+  if (estado === 'Programado') {
+    const fecha = fechaISO(datos.publicarEn)
+    return Boolean(fecha && fecha <= hoyColombia())
+  }
+  return true
+}
+
 export async function listarNovedades(limite?: number): Promise<Novedad[]> {
   const novedades: Novedad[] = []
   const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('novedades')) {
+    if (!contenidoPublicado(datos)) continue
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
     if (!titulo || !fecha) {
@@ -256,6 +271,7 @@ export async function listarNovedades(limite?: number): Promise<Novedad[]> {
       tipo: unaDeEstas(datos.tipo, ['convocatoria', 'evento', 'logro', 'publicacion', 'divulgacion'] as const, 'divulgacion'),
       resumen: texto(datos.resumen),
       imagen: ilustrativo ? undefined : imagenSegura(datos.imagen),
+      imagenAlt: ilustrativo ? undefined : texto(datos.imagenAlt) || undefined,
       autor: ilustrativo ? undefined : texto(datos.autor) || undefined,
     })
   }
@@ -271,6 +287,7 @@ export async function listarReuniones(): Promise<Reunion[]> {
   const reuniones: Reunion[] = []
   const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('reuniones')) {
+    if (!contenidoPublicado(datos)) continue
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
     if (!titulo || !fecha) {
@@ -322,6 +339,7 @@ export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
   const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   const perfilesConfirmados = new Set((await listarIntegrantes()).filter((i) => !i.ilustrativo).map((i) => i.slug))
   for (const { slug, datos, cuerpo } of await leerFuente('proyectos')) {
+    if (!contenidoPublicado(datos)) continue
     const titulo = texto(datos.titulo)
     if (!titulo) {
       avisar('proyectos', `${slug}.md`, 'falta "titulo"')
@@ -335,6 +353,7 @@ export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
       linea: texto(datos.linea),
       resumen: texto(datos.resumen),
       portada: ilustrativo ? undefined : imagenSegura(datos.portada),
+      portadaAlt: ilustrativo ? undefined : texto(datos.portadaAlt) || undefined,
       integrantes: !ilustrativo && Array.isArray(datos.integrantes) ? datos.integrantes.map(texto).filter((s) => perfilesConfirmados.has(s)) : [],
     })
   }
@@ -352,6 +371,7 @@ export async function listarIntegrantes(): Promise<Integrante[]> {
   const integrantes: Integrante[] = []
   const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('integrantes')) {
+    if (!contenidoPublicado(datos)) continue
     const nombre = texto(datos.nombre)
     if (!nombre) {
       avisar('integrantes', `${slug}.md`, 'falta "nombre"')
@@ -365,6 +385,7 @@ export async function listarIntegrantes(): Promise<Integrante[]> {
       rol: unaDeEstas(datos.rol, ['director', 'investigador', 'estudiante', 'egresado'] as const, 'estudiante'),
       area: texto(datos.area),
       foto: ilustrativo ? undefined : imagenSegura(datos.foto),
+      fotoAlt: ilustrativo ? undefined : texto(datos.fotoAlt) || undefined,
       enlaces: ilustrativo ? {} : {
         github: enlaceSeguro(enlaces.github),
         linkedin: enlaceSeguro(enlaces.linkedin),
@@ -381,6 +402,7 @@ export async function listarPublicaciones(): Promise<Publicacion[]> {
   const publicaciones: Publicacion[] = []
   const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('publicaciones')) {
+    if (!contenidoPublicado(datos)) continue
     const ilustrativo = datos.confirmado !== true
     if (ilustrativo && !mostrarIlustrativos) continue
     const titulo = texto(datos.titulo)
@@ -409,6 +431,7 @@ export async function listarPublicaciones(): Promise<Publicacion[]> {
 export async function listarGaleria(): Promise<FotoGaleria[]> {
   const fotos: FotoGaleria[] = []
   for (const { slug, datos } of await leerFuente('galeria')) {
+    if (!contenidoPublicado(datos)) continue
     if (datos.confirmado !== true) continue
     const titulo = texto(datos.titulo)
     const imagen = imagenSegura(datos.imagen)

@@ -7,6 +7,8 @@ import { ErrorAcceso } from '@/lib/autorizacion'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { guardarImagen, validarArchivoImagen } from '@/lib/storage/upload'
 import { grupoTrabajoSchema, type GrupoTrabajoEntrada } from '@/lib/validators/grupos'
+import { registrarAuditoria } from '@/lib/admin/auditoria'
+import { eliminarImagen } from '@/lib/storage/upload'
 
 export type EstadoGrupo = { ok: boolean; error?: string; codigo?: 401 | 403 }
 
@@ -34,8 +36,9 @@ export async function guardarGrupo(
   _estado: EstadoGrupo,
   formData: FormData,
 ): Promise<EstadoGrupo> {
+  let usuario: Awaited<ReturnType<typeof requerirEditor>>
   try {
-    await requerirEditor()
+    usuario = await requerirEditor()
   } catch (error) {
     return {
       ok: false,
@@ -45,14 +48,30 @@ export async function guardarGrupo(
   }
 
   const slug = slugExistente ?? String(formData.get('slug') ?? '').trim().toLowerCase()
-  let imagenPortada = String(formData.get('imagenPortadaActual') ?? '').trim() || undefined
+  const supabase = crearClienteAdmin()
+  const { data: existente } = await supabase
+    .from('grupos_trabajo')
+    .select('id, imagen_portada, galeria_imagenes')
+    .eq('slug', slug)
+    .maybeSingle()
+  if (slugExistente && !existente) return { ok: false, error: 'El grupo que intentas editar ya no existe.' }
+  if (!slugExistente && existente) return { ok: false, error: 'Ya existe un grupo con ese slug.' }
+
+  const imagenesAnteriores = [
+    typeof existente?.imagen_portada === 'string' ? existente.imagen_portada : undefined,
+    ...(Array.isArray(existente?.galeria_imagenes) ? existente.galeria_imagenes.filter((valor): valor is string => typeof valor === 'string') : []),
+  ].filter((valor): valor is string => Boolean(valor))
+  const imagenesNuevas: string[] = []
+  let imagenPortada = typeof existente?.imagen_portada === 'string' ? existente.imagen_portada : undefined
   const portada = formData.get('imagenPortada')
   if (portada instanceof File && portada.size > 0) {
     const error = validarArchivoImagen(portada)
     if (error) return { ok: false, error: `Imagen de portada: ${error}` }
     try {
       imagenPortada = await guardarImagen(portada, 'grupos')
+      imagenesNuevas.push(imagenPortada)
     } catch (errorCarga) {
+      await Promise.all(imagenesNuevas.map(eliminarImagen))
       return { ok: false, error: errorCarga instanceof Error ? errorCarga.message : 'No se pudo guardar la portada.' }
     }
   }
@@ -63,8 +82,11 @@ export async function guardarGrupo(
     const error = validarArchivoImagen(archivo)
     if (error) return { ok: false, error: `Galería: ${error}` }
     try {
-      galeriaImagenes.push(await guardarImagen(archivo, 'grupos'))
+      const imagen = await guardarImagen(archivo, 'grupos')
+      imagenesNuevas.push(imagen)
+      galeriaImagenes.push(imagen)
     } catch (errorCarga) {
+      await Promise.all(imagenesNuevas.map(eliminarImagen))
       return { ok: false, error: errorCarga instanceof Error ? errorCarga.message : 'No se pudo guardar una imagen.' }
     }
   }
@@ -81,14 +103,10 @@ export async function guardarGrupo(
   }
   const validacion = grupoTrabajoSchema.safeParse(entrada)
   if (!validacion.success) {
+    await Promise.all(imagenesNuevas.map(eliminarImagen))
     return { ok: false, error: validacion.error.issues[0]?.message ?? 'Revisa los datos del grupo.' }
   }
 
-  const supabase = crearClienteAdmin()
-  if (!slugExistente) {
-    const { data: existente } = await supabase.from('grupos_trabajo').select('id').eq('slug', slug).maybeSingle()
-    if (existente) return { ok: false, error: 'Ya existe un grupo con ese slug.' }
-  }
   const grupo = validacion.data
   const { error } = await supabase.from('grupos_trabajo').upsert({
     slug: grupo.slug,
@@ -101,15 +119,30 @@ export async function guardarGrupo(
     galeria_imagenes: grupo.galeriaImagenes,
     actualizado_en: new Date().toISOString(),
   }, { onConflict: 'slug' })
-  if (error) return { ok: false, error: `No se pudo guardar el grupo: ${error.message}` }
+  if (error) {
+    await Promise.all(imagenesNuevas.map(eliminarImagen))
+    return { ok: false, error: `No se pudo guardar el grupo: ${error.message}` }
+  }
+
+  const imagenesActuales = new Set([grupo.imagenPortada, ...grupo.galeriaImagenes].filter((valor): valor is string => Boolean(valor)))
+  await Promise.all(imagenesAnteriores.filter((imagen) => !imagenesActuales.has(imagen)).map(eliminarImagen))
+
+  await registrarAuditoria({
+    usuarioId: usuario.id,
+    usuarioEmail: usuario.correo,
+    accion: slugExistente ? 'actualizar' : 'crear',
+    recursoTipo: 'grupo',
+    recursoId: slug,
+  })
 
   revalidarGrupo(slug)
   redirect('/admin/grupos?guardado=1')
 }
 
 export async function eliminarGrupo(slug: string): Promise<EstadoGrupo> {
+  let usuario: Awaited<ReturnType<typeof requerirEditor>>
   try {
-    await requerirEditor()
+    usuario = await requerirEditor()
   } catch (error) {
     return {
       ok: false,
@@ -117,8 +150,26 @@ export async function eliminarGrupo(slug: string): Promise<EstadoGrupo> {
       codigo: error instanceof ErrorAcceso ? error.codigo : undefined,
     }
   }
-  const { error } = await crearClienteAdmin().from('grupos_trabajo').delete().eq('slug', slug)
+  const supabase = crearClienteAdmin()
+  const { data: existente } = await supabase
+    .from('grupos_trabajo')
+    .select('imagen_portada, galeria_imagenes')
+    .eq('slug', slug)
+    .maybeSingle()
+  const { error } = await supabase.from('grupos_trabajo').delete().eq('slug', slug)
   if (error) return { ok: false, error: `No se pudo eliminar el grupo: ${error.message}` }
+  const imagenes = [
+    typeof existente?.imagen_portada === 'string' ? existente.imagen_portada : undefined,
+    ...(Array.isArray(existente?.galeria_imagenes) ? existente.galeria_imagenes.filter((valor): valor is string => typeof valor === 'string') : []),
+  ].filter((valor): valor is string => Boolean(valor))
+  await Promise.all(imagenes.map(eliminarImagen))
+  await registrarAuditoria({
+    usuarioId: usuario.id,
+    usuarioEmail: usuario.correo,
+    accion: 'eliminar',
+    recursoTipo: 'grupo',
+    recursoId: slug,
+  })
   revalidarGrupo(slug)
   return { ok: true }
 }

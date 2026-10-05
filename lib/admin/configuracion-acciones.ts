@@ -5,6 +5,7 @@ import { guardarConfiguracion } from '@/lib/supabase/contenido'
 import { CLAVES_SECCION, type ConfiguracionNavegacion } from '@/lib/sitio'
 import { requerirEditor } from '@/lib/admin/datos'
 import { ErrorAcceso } from '@/lib/autorizacion'
+import { registrarAuditoria } from '@/lib/admin/auditoria'
 
 export type EstadoConfiguracion = {
   ok: boolean
@@ -17,8 +18,9 @@ export async function guardarConfiguracionNavegacion(
   _estado: EstadoConfiguracion,
   formData: FormData,
 ): Promise<EstadoConfiguracion> {
+  let usuario: Awaited<ReturnType<typeof requerirEditor>>
   try {
-    await requerirEditor()
+    usuario = await requerirEditor()
   } catch (error) {
     return {
       ok: false,
@@ -34,6 +36,14 @@ export async function guardarConfiguracionNavegacion(
   await guardarConfiguracion('navegacion', { secciones })
   await guardarConfiguracion('contenido_demo', {
     mostrar: formData.get('mostrarContenidoIlustrativo') === 'on',
+  })
+  await registrarAuditoria({
+    usuarioId: usuario.id,
+    usuarioEmail: usuario.correo,
+    accion: 'actualizar',
+    recursoTipo: 'configuracion',
+    recursoId: 'navegacion-y-demo',
+    detalle: { secciones, mostrarContenidoIlustrativo: formData.get('mostrarContenidoIlustrativo') === 'on' },
   })
   revalidatePath('/', 'layout')
   return { ok: true, mensaje: 'La configuración pública se actualizó correctamente.' }

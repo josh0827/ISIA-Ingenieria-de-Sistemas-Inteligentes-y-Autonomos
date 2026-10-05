@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { type ItemNavegacion } from '@/lib/sitio'
 import { Menu, Cerrar } from './Iconos'
 import MarcaIsia from './MarcaIsia'
@@ -12,9 +12,11 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
   const ruta = usePathname()
   const [rutaAbierta, setRutaAbierta] = useState<string | null>(null)
   const [indicador, setIndicador] = useState({ izquierda: 0, ancho: 0 })
+  const [desplazada, setDesplazada] = useState(false)
   const boton = useRef<HTMLButtonElement>(null)
   const navegacionRef = useRef<HTMLElement>(null)
   const abierto = rutaAbierta === ruta
+  const esAdmin = ruta.startsWith('/admin')
   const activa = (href: string) =>
     ruta === href || (href !== '/' && ruta.startsWith(href + '/'))
   const items = useMemo(() => [
@@ -37,6 +39,29 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
     return () => observador.disconnect()
   }, [ruta, items])
 
+  useEffect(() => {
+    if (esAdmin) {
+      setDesplazada(false)
+      return
+    }
+
+    let frame: number | null = null
+    const actualizar = () => {
+      frame = null
+      setDesplazada(window.scrollY > 24)
+    }
+    const alDesplazar = () => {
+      if (frame === null) frame = window.requestAnimationFrame(actualizar)
+    }
+
+    actualizar()
+    window.addEventListener('scroll', alDesplazar, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', alDesplazar)
+      if (frame !== null) window.cancelAnimationFrame(frame)
+    }
+  }, [esAdmin])
+
   function cerrar() {
     setRutaAbierta(null)
   }
@@ -44,6 +69,8 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
   return (
     <header
       className={estilos.barra}
+      data-desplazada={desplazada}
+      data-admin={esAdmin}
       onKeyDown={(event) => {
         if (event.key === 'Escape' && abierto) {
           cerrar()

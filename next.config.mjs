@@ -22,8 +22,9 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/**': ['./contenido/**/*.md'],
   },
-  // Cabeceras basicas de seguridad. No hay formularios que envien datos a
-  // terceros ni scripts externos, asi que con esto sobra para un sitio publico.
+  // Cabeceras básicas de seguridad. El formulario público escribe mediante
+  // una Server Action; las credenciales y el proveedor de correo permanecen
+  // exclusivamente en el servidor.
   async headers() {
     return [
       {

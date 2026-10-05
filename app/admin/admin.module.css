@@ -189,6 +189,13 @@
   max-width: 60ch;
 }
 
+.accionesCabecera {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .botonNuevo {
   border: none;
   border-radius: var(--r);
@@ -265,6 +272,114 @@
   font-size: 0.88rem;
   color: var(--texto-tenue);
 }
+
+.estadoVacioAdmin {
+  padding: 1.5rem;
+  border: 1px dashed var(--linea-fuerte);
+  color: var(--texto-tenue);
+  text-align: center;
+}
+
+.listaSolicitudes {
+  display: grid;
+  gap: 1rem;
+}
+
+.solicitud {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  background: var(--superficie);
+  overflow-wrap: anywhere;
+}
+
+.solicitudCabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.solicitudCabecera h2 { font-size: 1.05rem; }
+.solicitudCabecera a { color: var(--verde); font-size: 0.88rem; }
+.solicitudCabecera time { color: var(--texto-tenue); font-size: 0.78rem; }
+.solicitud p { color: var(--texto-tenue); font-size: 0.88rem; }
+.mensajeSolicitud { padding: 0.85rem; background: var(--fondo-2); white-space: pre-wrap; }
+
+.accionesSolicitud,
+.accionesSolicitud form {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.accionesSolicitud select,
+.accionesSolicitud button {
+  min-height: 38px;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--r-sm);
+  background: var(--superficie);
+  padding: 0.4rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+.accionesSolicitud button { color: var(--verde-oscuro); font-weight: 700; }
+.accionesSolicitud .botonPeligro { color: var(--rojo); border-color: var(--rojo); }
+
+.tablaSimple { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--r); }
+.tablaSimple table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.tablaSimple th, .tablaSimple td { padding: 0.7rem; text-align: left; border-bottom: 1px solid var(--linea-suave); white-space: nowrap; }
+.tablaSimple th { background: var(--fondo-2); }
+
+.rejillaMultimedia {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.archivoMultimedia {
+  display: grid;
+  align-content: start;
+  gap: 0.8rem;
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--r);
+  background: var(--superficie);
+}
+
+.miniaturaMultimedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--fondo-2);
+}
+
+.miniaturaMultimedia img { object-fit: cover; }
+.archivoMultimedia h2 { font-family: ui-monospace, monospace; font-size: 0.76rem; overflow-wrap: anywhere; }
+.archivoMultimedia p { color: var(--texto-tenue); font-size: 0.76rem; }
+.archivoMultimedia form { display: flex; }
+.archivoMultimedia .botonPeligro { border: 1px solid var(--rojo); border-radius: var(--r-sm); background: transparent; color: var(--rojo); padding: 0.45rem 0.7rem; font-size: 0.78rem; font-weight: 700; }
+
+.vistaPrevia {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 900px;
+  padding: clamp(1.2rem, 4vw, 2.5rem);
+  border: 1px solid var(--linea);
+  background: var(--superficie);
+}
+
+.vistaPrevia h2 { font-size: clamp(1.8rem, 4vw, 3rem); overflow-wrap: anywhere; }
+.vistaPrevia > img { width: 100%; height: auto; max-height: 560px; object-fit: cover; }
+.vistaPrevia dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+.vistaPrevia dl > div { padding-top: 0.8rem; border-top: 1px solid var(--linea); }
+.vistaPrevia dt { color: var(--texto-tenue); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+.vistaPrevia dd { margin: 0.25rem 0 0; overflow-wrap: anywhere; }
+.estadoVistaPrevia { justify-self: start; padding: 0.25rem 0.55rem; background: var(--verde-vel); color: var(--verde-oscuro); font-size: 0.72rem; font-weight: 700; }
 
 .aviso {
   max-width: 60ch;

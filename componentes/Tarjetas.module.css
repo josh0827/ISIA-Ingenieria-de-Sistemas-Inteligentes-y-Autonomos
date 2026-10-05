@@ -3,12 +3,16 @@
   flex-direction: column;
   height: 100%;
   border-bottom: 1px solid var(--linea);
-  transition: transform 0.22s var(--curva), border-color 0.22s var(--curva);
+  transition:
+    transform 220ms var(--curva),
+    border-color 220ms var(--curva),
+    filter 220ms var(--curva);
 }
 .proyecto:hover,
 .proyecto:focus-within {
   transform: translateY(-0.35rem);
   border-color: var(--verde);
+  filter: drop-shadow(0 0.9rem 1.1rem rgb(53 82 47 / 8%));
 }
 .portada {
   display: block;
@@ -282,5 +286,9 @@
   .pieProyecto > a:hover svg,
   .pieProyecto > a:focus-visible svg {
     transform: none;
+  }
+  .proyecto:hover,
+  .proyecto:focus-within {
+    filter: none;
   }
 }

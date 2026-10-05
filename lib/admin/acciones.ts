@@ -23,7 +23,8 @@ import {
 } from '@/lib/admin/esquemas'
 import { asignarAnidado, obtenerAnidado, requerirEditor } from '@/lib/admin/datos'
 import { ErrorAcceso } from '@/lib/autorizacion'
-import { guardarImagen, validarArchivoImagen } from '@/lib/storage/upload'
+import { eliminarImagen, guardarImagen, validarArchivoImagen } from '@/lib/storage/upload'
+import { registrarAuditoria } from '@/lib/admin/auditoria'
 import {
   esquemaGaleriaImagenZod,
   esquemaIntegranteImagenZod,
@@ -38,6 +39,12 @@ const CARPETAS_IMAGEN: Record<string, string> = {
   reuniones: 'eventos',
   integrantes: 'integrantes',
   galeria: 'galeria',
+}
+
+const CAMPOS_ALT: Record<string, { imagen: string; alt: string }> = {
+  proyectos: { imagen: 'portada', alt: 'portadaAlt' },
+  novedades: { imagen: 'imagen', alt: 'imagenAlt' },
+  integrantes: { imagen: 'foto', alt: 'fotoAlt' },
 }
 
 function revalidarContenido(coleccion: string, slug: string): void {
@@ -87,6 +94,16 @@ function esVacio(valor: unknown): boolean {
   return valor === undefined || valor === '' || (Array.isArray(valor) && valor.length === 0)
 }
 
+function imagenesDelDocumento(
+  esquema: NonNullable<ReturnType<typeof esquemaDe>>,
+  datos: Record<string, unknown>,
+): string[] {
+  return esquema.campos
+    .filter((campo) => campo.tipo === 'imagen')
+    .map((campo) => imagenSegura(obtenerAnidado(datos, campo.clave)))
+    .filter((valor): valor is string => Boolean(valor))
+}
+
 /**
  * Crea o actualiza un documento de una colección de contenido. slugExistente
  * viene enlazado (bind) desde el formulario: si es null se trata de una
@@ -98,8 +115,9 @@ export async function guardarDocumento(
   _estadoPrevio: EstadoFormulario,
   formData: FormData,
 ): Promise<EstadoFormulario> {
+  let usuario: Awaited<ReturnType<typeof requerirEditor>>
   try {
-    await requerirEditor()
+    usuario = await requerirEditor()
   } catch (error) {
     return {
       ok: false,
@@ -155,6 +173,10 @@ export async function guardarDocumento(
     if (!esVacio(valor)) asignarAnidado(datos, campo.clave, valor)
   }
 
+  if (datos.estadoEditorial === 'Programado' && !datos.publicarEn) {
+    return { ok: false, error: 'Indica la fecha de publicación para el contenido programado.' }
+  }
+
   if (coleccion === 'proyectos') {
     const resultado = esquemaProyectoZod.safeParse(datos)
     if (!resultado.success) {
@@ -162,21 +184,31 @@ export async function guardarDocumento(
     }
   }
 
+  const imagenesNuevas: string[] = []
   try {
     for (const { campo, archivo } of imagenesPendientes) {
       const carpeta = CARPETAS_IMAGEN[coleccion]
       if (!carpeta) throw new Error('No existe una carpeta de imágenes para este contenido.')
       const ruta = await guardarImagen(archivo, carpeta)
+      imagenesNuevas.push(ruta)
       asignarAnidado(datos, campo.clave, ruta)
     }
   } catch (error) {
+    await Promise.all(imagenesNuevas.map(eliminarImagen))
     const mensaje = error instanceof Error ? error.message : ''
     return { ok: false, error: mensaje || 'No se pudo guardar la imagen en el servidor.' }
+  }
+
+  const camposAlt = CAMPOS_ALT[coleccion]
+  if (camposAlt && imagenSegura(datos[camposAlt.imagen]) && !texto(datos[camposAlt.alt])) {
+    await Promise.all(imagenesNuevas.map(eliminarImagen))
+    return { ok: false, error: 'La imagen necesita un texto alternativo descriptivo.' }
   }
 
   if (coleccion === 'proyectos') {
     const resultado = esquemaProyectoZod.safeParse(datos)
     if (!resultado.success) {
+      await Promise.all(imagenesNuevas.map(eliminarImagen))
       return { ok: false, error: resultado.error.issues[0]?.message ?? 'Revisa los datos del proyecto.' }
     }
   }
@@ -192,11 +224,30 @@ export async function guardarDocumento(
   if (esquemaImagen) {
     const resultadoImagen = esquemaImagen.safeParse(datos)
     if (!resultadoImagen.success) {
+      await Promise.all(imagenesNuevas.map(eliminarImagen))
       return { ok: false, error: resultadoImagen.error.issues[0]?.message }
     }
   }
 
-  await guardarFilaContenido(coleccion, slug, datos, cuerpo)
+  try {
+    await guardarFilaContenido(coleccion, slug, datos, cuerpo)
+  } catch {
+    await Promise.all(imagenesNuevas.map(eliminarImagen))
+    return { ok: false, error: 'No se pudo guardar el contenido. Intenta nuevamente.' }
+  }
+
+  const imagenesActuales = new Set(imagenesDelDocumento(esquema, datos))
+  const imagenesReemplazadas = imagenesDelDocumento(esquema, datosExistentes)
+    .filter((imagen) => !imagenesActuales.has(imagen))
+  await Promise.all(imagenesReemplazadas.map(eliminarImagen))
+  await registrarAuditoria({
+    usuarioId: usuario.id,
+    usuarioEmail: usuario.correo,
+    accion: slugExistente ? 'actualizar' : 'crear',
+    recursoTipo: coleccion,
+    recursoId: slug,
+    detalle: { estadoEditorial: datos.estadoEditorial, confirmado: datos.confirmado === true },
+  })
   revalidarContenido(coleccion, slug)
   redirect(`/admin/${coleccion}?guardado=1`)
 }
@@ -205,8 +256,9 @@ export async function eliminarDocumento(
   coleccion: string,
   slug: string,
 ): Promise<EstadoFormulario> {
+  let usuario: Awaited<ReturnType<typeof requerirEditor>>
   try {
-    await requerirEditor()
+    usuario = await requerirEditor()
   } catch (error) {
     return {
       ok: false,
@@ -214,8 +266,18 @@ export async function eliminarDocumento(
       codigo: error instanceof ErrorAcceso ? error.codigo : undefined,
     }
   }
-  if (!esquemaDe(coleccion)) throw new Error('Tipo de contenido desconocido.')
+  const esquema = esquemaDe(coleccion)
+  if (!esquema) throw new Error('Tipo de contenido desconocido.')
+  const existente = await obtenerFilaContenido(coleccion, slug)
   await eliminarFilaContenido(coleccion, slug)
+  if (existente) await Promise.all(imagenesDelDocumento(esquema, existente.datos).map(eliminarImagen))
+  await registrarAuditoria({
+    usuarioId: usuario.id,
+    usuarioEmail: usuario.correo,
+    accion: 'eliminar',
+    recursoTipo: coleccion,
+    recursoId: slug,
+  })
   revalidarContenido(coleccion, slug)
   return { ok: true }
 }

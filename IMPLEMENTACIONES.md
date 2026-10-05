@@ -2,9 +2,9 @@
 
 ## Estado actual
 
-La rama `Prueba` mantiene la interfaz pública y el panel `/admin` en Next.js App Router. La capa de backend usa Supabase:
+La rama principal mantiene la interfaz pública y el panel `/admin` en Next.js App Router. La capa de backend usa Supabase:
 
-- **PostgreSQL:** tablas `contenido`, `configuracion`, `usuarios_autorizados`, `grupos_trabajo` y `practicas_ofertas`.
+- **PostgreSQL:** contenido, configuración, usuarios autorizados, grupos, prácticas, solicitudes de participación y auditoría.
 - **Supabase Auth:** inicio de sesión con Google mediante PKCE y cookies SSR.
 - **Supabase Storage:** bucket público `imagenes` para las cargas del panel.
 - **Server Actions:** validación con Zod, autorización y escritura desde el servidor.
@@ -32,8 +32,8 @@ Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta a
 1. Crear un proyecto en Supabase.
 2. Ejecutar `supabase/migrations/202609260001_backend_inicial.sql` desde SQL Editor o mediante Supabase CLI.
 3. Habilitar Google en **Authentication > Providers** y configurar las URLs de redirección.
-4. Copiar `.env.local.example` a `.env.local` y completar las tres variables.
-5. Ejecutar, en orden, `supabase/migrations/202609260002_editores_id.sql`, `202609260003_grupos_roles_practicas.sql` y `202609260004_autorizacion_por_email.sql`.
+4. Copiar `.env.local.example` a `.env.local` y completar las variables obligatorias de Supabase. Las variables de Resend son opcionales.
+5. Ejecutar, en orden, `supabase/migrations/202609260002_editores_id.sql`, `202609260003_grupos_roles_practicas.sql`, `202609260004_autorizacion_por_email.sql` y `202610050001_solicitudes_auditoria_editorial.sql`.
 6. Crear una fila en `public.usuarios_autorizados` con correo, rol y `activo = true`. El campo `id` puede quedar vacío hasta el primer acceso con Google.
 7. Iniciar sesión y verificar que la callback complete `id` con el UUID de **Authentication > Users**.
 8. Ejecutar `npm run migrar-contenido` si se desea importar el contenido Markdown inicial.
@@ -42,7 +42,7 @@ Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta a
 
 `public.contenido` usa `coleccion` y `slug` como clave compuesta. La columna JSONB `datos` conserva los campos editables y `cuerpo` almacena Markdown. `public.configuracion` guarda la visibilidad del menú. Las imágenes se almacenan bajo carpetas del bucket `imagenes` y la base solo conserva la URL pública.
 
-`public.grupos_trabajo` conserva la estructura de cada equipo. `public.usuarios_autorizados` controla los roles `admin`, `editor` y `empresa`; `public.practicas_ofertas` conserva las ofertas y su empresa propietaria. La migración `202609260003_grupos_roles_practicas.sql` crea estas tres estructuras y `202609260004_autorizacion_por_email.sql` habilita el alta previa por correo.
+`public.grupos_trabajo` conserva la estructura de cada equipo. `public.usuarios_autorizados` controla los roles `admin`, `editor` y `empresa`; `public.practicas_ofertas` conserva las ofertas y su empresa propietaria. `public.solicitudes_participacion` mantiene privados los formularios recibidos y `public.auditoria_admin` registra las operaciones administrativas.
 
 ## Pendiente de validación humana
 
@@ -52,6 +52,7 @@ Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta a
 - Verificar que desactivar Galería la retire del menú y que `/galeria` responda como no disponible después de recargar.
 - Probar que el botón de eliminación de prácticas solo aparezca para `admin` y que la acción rechace a `editor` y `empresa`.
 - Confirmar que una publicación no confirmada aparezca marcada como ilustrativa cuando la demostración esté activa y desaparezca al desactivarla.
+- Probar una solicitud real, su cambio de estado, su eliminación por un administrador y el aviso opcional de Resend.
 
 ## Plan futuro de búsqueda
 
@@ -60,3 +61,19 @@ Si el volumen de contenido crece, la búsqueda puede migrarse a Algolia. La inte
 ## Transferencia institucional
 
 El procedimiento para trasladar el control de Supabase, Vercel, Google OAuth, DNS y accesos del repositorio está definido en `TRANSFERENCIA_INSTITUCIONAL.md`. La transferencia requiere inventario previo, dos responsables durante el cambio, verificación funcional y aprobación institucional antes de retirar accesos personales.
+## Cierre funcional: participación, publicación y operación
+
+La versión actual incorpora:
+
+- Correo institucional centralizado: `isia_man@unal.edu.co`.
+- Formulario de manifestación de interés con validación Zod en cliente y servidor, consentimiento, campo trampa y límite temporal por correo.
+- Persistencia privada en `solicitudes_participacion` y gestión de estados desde el panel.
+- Aviso opcional mediante Resend, sin almacenar la contraseña del correo institucional.
+- Estados editoriales Borrador, Publicado y Programado para el contenido administrable.
+- Registro de auditoría para cambios del panel.
+- Eliminación de imágenes editoriales reemplazadas o asociadas a contenido eliminado.
+- Biblioteca multimedia con conteo de referencias y eliminación administrativa de archivos sin uso.
+- Exportación JSON de contenido, configuración, grupos y prácticas para respaldos institucionales.
+- Procedimiento documentado para solicitar una dirección bajo `unal.edu.co`.
+
+Para habilitar estas funciones en un entorno existente se debe aplicar `supabase/migrations/202610050001_solicitudes_auditoria_editorial.sql` antes de probar el formulario o la auditoría.

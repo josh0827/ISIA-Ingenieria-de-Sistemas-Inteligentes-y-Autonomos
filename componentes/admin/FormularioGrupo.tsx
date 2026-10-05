@@ -48,7 +48,6 @@ export default function FormularioGrupo({ grupo }: { grupo?: GrupoTrabajo }) {
       <div className={estilos.campo}>
         <label htmlFor="imagenPortada">Imagen de portada (opcional)</label>
         <input id="imagenPortada" name="imagenPortada" type="file" accept="image/jpeg,image/png,image/webp,image/avif" />
-        <input name="imagenPortadaActual" type="hidden" value={grupo?.imagenPortada ?? ''} />
         {grupo?.imagenPortada ? <p className={estilos.archivoActual}>Hay una portada guardada. Selecciona otra para reemplazarla.</p> : <p className={estilos.ayuda}>Si no cargas una imagen, la página mostrará un estado visual neutro.</p>}
       </div>
       <div className={estilos.campo}>

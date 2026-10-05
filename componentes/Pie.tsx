@@ -29,7 +29,8 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
           </nav>
           <div className={estilos.contacto}>
             <h2>Participación y contacto</h2>
-            <p>Canal de contacto pendiente de confirmar</p>
+            <p>Escríbenos para resolver inquietudes académicas o manifestar tu interés en participar.</p>
+            <a href={SITIO.correoHref}>{SITIO.correo}</a>
             <Link href="/unete">
               Conoce cómo participar <span aria-hidden>↗</span>
             </Link>

@@ -59,7 +59,7 @@ export default async function PaginaProyecto({ params }: Props) {
           <div className={estilos.imagen}>
             <Image
               src={proyecto.portada}
-              alt={`Imagen del proyecto ${proyecto.titulo}`}
+              alt={proyecto.portadaAlt ?? `Imagen del proyecto ${proyecto.titulo}`}
               width={1200}
               height={750}
               className={estilos.imagenFoto}

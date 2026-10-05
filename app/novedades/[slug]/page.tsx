@@ -57,7 +57,7 @@ export default async function PaginaNovedad({ params }: Props) {
           <div className={estilos.imagen}>
             <Image
               src={novedad.imagen}
-              alt={novedad.titulo}
+              alt={novedad.imagenAlt ?? novedad.titulo}
               width={1200}
               height={675}
               className={estilos.imagenFoto}
