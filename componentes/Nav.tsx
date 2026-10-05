@@ -2,9 +2,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRef, useState } from 'react'
-import { SITIO, type ItemNavegacion } from '@/lib/sitio'
+import { type ItemNavegacion } from '@/lib/sitio'
 import { Menu, Cerrar } from './Iconos'
-import Escudo from './Escudo'
 import MarcaIsia from './MarcaIsia'
 import estilos from './Nav.module.css'
 
@@ -39,15 +38,8 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
           onClick={cerrar}
           aria-label="ISIA, ir al inicio"
         >
-          <MarcaIsia variante="simbolo" alto={56} decorativa />
+          <MarcaIsia variante="simbolo" alto={56} decorativa prioridad />
         </Link>
-        <div className={estilos.institucion}>
-          <Escudo alto={42} />
-          <span className={estilos.institucionTexto}>
-            <span>{SITIO.universidad}</span>
-            <span>Sede Manizales · Colombia</span>
-          </span>
-        </div>
         <Link
           href="/unete"
           className={estilos.cta}

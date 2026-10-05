@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { SITIO, type ItemNavegacion } from '@/lib/sitio'
-import Escudo from './Escudo'
 import MarcaIsia from './MarcaIsia'
 import estilos from './Pie.module.css'
 export default function Pie({ items }: { items: ItemNavegacion[] }) {
@@ -12,14 +11,11 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
             <Link href="/" className={estilos.marca} aria-label="ISIA, ir al inicio">
               <MarcaIsia variante="completa" alto={104} decorativa />
             </Link>
-            <div className={estilos.institucional}>
-              <Escudo alto={48} />
-              <p className={estilos.ubicacion}>
-                {SITIO.universidad}
-                <br />
-                Sede Manizales · Manizales, Colombia
-              </p>
-            </div>
+            <p className={estilos.ubicacion}>
+              {SITIO.universidad}
+              <br />
+              Sede Manizales · Manizales, Colombia
+            </p>
           </div>
           <nav aria-label="Secciones del sitio">
             <h2>Explorar</h2>
@@ -48,18 +44,6 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
         </div>
         <div className={estilos.cierre}>
           <p>Demo académica · Contenido pendiente de validación.</p>
-          <p>
-            Escudo provisional, sin modificaciones. César Puertas Céspedes, vía
-            Wikimedia Commons.{' '}
-            <a
-              href="https://commons.wikimedia.org/wiki/File:Escudo_de_la_Universidad_Nacional_de_Colombia_(2016).svg"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Fuente y licencia de atribución
-            </a>
-            .
-          </p>
         </div>
       </div>
     </footer>

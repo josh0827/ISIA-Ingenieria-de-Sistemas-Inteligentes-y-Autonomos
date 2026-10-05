@@ -22,9 +22,12 @@
 }
 .portadaRejilla {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   gap: 4rem;
   align-items: center;
+}
+.portadaTexto {
+  min-width: 0;
 }
 .eyebrow {
   color: var(--verde);
@@ -34,22 +37,14 @@
   text-transform: uppercase;
   margin-bottom: 1.4rem;
 }
-.sigla {
-  display: block;
-  font-size: clamp(4.8rem, 7.6vw, 7rem);
-  letter-spacing: -0.06em;
-  line-height: 1;
-  font-weight: 580;
-  color: var(--verde-oscuro);
-  text-shadow: 0.08em 0.06em 0 rgba(148, 52, 69, 0.12);
+.marcaPortada {
+  width: min(32rem, 100%);
+  line-height: 0;
 }
-.nombre {
-  display: block;
-  font-size: clamp(1.85rem, 3vw, 2.65rem);
-  line-height: 1.15;
-  max-width: 34rem;
-  margin-top: 1rem;
-  font-weight: 500;
+.marcaPortadaImagen {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: var(--proporcion-marca);
 }
 .proposito {
   color: var(--texto-tenue);
@@ -74,6 +69,7 @@
   color: var(--linea-fuerte);
 }
 .figura {
+  width: 100%;
   background: var(--superficie);
   border: 1px solid var(--linea);
   padding: 1.4rem;
@@ -272,7 +268,7 @@
     gap: 1.2rem;
   }
   .integrantes {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0;
   }
   .presentacion {
@@ -286,9 +282,6 @@
   }
   .figura {
     max-width: 480px;
-  }
-  .nombre {
-    max-width: 28rem;
   }
   .proyectos {
     grid-template-columns: 1fr;

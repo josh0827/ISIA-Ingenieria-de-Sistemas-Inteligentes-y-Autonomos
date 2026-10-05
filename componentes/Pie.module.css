@@ -13,13 +13,8 @@
   display: inline-flex;
   width: fit-content;
 }
-.institucional {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin-top: 1.25rem;
-}
 .ubicacion {
+  margin-top: 1.25rem;
   font-size: 0.8rem;
   color: var(--texto-tenue);
 }
@@ -54,9 +49,6 @@
   margin-top: 1rem;
 }
 .cierre {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 3rem;
   border-top: 1px solid var(--linea);
   padding-block: 1.5rem;
   color: var(--texto-tenue);
@@ -72,10 +64,6 @@
   }
   .rejilla > :first-child {
     grid-column: 1/-1;
-  }
-  .cierre {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
   }
 }
 @media (max-width: 500px) {

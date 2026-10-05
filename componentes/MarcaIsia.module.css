@@ -9,10 +9,9 @@
 
 .imagen {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  mix-blend-mode: multiply;
+  left: var(--imagen-x);
+  top: var(--imagen-y);
+  width: var(--imagen-ancho);
+  height: var(--imagen-alto);
+  max-width: none;
 }

@@ -6,6 +6,7 @@ import {
   TarjetaProyecto,
 } from '@/componentes/Tarjetas'
 import Esquema from '@/componentes/Esquema'
+import MarcaIsia from '@/componentes/MarcaIsia'
 import { Flecha } from '@/componentes/Iconos'
 import {
   listarIntegrantes,
@@ -13,7 +14,7 @@ import {
   listarProyectos,
 } from '@/lib/contenido'
 import { obtenerConfiguracionNavegacion } from '@/lib/configuracion'
-import { LINEAS, OBJETIVOS, PRESENTACION, SITIO } from '@/lib/sitio'
+import { LINEAS, OBJETIVOS, PRESENTACION } from '@/lib/sitio'
 import estilos from './pagina.module.css'
 
 export const revalidate = 300
@@ -38,9 +39,13 @@ export default async function Inicio() {
             <p className={estilos.eyebrow}>
               Universidad Nacional de Colombia · Sede Manizales
             </p>
-            <h1>
-              <span className={estilos.sigla}>ISIA</span>
-              <span className={estilos.nombre}>{SITIO.nombre}</span>
+            <h1 className={estilos.marcaPortada}>
+              <MarcaIsia
+                variante="completa"
+                alto={230}
+                prioridad
+                className={estilos.marcaPortadaImagen}
+              />
             </h1>
             <p className={estilos.proposito}>
               Un espacio de formación en investigación para explorar cómo los

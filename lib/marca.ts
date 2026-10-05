@@ -6,17 +6,17 @@
  */
 export const MARCA_ISIA = {
   simbolo: {
-    src: '/imagenes/logos/isia-simbolo.jpg',
+    src: '/imagenes/logos/isia-simbolo.png',
     anchoFuente: 2390,
     altoFuente: 1095,
-    proporcionVisible: 2244 / 585,
+    recorte: { x: 71, y: 265, ancho: 2248, alto: 587 },
     alt: 'ISIA, Ingeniería de Sistemas Inteligentes y Autónomos',
   },
   completa: {
-    src: '/imagenes/logos/isia-con-texto.jpg',
-    anchoFuente: 2390,
-    altoFuente: 1792,
-    proporcionVisible: 2244 / 1007,
+    src: '/imagenes/logos/isia-con-texto.png',
+    anchoFuente: 1448,
+    altoFuente: 1086,
+    recorte: { x: 8, y: 284, ancho: 1432, alto: 646 },
     alt: 'ISIA, Semillero de Ingeniería de Sistemas Inteligentes y Autónomos, UNAL Manizales',
   },
 } as const

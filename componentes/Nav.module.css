@@ -13,23 +13,8 @@
   align-items: center;
   flex-shrink: 0;
 }
-.institucion {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-left: auto;
-}
-.institucionTexto {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.78rem;
-  line-height: 1.6;
-}
-.institucionTexto > span:last-child {
-  color: var(--texto-tenue);
-  font-size: 0.72rem;
-}
 .cta {
+  margin-left: auto;
   padding: 0.65rem 1rem;
   background: var(--verde);
   color: white;
@@ -112,8 +97,7 @@
     min-height: 88px;
     gap: 1rem;
   }
-  .navBorde,
-  .institucion {
+  .navBorde {
     display: none;
   }
   .cta {
@@ -133,9 +117,5 @@
   .hamburguesa {
     margin-left: auto;
     flex-shrink: 0;
-  }
-  .marca > span {
-    height: 48px !important;
-    width: 184px !important;
   }
 }

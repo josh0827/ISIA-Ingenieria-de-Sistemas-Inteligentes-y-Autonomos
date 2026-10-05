@@ -71,11 +71,9 @@ La configuración y comprobación del despliegue continuo se describe en [DESPLI
 
 ## Identidad y movimiento
 
-La paleta está centralizada en `app/globals.css`. El verde provisional `#456A3E` coincide con el relleno `.st2` del escudo SVG disponible; `#35522F` sirve de apoyo. Estos valores **no constituyen un manual institucional oficial**. La tipografía principal es Geist.
+La paleta está centralizada en `app/globals.css`. El verde provisional `#456A3E` y el verde de apoyo `#35522F` se coordinan con la identidad visual disponible. Estos valores **no constituyen un manual institucional oficial**. La tipografía principal es Geist.
 
-El escudo se conserva sin alterar. El recurso provisional procede de [Wikimedia Commons: Escudo de la Universidad Nacional de Colombia (2016)](https://commons.wikimedia.org/wiki/File:Escudo_de_la_Universidad_Nacional_de_Colombia_(2016).svg); la documentación de origen atribuye su autoría a **César Puertas Céspedes**. Se mantiene la atribución visible en el sitio. Antes de sustituirlo, confirma el archivo institucional y sus condiciones de uso.
-
-La marca de ISIA utiliza dos variantes en `public/imagenes/logos`: la versión horizontal en el encabezado y la versión con texto en el pie. Sus rutas y proporciones están centralizadas en `lib/marca.ts`, de modo que puedan reemplazarse sin modificar los componentes de navegación.
+La marca de ISIA utiliza dos variantes PNG transparentes en `public/imagenes/logos`: la versión horizontal en el encabezado y como icono, y la versión con texto en la portada y el pie. Sus rutas y recortes están centralizados en `lib/marca.ts`, de modo que puedan reemplazarse sin modificar los componentes de navegación.
 
 No se utilizan apariciones, fade-in, desplazamientos, zoom ni parallax asociados al scroll. El contenido es visible desde el renderizado. El componente `Revelar` se conserva únicamente como envoltorio compatible, sin ocultamiento ni animaciones de entrada. Las transiciones de interacción respetan movimiento reducido.
 
