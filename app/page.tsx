@@ -36,9 +36,6 @@ export default async function Inicio() {
       <section className={estilos.portada}>
         <div className={`contenedor ${estilos.portadaRejilla}`}>
           <div className={estilos.portadaTexto}>
-            <p className={estilos.eyebrow}>
-              Universidad Nacional de Colombia · Sede Manizales
-            </p>
             <h1 className={estilos.marcaPortada}>
               <MarcaIsia
                 variante="completa"
