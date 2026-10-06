@@ -8,9 +8,12 @@ export default function ProgresoNavegacion() {
   const ruta = usePathname()
   const [visible, setVisible] = useState(false)
   const temporizador = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const ubicacion = useRef('')
 
   useEffect(() => {
     setVisible(false)
+    clearTimeout(temporizador.current)
+    ubicacion.current = window.location.pathname + window.location.search
   }, [ruta])
 
   useEffect(() => {
@@ -26,8 +29,13 @@ export default function ProgresoNavegacion() {
       temporizador.current = setTimeout(() => setVisible(false), 8000)
     }
 
+    // Volver atrás desde un ancla (#contenido) también dispara popstate, pero
+    // la ruta no cambia y la barra se quedaba encendida para siempre.
     function iniciarHistorial() {
+      if (window.location.pathname + window.location.search === ubicacion.current) return
       setVisible(true)
+      clearTimeout(temporizador.current)
+      temporizador.current = setTimeout(() => setVisible(false), 8000)
     }
 
     document.addEventListener('click', iniciar, true)

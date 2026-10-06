@@ -1,10 +1,11 @@
 ﻿import fs from 'fs'
 import path from 'path'
+import { cache } from 'react'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
 import { obtenerVisibilidadContenidoIlustrativo } from './configuracion'
-import { supabaseServidorListo } from './supabase/config'
+import { esHostSupabasePropio, supabaseServidorListo } from './supabase/config'
 import { listarFilasContenido } from './supabase/contenido'
 
 const RAIZ = path.join(process.cwd(), 'contenido')
@@ -124,7 +125,10 @@ async function leerColeccion(nombre: NombreColeccion): Promise<Crudo[]> {
  * PostgreSQL (editable desde /admin). Si no, se usa el Markdown de contenido/
  * para que el sitio y el desarrollo local sigan funcionando sin ellas.
  */
-async function leerFuente(carpeta: NombreColeccion): Promise<Crudo[]> {
+// cache() reutiliza la lectura dentro de una misma petición: una ficha de
+// proyecto pedía proyectos e integrantes dos veces (metadatos y página), y la
+// portada volvía a pedir integrantes para listar proyectos.
+const leerFuente = cache(async (carpeta: NombreColeccion): Promise<Crudo[]> => {
   if (!supabaseServidorListo()) return leerCarpeta(carpeta)
   try {
     return await leerColeccion(carpeta)
@@ -137,7 +141,7 @@ async function leerFuente(carpeta: NombreColeccion): Promise<Crudo[]> {
     )
     return leerCarpeta(carpeta)
   }
-}
+})
 
 export function texto(valor: unknown): string {
   return typeof valor === 'string' ? valor.trim() : ''
@@ -219,7 +223,7 @@ export function imagenSupabase(valor: unknown): string | undefined {
     const url = new URL(s)
     if (
       url.protocol !== 'https:' ||
-      !url.hostname.endsWith('.supabase.co') ||
+      !esHostSupabasePropio(url.hostname) ||
       !url.pathname.startsWith('/storage/v1/object/public/imagenes/')
     ) {
       return undefined
