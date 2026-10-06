@@ -157,27 +157,6 @@ a {
 .saltar:focus {
   top: 0.5rem;
 }
-.demo-bar {
-  background: var(--verde-vel);
-  color: var(--verde-oscuro);
-  border-bottom: 1px solid var(--linea);
-  font-size: 0.72rem;
-}
-.demo-bar > div {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding-block: 0.5rem;
-}
-.demo-bar span {
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  white-space: nowrap;
-}
-.demo-bar p {
-  border-left: 1px solid var(--linea-fuerte);
-  padding-left: 1rem;
-}
 .prosa {
   color: var(--texto-tenue);
   line-height: 1.8;
@@ -237,16 +216,6 @@ a {
       border-color 0.2s var(--curva),
       transform 0.2s var(--curva),
       box-shadow 0.2s var(--curva);
-  }
-}
-@media (max-width: 520px) {
-  .demo-bar > div {
-    align-items: flex-start;
-    gap: 0.6rem;
-    font-size: 0.65rem;
-  }
-  .demo-bar p {
-    padding-left: 0.6rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {

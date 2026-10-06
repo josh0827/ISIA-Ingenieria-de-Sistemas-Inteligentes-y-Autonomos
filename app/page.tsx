@@ -5,7 +5,6 @@ import {
   TarjetaNovedad,
   TarjetaProyecto,
 } from '@/componentes/Tarjetas'
-import Esquema from '@/componentes/Esquema'
 import MarcaIsia from '@/componentes/MarcaIsia'
 import { Flecha } from '@/componentes/Iconos'
 import {
@@ -14,7 +13,7 @@ import {
   listarProyectos,
 } from '@/lib/contenido'
 import { obtenerConfiguracionNavegacion } from '@/lib/configuracion'
-import { LINEAS, OBJETIVOS, PRESENTACION } from '@/lib/sitio'
+import { LINEAS, OBJETIVOS, PRESENTACION, SITIO } from '@/lib/sitio'
 import estilos from './pagina.module.css'
 
 export const revalidate = 300
@@ -36,13 +35,10 @@ export default async function Inicio() {
       <section className={estilos.portada}>
         <div className={`contenedor ${estilos.portadaRejilla}`}>
           <div className={estilos.portadaTexto}>
-            <h1 className={estilos.marcaPortada}>
-              <MarcaIsia
-                variante="completa"
-                alto={180}
-                prioridad
-                className={estilos.marcaPortadaImagen}
-              />
+            <p className={estilos.eyebrow}>Semillero de investigación</p>
+            <h1 className={estilos.tituloPortada}>
+              <span>{SITIO.nombreLineas[0]}</span>{' '}
+              <span className={estilos.tituloAcento}>{SITIO.nombreLineas[1]}</span>
             </h1>
             <p className={estilos.proposito}>
               Un espacio de formación en investigación para explorar cómo los
@@ -54,22 +50,22 @@ export default async function Inicio() {
                 Quiero participar
               </Boton>
             </div>
-            <p className={estilos.identificador}>
-              Semillero de investigación <span aria-hidden> / </span> Manizales,
-              Colombia
+          </div>
+          {/* El logo ocupa el lugar del antiguo esquema y conserva su lenguaje
+              visual: cuadrícula, círculos guía y el ciclo percibir, decidir, actuar. */}
+          <div className={estilos.escenario} id="logo-portada">
+            <svg className={estilos.guias} viewBox="0 0 480 400" fill="none" aria-hidden="true">
+              <circle cx="240" cy="200" r="178" strokeWidth=".8" />
+              <circle className={estilos.guiaGiro} cx="240" cy="200" r="138" strokeWidth=".8" strokeDasharray="3 8" />
+              <path d="M40 200H440M240 10V390" strokeWidth=".6" strokeDasharray="3 6" />
+              <circle cx="329" cy="46" r="4" className={estilos.guiaNodo} />
+              <circle cx="151" cy="354" r="4" className={estilos.guiaNodo} />
+            </svg>
+            <MarcaIsia variante="simbolo" alto={150} prioridad className={estilos.logoPortada} />
+            <p className={estilos.ciclo} aria-hidden="true">
+              Percibir <span>·</span> Decidir <span>·</span> Actuar
             </p>
           </div>
-          <figure className={estilos.figura}>
-            <div className={estilos.figuraCabecera}>
-              <span>SISTEMAS INTELIGENTES Y AUTÓNOMOS</span>
-              <span aria-hidden>01 — ISIA</span>
-            </div>
-            <Esquema />
-            <figcaption>
-              <span>Del entorno a la acción</span>
-              <span>Esquema conceptual · Ilustración</span>
-            </figcaption>
-          </figure>
         </div>
       </section>
       <div className={estilos.explorar}>
@@ -118,7 +114,7 @@ export default async function Inicio() {
           <TituloSeccion
             indice="ÁREAS DE EXPLORACIÓN"
             titulo="Líneas de investigación"
-            descripcion="Seis líneas de referencia para esta demo. Su definición como líneas oficiales está pendiente de validación."
+            descripcion="Seis líneas de referencia. Su definición como líneas oficiales está pendiente de validación."
           />
           <Boton href="/lineas" variante="sutil">
             Explorar las líneas

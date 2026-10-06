@@ -3,11 +3,12 @@
 ## 1. Acceso y autenticación
 
 1. Ingresa a `/admin`.
-2. Selecciona **Iniciar sesión con Google**.
-3. Usa la cuenta registrada en la tabla `usuarios_autorizados` de Supabase.
-4. Al terminar, selecciona **Cerrar sesión**.
+2. Escribe el correo y la contraseña de tu cuenta y selecciona **Entrar al panel**.
+3. Al terminar, selecciona **Cerrar sesión**.
 
-La autenticación de Google no concede permisos por sí sola. El usuario debe existir en `usuarios_autorizados`, tener `activo = true` y un rol válido.
+Si en Supabase se activa el proveedor de Google, la pantalla muestra además **Iniciar sesión con Google** sin tocar el código.
+
+Tener una cuenta no concede permisos por sí solo. El usuario debe existir en `usuarios_autorizados`, tener `activo = true` y un rol válido; si no, el panel cierra la sesión.
 
 ## 2. Roles y permisos
 
@@ -31,10 +32,14 @@ El rol `empresa` entra a un panel limitado a sus propias prácticas. El servidor
 
 ## 3. Gestión de usuarios autorizados
 
-La gestión de usuarios se realiza en **Supabase Dashboard > Table Editor > usuarios_autorizados**.
+Dar de alta a una persona lleva dos pasos en Supabase Dashboard:
 
-- Para habilitar una cuenta, registra su correo, asigna el rol y usa `activo = true`.
-- El campo `id` puede quedar vacío antes del primer acceso. La callback lo vincula con el UUID validado por Supabase Auth cuando existe una única coincidencia por correo.
+1. **Authentication > Users > Add user > Create new user:** su correo y una contraseña inicial, con **Auto Confirm User** marcado. Comparte la contraseña por un canal privado.
+2. **Table Editor > usuarios_autorizados:** una fila con el mismo correo, el rol y `activo = true`.
+
+- El campo `id` puede quedar vacío antes del primer acceso. Se vincula con la cuenta en el primer inicio de sesión, siempre que el correo esté confirmado y la fila no pertenezca ya a otra cuenta.
+- En **Authentication > Sign In / Providers**, mantén desactivado **Allow new users to sign up**: las cuentas solo las crea un administrador.
+- Para cambiar una contraseña, edita el usuario en **Authentication > Users**.
 - Para revocar el acceso, cambia `activo` a `false` o elimina la fila.
 - Para una empresa, completa `nombre_empresa_o_usuario`.
 

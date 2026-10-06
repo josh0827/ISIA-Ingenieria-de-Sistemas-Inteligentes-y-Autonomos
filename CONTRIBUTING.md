@@ -141,22 +141,22 @@ Esta validación comprueba el formato y la existencia local; no garantiza que un
 
 ## Panel de administración (/admin)
 
-Además de editar los archivos Markdown, el sitio incluye un panel protegido en `/admin` para crear, editar y eliminar proyectos, novedades, reuniones, integrantes, publicaciones y galería desde el navegador, con inicio de sesión mediante Google.
+Además de editar los archivos Markdown, el sitio incluye un panel protegido en `/admin` para crear, editar y eliminar proyectos, novedades, reuniones, integrantes, publicaciones y galería desde el navegador, con inicio de sesión por correo y contraseña.
 
 ### Cómo funciona
 
 - El contenido se guarda en la tabla **`contenido` de PostgreSQL**. Cada fila se identifica mediante `coleccion` y `slug`, y conserva los datos editables en JSONB.
 - Si Supabase no está configurado o no responde, el sitio público sigue leyendo `contenido/*.md`; `/admin` muestra un aviso de configuración pendiente.
-- Iniciar sesión con Google no basta para editar: la cuenta necesita una fila activa en la tabla `usuarios_autorizados` con rol `admin` o `editor` (el rol `empresa` solo gestiona prácticas). Esta tabla se administra desde Supabase Dashboard, fuera del sitio; los permisos de cada rol están en [MANUAL_ADMIN.md](MANUAL_ADMIN.md).
+- Tener una cuenta no basta para editar: la cuenta necesita una fila activa en la tabla `usuarios_autorizados` con rol `admin` o `editor` (el rol `empresa` solo gestiona prácticas). Esta tabla se administra desde Supabase Dashboard, fuera del sitio; los permisos de cada rol están en [MANUAL_ADMIN.md](MANUAL_ADMIN.md).
 - Las páginas públicas se regeneran como máximo cada 5 minutos (`revalidate = 300`), y cada guardado en `/admin` las revalida al momento con `revalidatePath`. Lo publicado aparece sin un nuevo despliegue.
 
 ### Puesta en marcha (una sola vez por entorno)
 
 1. Crea un proyecto en [Supabase](https://supabase.com/dashboard).
 2. Ejecuta en orden los archivos de `supabase/migrations/` desde SQL Editor o con Supabase CLI. Crean las tablas (entre ellas `usuarios_autorizados`, las solicitudes de participación y la auditoría), activan RLS y preparan el bucket `imagenes`.
-3. En **Authentication → Providers**, habilita Google. Crea un cliente OAuth de tipo web en Google Cloud, registra el callback de Supabase y configura en Supabase las URLs autorizadas del sitio, incluida `/api/auth/callback`.
+3. En **Authentication → Sign In / Providers**, deja activo Email y desactiva **Allow new users to sign up**: las cuentas las crea un administrador en **Authentication → Users**. Google es opcional; si lo activas (cliente OAuth web en Google Cloud con el callback de Supabase y `/api/auth/callback` en las URLs autorizadas), el botón aparece solo en la pantalla de acceso.
 4. Copia [.env.local.example](.env.local.example) a `.env.local` y completa la URL, la clave publishable (`sb_publishable_...`) y la secret (`sb_secret_...`). `.env.local` está excluido por `.gitignore`; nunca lo subas.
-5. Añade el correo de cada persona en `public.usuarios_autorizados` con su `rol` (`admin`, `editor` o `empresa`) y `activo = true`. En su primer inicio de sesión con Google, la cuenta se vincula sola a esa fila.
+5. Crea la cuenta de cada persona en **Authentication → Users** (con **Auto Confirm User**) y añade su correo en `public.usuarios_autorizados` con su `rol` (`admin`, `editor` o `empresa`) y `activo = true`. En su primer inicio de sesión, la cuenta se vincula sola a esa fila.
 6. En la fila `configuracion/navegacion`, el mapa `secciones` controla qué enlaces aparecen en el menú público. También puede editarse desde **Panel Admin → Navegación pública**.
 7. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
    ```bash

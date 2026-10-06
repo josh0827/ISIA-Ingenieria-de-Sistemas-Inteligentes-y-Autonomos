@@ -5,12 +5,11 @@ export const SITIO = {
   nombreLineas: ['Ingeniería de Sistemas', 'Inteligentes y Autónomos'],
   nombreCorto: 'Semillero ISIA',
   descripcion:
-    'Semillero de investigación ISIA, Ingeniería de Sistemas Inteligentes y Autónomos, de la Universidad Nacional de Colombia, sede Manizales. Demo académica con contenido ilustrativo pendiente de validación.',
+    'Semillero de investigación ISIA, Ingeniería de Sistemas Inteligentes y Autónomos, de la Universidad Nacional de Colombia, sede Manizales.',
   universidad: 'Universidad Nacional de Colombia',
   sede: 'Sede Manizales',
   ubicacion: 'Manizales, Colombia',
   locale: 'es_CO',
-  modo: 'DEMO',
   correo: 'isia_man@unal.edu.co',
   correoHref: 'mailto:isia_man@unal.edu.co',
   repositorio: 'https://github.com/josh0827/ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos',
@@ -69,10 +68,10 @@ export const NAVEGACION_PREDETERMINADA: ConfiguracionNavegacion = {
 
 export const PRESENTACION = {
   titular: 'Comprender, diseñar y explorar sistemas inteligentes',
-  aviso: 'Presentación y objetivos propuestos para esta demo; pendientes de validación por el semillero.',
+  aviso: 'Presentación y objetivos propuestos; pendientes de validación por el semillero.',
   parrafos: [
     'ISIA es el semillero de investigación en Ingeniería de Sistemas Inteligentes y Autónomos de la Universidad Nacional de Colombia, sede Manizales.',
-    'Esta demo propone una mirada a los sistemas que perciben su entorno, procesan información y actúan a partir de ella. Presenta posibles temas de estudio que conectan software, electrónica, datos y control, con especial atención a la formación de estudiantes de pregrado.',
+    'Proponemos una mirada a los sistemas que perciben su entorno, procesan información y actúan a partir de ella. Presenta posibles temas de estudio que conectan software, electrónica, datos y control, con especial atención a la formación de estudiantes de pregrado.',
   ],
 }
 
@@ -96,7 +95,7 @@ export const OBJETIVOS: { titulo: string; texto: string }[] = [
   },
 ]
 
-export const AVISO_LINEAS = 'Líneas de referencia para esta demo. Su denominación y alcance están pendientes de validación; no se presentan como líneas oficiales aprobadas.'
+export const AVISO_LINEAS = 'Líneas de referencia provisionales. Su denominación y alcance están pendientes de validación; no se presentan como líneas oficiales aprobadas.'
 
 /** El orden y los títulos permiten relacionar las fichas Markdown con cada línea. */
 export const LINEAS: { icono: string; titulo: string; texto: string }[] = [

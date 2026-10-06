@@ -13,7 +13,7 @@ import estilos from '../listados.module.css'
 export const metadata: Metadata = {
   title: 'Novedades',
   description:
-    'Sección de novedades de la demo académica de ISIA. Notas ilustrativas, sin anuncios ni convocatorias vigentes.',
+    'Novedades del semillero ISIA: convocatorias, eventos, logros y divulgación.',
 }
 export const revalidate = 300
 
@@ -27,11 +27,11 @@ export default async function PaginaNovedades() {
         titulo="Novedades"
         descripcion="Un espacio para compartir ideas, actividades y conocimiento del semillero."
       />
-      <AvisoDemo>
+      {novedades.some((novedad) => novedad.ilustrativo) && <AvisoDemo>
         Las siguientes notas y sus fechas son ilustrativas. Se ordenan de la más
         reciente a la más antigua para mostrar el funcionamiento de esta
         sección.
-      </AvisoDemo>
+      </AvisoDemo>}
       {novedades.length ? (
         <FiltrosNovedades novedades={novedades} />
       ) : (

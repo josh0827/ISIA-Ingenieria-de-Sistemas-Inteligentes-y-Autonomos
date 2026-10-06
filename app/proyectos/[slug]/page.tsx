@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: p.ilustrativo ? 'Ficha de proyecto ilustrativo' : p.titulo,
     description: p.ilustrativo
-      ? 'Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.'
+      ? 'Ficha ilustrativa del semillero ISIA. La propuesta y su estado son de ejemplo y no documentan resultados reales.'
       : p.resumen,
   }
 }

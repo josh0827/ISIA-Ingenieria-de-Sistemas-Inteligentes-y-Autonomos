@@ -8,7 +8,7 @@ import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Integrantes',
-  description: 'Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.',
+  description: 'Directorio de integrantes del semillero ISIA. Identidades, roles y perfiles pendientes de confirmación.',
 }
 
 export const revalidate = 300
@@ -33,7 +33,7 @@ export default async function PaginaIntegrantes() {
           descripcion="El espacio para conocer a las personas que dan forma al semillero y sus intereses de investigación."
         />
         <AvisoDemo>
-          Los perfiles de esta demo son ilustrativos y no representan personas reales. El directorio, los roles y las fotografías están pendientes de confirmación.
+          Los perfiles que se muestran son ilustrativos y no representan personas reales. El directorio, los roles y las fotografías están pendientes de confirmación.
         </AvisoDemo>
         {integrantes.length === 0 ? (
           <EstadoVacio titulo="Directorio pendiente de confirmación" descripcion="Los perfiles se compartirán cuando se disponga de información y fotografías autorizadas." />

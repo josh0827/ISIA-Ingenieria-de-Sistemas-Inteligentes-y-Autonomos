@@ -8,7 +8,7 @@ import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Galería',
-  description: 'Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.',
+  description: 'Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación.',
 }
 
 export const revalidate = 300
@@ -29,7 +29,7 @@ export default async function PaginaGaleria() {
         <>
           <EstadoVacio
             titulo="Registro fotográfico pendiente"
-            descripcion="Aún no hay fotografías reales del semillero disponibles para esta demo. Aquí se compartirán imágenes autorizadas de proyectos, encuentros y actividades, acompañadas de su contexto."
+            descripcion="Aún no hay fotografías del semillero publicadas. Aquí se compartirán imágenes autorizadas de proyectos, encuentros y actividades, acompañadas de su contexto."
           >
             {proyectosVisibles && <Boton href="/proyectos" variante="sutil">Conocer los proyectos ilustrativos</Boton>}
           </EstadoVacio>

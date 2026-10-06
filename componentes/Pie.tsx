@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { SITIO, type ItemNavegacion } from '@/lib/sitio'
-import MarcaIsia from './MarcaIsia'
 import estilos from './Pie.module.css'
 export default function Pie({ items }: { items: ItemNavegacion[] }) {
   return (
@@ -8,13 +7,19 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
       <div className="contenedor">
         <div className={estilos.rejilla}>
           <div>
+            {/* El logo ya aparece en el menú y en la portada; aquí basta el nombre. */}
             <Link href="/" className={estilos.marca} aria-label="ISIA, ir al inicio">
-              <MarcaIsia variante="simbolo" alto={34} decorativa />
+              <strong>{SITIO.sigla}</strong>
+              <span>
+                {SITIO.nombreLineas[0]}
+                <br />
+                {SITIO.nombreLineas[1]}
+              </span>
             </Link>
             <p className={estilos.ubicacion}>
               {SITIO.universidad}
               <br />
-              Sede Manizales · Manizales, Colombia
+              {SITIO.sede} · {SITIO.ubicacion}
             </p>
           </div>
           <nav aria-label="Secciones del sitio">
@@ -44,7 +49,9 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
           </div>
         </div>
         <div className={estilos.cierre}>
-          <p>Demo académica · Contenido pendiente de validación.</p>
+          <p>
+            © {new Date().getFullYear()} {SITIO.nombreCorto} · {SITIO.universidad}, {SITIO.sede}
+          </p>
         </div>
       </div>
     </footer>

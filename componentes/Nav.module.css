@@ -34,9 +34,50 @@
   min-height: 72px;
 }
 .marca {
+  position: relative;
   display: flex;
   align-items: center;
   flex-shrink: 0;
+}
+.logoMenu,
+.afiliacion {
+  transition:
+    opacity 260ms var(--curva),
+    visibility 260ms var(--curva),
+    transform 260ms var(--curva);
+}
+.afiliacion {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  line-height: 1.3;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-35%);
+}
+.afiliacion strong {
+  color: var(--verde-oscuro);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+.afiliacion span {
+  color: var(--texto-tenue);
+  font-size: 0.72rem;
+}
+/* Mientras el logo grande de la portada está a la vista, el del menú cede su
+   sitio a la afiliación (Nav.tsx lo detecta con IntersectionObserver). */
+.barra[data-logo-portada='true'] .logoMenu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.35rem);
+}
+.barra[data-logo-portada='true'] .afiliacion {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%);
 }
 .marca :global(img) {
   transition: filter 220ms var(--curva);
@@ -213,7 +254,7 @@
   .fila {
     min-height: 72px;
   }
-  .marca > span {
+  .marca > .logoMenu {
     width: auto !important;
     height: 36px !important;
     aspect-ratio: var(--proporcion-marca);

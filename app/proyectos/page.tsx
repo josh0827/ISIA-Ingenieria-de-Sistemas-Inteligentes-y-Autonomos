@@ -13,7 +13,7 @@ import estilos from '../listados.module.css'
 export const metadata: Metadata = {
   title: 'Proyectos',
   description:
-    'Explora las fichas de proyectos de la demo académica de ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.',
+    'Explora las fichas de proyectos del semillero ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.',
 }
 export const revalidate = 300
 
@@ -27,11 +27,11 @@ export default async function PaginaProyectos() {
         titulo="Proyectos"
         descripcion="Preguntas, métodos y posibilidades de exploración en sistemas inteligentes y autónomos."
       />
-      <AvisoDemo>
+      {proyectos.some((proyecto) => proyecto.ilustrativo) && <AvisoDemo>
         Los proyectos de ejemplo permiten recorrer sus fichas y conocer posibles
         enfoques de investigación. No representan proyectos, resultados ni
         equipos confirmados.
-      </AvisoDemo>
+      </AvisoDemo>}
       {proyectos.length ? (
         <FiltrosProyectos proyectos={proyectos} />
       ) : (

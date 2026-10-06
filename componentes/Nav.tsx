@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { type ItemNavegacion } from '@/lib/sitio'
+import { SITIO, type ItemNavegacion } from '@/lib/sitio'
 import { Menu, Cerrar } from './Iconos'
 import MarcaIsia from './MarcaIsia'
 import estilos from './Nav.module.css'
@@ -13,6 +13,9 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
   const [rutaAbierta, setRutaAbierta] = useState<string | null>(null)
   const [indicador, setIndicador] = useState({ izquierda: 0, ancho: 0 })
   const [desplazada, setDesplazada] = useState(false)
+  // Arranca en true en la portada para que el HTML inicial no muestre dos logos
+  // a la vez; el observador lo corrige en cuanto mide la pantalla real.
+  const [logoEnPortada, setLogoEnPortada] = useState(ruta === '/')
   const boton = useRef<HTMLButtonElement>(null)
   const navegacionRef = useRef<HTMLElement>(null)
   const abierto = rutaAbierta === ruta
@@ -23,6 +26,22 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
     { href: '/', texto: 'Inicio' },
     ...navegacion.filter((item) => item.href !== '/' && item.href !== '/unete'),
   ], [navegacion])
+
+  // Nunca dos logos a la vez: mientras el logo grande de la portada está a la
+  // vista, el del menú cede su sitio a la afiliación institucional.
+  useEffect(() => {
+    const logo = document.getElementById('logo-portada')
+    if (!logo) {
+      setLogoEnPortada(false)
+      return
+    }
+    const observador = new IntersectionObserver(
+      ([entrada]) => setLogoEnPortada(entrada.isIntersecting),
+      { threshold: 0.35 },
+    )
+    observador.observe(logo)
+    return () => observador.disconnect()
+  }, [ruta])
 
   useLayoutEffect(() => {
     const nav = navegacionRef.current
@@ -70,6 +89,7 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
     <header
       className={estilos.barra}
       data-desplazada={desplazada}
+      data-logo-portada={logoEnPortada}
       data-admin={esAdmin}
       onKeyDown={(event) => {
         if (event.key === 'Escape' && abierto) {
@@ -80,7 +100,11 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
     >
       <div className={`contenedor ${estilos.fila}`}>
         <Link href="/" className={estilos.marca} onClick={cerrar} aria-label="ISIA, ir al inicio">
-          <MarcaIsia variante="simbolo" alto={40} decorativa prioridad />
+          <MarcaIsia variante="simbolo" alto={40} decorativa prioridad className={estilos.logoMenu} />
+          <span className={estilos.afiliacion} aria-hidden="true">
+            <strong>{SITIO.universidad}</strong>
+            <span>{SITIO.sede}</span>
+          </span>
         </Link>
         <Link href="/unete" className={estilos.cta} aria-current={activa('/unete') ? 'page' : undefined}>
           Quiero participar <span aria-hidden>↗</span>

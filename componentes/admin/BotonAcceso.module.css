@@ -57,3 +57,67 @@
   font-size: 0.9rem;
   margin: 0;
 }
+
+/* Acceso con correo y contraseña */
+.formulario {
+  display: grid;
+  gap: 1rem;
+  text-align: left;
+}
+
+.campo {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.campo label {
+  color: var(--texto);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.campo input {
+  width: 100%;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--r-sm);
+  background: var(--fondo);
+  color: var(--texto);
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+}
+
+.campo input:focus-visible {
+  outline: 2px solid var(--verde);
+  outline-offset: 1px;
+}
+
+.formulario .boton {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.separador {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--texto-tenue);
+  font-size: 0.8rem;
+}
+
+.separador::before,
+.separador::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--linea);
+}
+
+.botonSecundario {
+  background: transparent;
+  color: var(--verde-oscuro);
+  border: 1px solid var(--linea-fuerte);
+}
+
+.botonSecundario:hover:not(:disabled) {
+  background: var(--verde-vel);
+  box-shadow: none;
+}

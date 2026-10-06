@@ -52,14 +52,17 @@
   text-transform: uppercase;
   margin-bottom: 1.4rem;
 }
-.marcaPortada {
-  width: min(25rem, 100%);
-  line-height: 0;
+.tituloPortada {
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  max-width: 12ch;
 }
-.marcaPortadaImagen {
-  width: 100% !important;
-  height: auto !important;
-  aspect-ratio: var(--proporcion-marca);
+.tituloPortada > span {
+  display: block;
+}
+.tituloAcento {
+  color: var(--verde);
 }
 .proposito {
   color: var(--texto-tenue);
@@ -74,46 +77,81 @@
   margin-top: 2rem;
   align-items: center;
 }
-.identificador {
-  font-size: 0.68rem;
-  color: var(--texto-tenue);
-  margin-top: 2rem;
-}
-.identificador span {
-  margin-inline: 0.5rem;
-  color: var(--linea-fuerte);
-}
-.figura {
+/* Escenario del logo: cuadrícula que se desvanece hacia los bordes, círculos
+   guía del antiguo esquema y un halo suave detrás de la marca. */
+.escenario {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1.6rem;
   width: 100%;
-  background: var(--superficie);
-  border: 1px solid var(--linea);
-  padding: 1.4rem;
-  box-shadow: 0 1.1rem 2.8rem rgb(53 82 47 / 8%);
+  aspect-ratio: 6 / 5;
 }
-.figuraCabecera {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  color: var(--verde);
-  font-size: 0.53rem;
-  letter-spacing: 0.09em;
-  border-bottom: 1px solid var(--linea);
-  padding-bottom: 1rem;
+.escenario::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgb(69 106 62 / 13%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(69 106 62 / 13%) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(closest-side, black 35%, transparent 100%);
+  mask-image: radial-gradient(closest-side, black 35%, transparent 100%);
 }
-.figura figcaption {
-  border-top: 1px solid var(--linea);
-  padding-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.escenario::after {
+  content: '';
+  position: absolute;
+  inset: 18% 12%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 254 249 / 92%), rgb(255 254 249 / 0%));
 }
-.figura figcaption > span:first-child {
-  font-size: 0.9rem;
-  font-weight: 550;
+.guias {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  stroke: var(--verde);
+  opacity: 0.55;
 }
-.figura figcaption > span:last-child {
-  font-size: 0.65rem;
-  color: var(--texto-tenue);
+.guiaNodo {
+  fill: var(--rojo);
+  stroke: none;
+}
+.guiaGiro {
+  transform-origin: 240px 200px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .guiaGiro {
+    animation: girarGuia 60s linear infinite;
+  }
+}
+@keyframes girarGuia {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.logoPortada {
+  width: min(64%, 24rem) !important;
+  height: auto !important;
+  aspect-ratio: var(--proporcion-marca);
+  filter: drop-shadow(0 1.1rem 1.6rem rgb(53 82 47 / 14%));
+}
+.ciclo {
+  color: var(--verde-oscuro);
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.ciclo span {
+  color: var(--rojo);
+  margin-inline: 0.35rem;
 }
 .explorar {
   border-block: 1px solid var(--linea);
@@ -296,8 +334,10 @@
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
-  .figura {
+  .escenario {
     max-width: 480px;
+    margin-inline: auto;
+    aspect-ratio: 4 / 3;
   }
   .proyectos {
     grid-template-columns: 1fr;
@@ -334,18 +374,13 @@
   }
 }
 @media (max-width: 420px) {
-  .marcaPortada {
-    width: min(19rem, 100%);
-  }
   .objetivos {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  .figura {
-    padding: 1rem;
-  }
-  .figuraCabecera {
-    font-size: 0.46rem;
+  .ciclo {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
   }
   .acciones {
     align-items: flex-start;
