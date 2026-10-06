@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import BotonGoogle from '@/componentes/admin/BotonGoogle'
+import FormularioAcceso from '@/componentes/admin/FormularioAcceso'
 import { supabaseServidorListo } from '@/lib/supabase/config'
+import { googleHabilitado } from '@/lib/supabase/proveedores'
 import estilos from '../../admin.module.css'
+import estilosAcceso from '@/componentes/admin/BotonAcceso.module.css'
 
 export const metadata: Metadata = { title: 'Iniciar sesión' }
 export const dynamic = 'force-dynamic'
@@ -11,6 +14,7 @@ type Props = { searchParams: Promise<{ error?: string; next?: string }> }
 export default async function PaginaIniciarSesion({ searchParams }: Props) {
   const { error, next } = await searchParams
   const siguiente = next && /^\/(?![\\/])/.test(next) ? next : '/admin'
+  const conGoogle = supabaseServidorListo() && (await googleHabilitado())
 
   return (
     <div className={estilos.pantallaSesion}>
@@ -19,8 +23,8 @@ export default async function PaginaIniciarSesion({ searchParams }: Props) {
         {supabaseServidorListo() ? (
           <>
             <p>
-              Inicia sesión con Google. Tu usuario debe estar activo en la lista de
-              usuarios autorizados.
+              Entra con el correo y la contraseña de tu cuenta. Solo pueden acceder
+              los usuarios autorizados del semillero.
             </p>
             {error === 'unauthorized' && (
               <p role="alert" className={estilos.errorSesion}>
@@ -37,7 +41,13 @@ export default async function PaginaIniciarSesion({ searchParams }: Props) {
                 Google no pudo completar la sesión. Intenta iniciar sesión nuevamente.
               </p>
             )}
-            <BotonGoogle siguiente={siguiente} />
+            <FormularioAcceso siguiente={siguiente} />
+            {conGoogle && (
+              <>
+                <span className={estilosAcceso.separador}>o</span>
+                <BotonGoogle siguiente={siguiente} />
+              </>
+            )}
           </>
         ) : (
           <p>

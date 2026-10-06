@@ -28,7 +28,7 @@ export default function BotonGoogle({ siguiente = '/admin' }: { siguiente?: stri
 
   return (
     <div className={estilos.contenedor}>
-      <button type="button" onClick={iniciarSesion} disabled={cargando} className={estilos.boton}>
+      <button type="button" onClick={iniciarSesion} disabled={cargando} className={`${estilos.boton} ${estilos.botonSecundario}`}>
         {cargando && <span className={estilos.spinner} aria-hidden="true" />}
         {cargando ? 'Conectando…' : 'Iniciar sesión con Google'}
       </button>
