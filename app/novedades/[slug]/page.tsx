@@ -4,9 +4,10 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { AvisoDemo, Boton, Etiqueta, Fecha, Seccion } from '@/componentes/Base'
 import { markdownAHtml, obtenerNovedad } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../../detalle.module.css'
 type Props = { params: Promise<{ slug: string }> }
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const n = await obtenerNovedad((await params).slug)
   if (!n) return { title: 'Novedad no encontrada' }
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 export default async function PaginaNovedad({ params }: Props) {
+  if (!(await seccionVisible('novedades'))) notFound()
   const novedad = await obtenerNovedad((await params).slug)
   if (!novedad) notFound()
   const cuerpo = await markdownAHtml(novedad.cuerpo)
@@ -55,7 +57,7 @@ export default async function PaginaNovedad({ params }: Props) {
           <div className={estilos.imagen}>
             <Image
               src={novedad.imagen}
-              alt={novedad.titulo}
+              alt={novedad.imagenAlt ?? novedad.titulo}
               width={1200}
               height={675}
               className={estilos.imagenFoto}

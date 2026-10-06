@@ -1,0 +1,1317 @@
+{
+  "rows": [
+    {
+      "width": 1440,
+      "route": "/",
+      "status": 200,
+      "h1": 1,
+      "title": "ISIA · Semillero de investigación · DEMO",
+      "description": "Demo académica del semillero ISIA, Universidad Nacional de Colombia, sede Manizales. Contenido ilustrativo pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/lineas",
+      "status": 200,
+      "h1": 1,
+      "title": "Líneas de investigación · ISIA DEMO",
+      "description": "Explora las seis líneas de referencia de la demo del semillero ISIA. Contenido provisional pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/proyectos",
+      "status": 200,
+      "h1": 1,
+      "title": "Proyectos · ISIA DEMO",
+      "description": "Explora las fichas de proyectos de la demo académica de ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/novedades",
+      "status": 200,
+      "h1": 1,
+      "title": "Novedades · ISIA DEMO",
+      "description": "Sección de novedades de la demo académica de ISIA. Notas ilustrativas, sin anuncios ni convocatorias vigentes.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/reuniones",
+      "status": 200,
+      "h1": 1,
+      "title": "Reuniones · ISIA DEMO",
+      "description": "Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas. Demo sin reuniones ficticias anunciadas como actividades reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/integrantes",
+      "status": 200,
+      "h1": 1,
+      "title": "Integrantes · ISIA DEMO",
+      "description": "Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/publicaciones",
+      "status": 200,
+      "h1": 1,
+      "title": "Publicaciones y recursos · ISIA DEMO",
+      "description": "Espacio de publicaciones y recursos académicos de ISIA. Demo con contenido pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/galeria",
+      "status": 200,
+      "h1": 1,
+      "title": "Galería · ISIA DEMO",
+      "description": "Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/unete",
+      "status": 200,
+      "h1": 1,
+      "title": "Únete · ISIA DEMO",
+      "description": "Información sobre participación en el semillero ISIA. Procedimiento de vinculación y canal de contacto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/proyectos/banco-de-instrumentacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/proyectos/nodo-de-medida-autonomo",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "route": "/proyectos/percepcion-en-entornos-no-estructurados",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "route": "/proyectos/plataforma-movil-de-pruebas",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "route": "/novedades/2026-08-20-documentar-un-experimento",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "route": "/novedades/2026-09-01-temas-de-sistemas-inteligentes",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "route": "/novedades/2026-09-08-pregunta-de-investigacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "status": 200,
+      "h1": 1,
+      "title": "ISIA · Semillero de investigación · DEMO",
+      "description": "Demo académica del semillero ISIA, Universidad Nacional de Colombia, sede Manizales. Contenido ilustrativo pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/lineas",
+      "status": 200,
+      "h1": 1,
+      "title": "Líneas de investigación · ISIA DEMO",
+      "description": "Explora las seis líneas de referencia de la demo del semillero ISIA. Contenido provisional pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/proyectos",
+      "status": 200,
+      "h1": 1,
+      "title": "Proyectos · ISIA DEMO",
+      "description": "Explora las fichas de proyectos de la demo académica de ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/novedades",
+      "status": 200,
+      "h1": 1,
+      "title": "Novedades · ISIA DEMO",
+      "description": "Sección de novedades de la demo académica de ISIA. Notas ilustrativas, sin anuncios ni convocatorias vigentes.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/reuniones",
+      "status": 200,
+      "h1": 1,
+      "title": "Reuniones · ISIA DEMO",
+      "description": "Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas. Demo sin reuniones ficticias anunciadas como actividades reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/integrantes",
+      "status": 200,
+      "h1": 1,
+      "title": "Integrantes · ISIA DEMO",
+      "description": "Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/publicaciones",
+      "status": 200,
+      "h1": 1,
+      "title": "Publicaciones y recursos · ISIA DEMO",
+      "description": "Espacio de publicaciones y recursos académicos de ISIA. Demo con contenido pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/galeria",
+      "status": 200,
+      "h1": 1,
+      "title": "Galería · ISIA DEMO",
+      "description": "Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/unete",
+      "status": 200,
+      "h1": 1,
+      "title": "Únete · ISIA DEMO",
+      "description": "Información sobre participación en el semillero ISIA. Procedimiento de vinculación y canal de contacto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/proyectos/banco-de-instrumentacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/proyectos/nodo-de-medida-autonomo",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "route": "/proyectos/percepcion-en-entornos-no-estructurados",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "route": "/proyectos/plataforma-movil-de-pruebas",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "route": "/novedades/2026-08-20-documentar-un-experimento",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "nodes": [
+            [
+              ".demo-bar"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "route": "/novedades/2026-09-01-temas-de-sistemas-inteligentes",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "route": "/novedades/2026-09-08-pregunta-de-investigacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "status": 200,
+      "h1": 1,
+      "title": "ISIA · Semillero de investigación · DEMO",
+      "description": "Demo académica del semillero ISIA, Universidad Nacional de Colombia, sede Manizales. Contenido ilustrativo pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/lineas",
+      "status": 200,
+      "h1": 1,
+      "title": "Líneas de investigación · ISIA DEMO",
+      "description": "Explora las seis líneas de referencia de la demo del semillero ISIA. Contenido provisional pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/proyectos",
+      "status": 200,
+      "h1": 1,
+      "title": "Proyectos · ISIA DEMO",
+      "description": "Explora las fichas de proyectos de la demo académica de ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/novedades",
+      "status": 200,
+      "h1": 1,
+      "title": "Novedades · ISIA DEMO",
+      "description": "Sección de novedades de la demo académica de ISIA. Notas ilustrativas, sin anuncios ni convocatorias vigentes.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/reuniones",
+      "status": 200,
+      "h1": 1,
+      "title": "Reuniones · ISIA DEMO",
+      "description": "Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas. Demo sin reuniones ficticias anunciadas como actividades reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/integrantes",
+      "status": 200,
+      "h1": 1,
+      "title": "Integrantes · ISIA DEMO",
+      "description": "Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/publicaciones",
+      "status": 200,
+      "h1": 1,
+      "title": "Publicaciones y recursos · ISIA DEMO",
+      "description": "Espacio de publicaciones y recursos académicos de ISIA. Demo con contenido pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/galeria",
+      "status": 200,
+      "h1": 1,
+      "title": "Galería · ISIA DEMO",
+      "description": "Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/unete",
+      "status": 200,
+      "h1": 1,
+      "title": "Únete · ISIA DEMO",
+      "description": "Información sobre participación en el semillero ISIA. Procedimiento de vinculación y canal de contacto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/proyectos/banco-de-instrumentacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/proyectos/nodo-de-medida-autonomo",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/proyectos/percepcion-en-entornos-no-estructurados",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/proyectos/plataforma-movil-de-pruebas",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/novedades/2026-08-20-documentar-un-experimento",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/novedades/2026-09-01-temas-de-sistemas-inteligentes",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "route": "/novedades/2026-09-08-pregunta-de-investigacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/",
+      "status": 200,
+      "h1": 1,
+      "title": "ISIA · Semillero de investigación · DEMO",
+      "description": "Demo académica del semillero ISIA, Universidad Nacional de Colombia, sede Manizales. Contenido ilustrativo pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/lineas",
+      "status": 200,
+      "h1": 1,
+      "title": "Líneas de investigación · ISIA DEMO",
+      "description": "Explora las seis líneas de referencia de la demo del semillero ISIA. Contenido provisional pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/proyectos",
+      "status": 200,
+      "h1": 1,
+      "title": "Proyectos · ISIA DEMO",
+      "description": "Explora las fichas de proyectos de la demo académica de ISIA. Las propuestas ilustrativas están identificadas y pendientes de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/novedades",
+      "status": 200,
+      "h1": 1,
+      "title": "Novedades · ISIA DEMO",
+      "description": "Sección de novedades de la demo académica de ISIA. Notas ilustrativas, sin anuncios ni convocatorias vigentes.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/reuniones",
+      "status": 200,
+      "h1": 1,
+      "title": "Reuniones · ISIA DEMO",
+      "description": "Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas. Demo sin reuniones ficticias anunciadas como actividades reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/integrantes",
+      "status": 200,
+      "h1": 1,
+      "title": "Integrantes · ISIA DEMO",
+      "description": "Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/publicaciones",
+      "status": 200,
+      "h1": 1,
+      "title": "Publicaciones y recursos · ISIA DEMO",
+      "description": "Espacio de publicaciones y recursos académicos de ISIA. Demo con contenido pendiente de validación.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/galeria",
+      "status": 200,
+      "h1": 1,
+      "title": "Galería · ISIA DEMO",
+      "description": "Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/unete",
+      "status": 200,
+      "h1": 1,
+      "title": "Únete · ISIA DEMO",
+      "description": "Información sobre participación en el semillero ISIA. Procedimiento de vinculación y canal de contacto pendientes de confirmación en esta demo.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/proyectos/banco-de-instrumentacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/proyectos/nodo-de-medida-autonomo",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/proyectos/percepcion-en-entornos-no-estructurados",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/proyectos/plataforma-movil-de-pruebas",
+      "status": 200,
+      "h1": 1,
+      "title": "Ficha de proyecto ilustrativo · ISIA DEMO",
+      "description": "Ficha de demostración del semillero ISIA. La propuesta y su estado son ilustrativos y no documentan resultados reales.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/novedades/2026-08-20-documentar-un-experimento",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/novedades/2026-09-01-temas-de-sistemas-inteligentes",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    },
+    {
+      "width": 360,
+      "route": "/novedades/2026-09-08-pregunta-de-investigacion",
+      "status": 200,
+      "h1": 1,
+      "title": "Nota académica ilustrativa · ISIA DEMO",
+      "description": "Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.",
+      "robots": "noindex, nofollow",
+      "overflow": false,
+      "hidden": [],
+      "transformed": [],
+      "missingImages": [],
+      "fake": false,
+      "forms": 0,
+      "structured": 0,
+      "violations": []
+    }
+  ],
+  "errors": [],
+  "broken": [],
+  "interactions": "passed",
+  "motion": 0,
+  "withoutJS": true
+}

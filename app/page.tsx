@@ -6,22 +6,25 @@ import {
   TarjetaProyecto,
 } from '@/componentes/Tarjetas'
 import Esquema from '@/componentes/Esquema'
+import MarcaIsia from '@/componentes/MarcaIsia'
 import { Flecha } from '@/componentes/Iconos'
 import {
   listarIntegrantes,
   listarNovedades,
   listarProyectos,
 } from '@/lib/contenido'
-import { LINEAS, OBJETIVOS, PRESENTACION, SITIO } from '@/lib/sitio'
+import { obtenerConfiguracionNavegacion } from '@/lib/configuracion'
+import { LINEAS, OBJETIVOS, PRESENTACION } from '@/lib/sitio'
 import estilos from './pagina.module.css'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function Inicio() {
+  const configuracion = await obtenerConfiguracionNavegacion()
   const [proyectos, novedades, integrantes] = await Promise.all([
-    listarProyectos(3),
-    listarNovedades(3),
-    listarIntegrantes(),
+    configuracion.proyectos ? listarProyectos(3) : Promise.resolve([]),
+    configuracion.novedades ? listarNovedades(3) : Promise.resolve([]),
+    configuracion.integrantes ? listarIntegrantes() : Promise.resolve([]),
   ])
   const perfilesResumen = integrantes
     .filter(
@@ -33,19 +36,20 @@ export default async function Inicio() {
       <section className={estilos.portada}>
         <div className={`contenedor ${estilos.portadaRejilla}`}>
           <div className={estilos.portadaTexto}>
-            <p className={estilos.eyebrow}>
-              Universidad Nacional de Colombia · Sede Manizales
-            </p>
-            <h1>
-              <span className={estilos.sigla}>ISIA</span>
-              <span className={estilos.nombre}>{SITIO.nombre}</span>
+            <h1 className={estilos.marcaPortada}>
+              <MarcaIsia
+                variante="completa"
+                alto={180}
+                prioridad
+                className={estilos.marcaPortadaImagen}
+              />
             </h1>
             <p className={estilos.proposito}>
               Un espacio de formación en investigación para explorar cómo los
               sistemas perciben, aprenden e interactúan con su entorno.
             </p>
             <div className={estilos.acciones}>
-              <Boton href="/proyectos">Ver los proyectos</Boton>
+              {configuracion.proyectos && <Boton href="/proyectos">Ver los proyectos</Boton>}
               <Boton href="/unete" variante="sutil">
                 Quiero participar
               </Boton>
@@ -71,15 +75,15 @@ export default async function Inicio() {
       <div className={estilos.explorar}>
         <div className="contenedor">
           <span>Explora el semillero</span>
-          <Link href="/lineas">
-            Investigación <Flecha size={15} />
-          </Link>
-          <Link href="/reuniones">
-            Encuentros académicos <Flecha size={15} />
-          </Link>
-          <Link href="/publicaciones">
-            Conocimiento y recursos <Flecha size={15} />
-          </Link>
+          {configuracion.lineas && (
+            <Link href="/lineas">Investigación <Flecha size={15} /></Link>
+          )}
+          {configuracion.reuniones && (
+            <Link href="/reuniones">Encuentros académicos <Flecha size={15} /></Link>
+          )}
+          {configuracion.publicaciones && (
+            <Link href="/publicaciones">Conocimiento y recursos <Flecha size={15} /></Link>
+          )}
         </div>
       </div>
       <Seccion id="semillero">
@@ -109,7 +113,7 @@ export default async function Inicio() {
           ))}
         </ol>
       </Seccion>
-      <Seccion alterna id="lineas">
+      {configuracion.lineas && <Seccion alterna id="lineas">
         <div className={estilos.cabeceraSeccion}>
           <TituloSeccion
             indice="ÁREAS DE EXPLORACIÓN"
@@ -139,8 +143,8 @@ export default async function Inicio() {
             </Link>
           ))}
         </div>
-      </Seccion>
-      <Seccion id="proyectos">
+      </Seccion>}
+      {configuracion.proyectos && <Seccion id="proyectos">
         <div className={estilos.cabeceraSeccion}>
           <TituloSeccion
             indice="INVESTIGACIÓN EN CONTEXTO"
@@ -156,8 +160,8 @@ export default async function Inicio() {
             <TarjetaProyecto key={p.slug} proyecto={p} />
           ))}
         </div>
-      </Seccion>
-      <Seccion alterna id="novedades">
+      </Seccion>}
+      {configuracion.novedades && <Seccion alterna id="novedades">
         <div className={estilos.cabeceraSeccion}>
           <TituloSeccion
             indice="VIDA ACADÉMICA"
@@ -171,8 +175,8 @@ export default async function Inicio() {
         {novedades.map((n) => (
           <TarjetaNovedad key={n.slug} novedad={n} />
         ))}
-      </Seccion>
-      <Seccion id="integrantes">
+      </Seccion>}
+      {configuracion.integrantes && <Seccion id="integrantes">
         <TituloSeccion
           indice="COMUNIDAD"
           titulo="Personas que hacen posible la investigación"
@@ -184,7 +188,7 @@ export default async function Inicio() {
           ))}
         </div>
         <VerTodo href="/integrantes">Conocer la sección de integrantes</VerTodo>
-      </Seccion>
+      </Seccion>}
       <section className={estilos.unete}>
         <div className={`contenedor ${estilos.uneteInterior}`}>
           <div>

@@ -8,10 +8,11 @@ import {
   markdownAHtml,
   obtenerProyecto,
 } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import { LINEAS } from '@/lib/sitio'
 import estilos from '../../detalle.module.css'
 type Props = { params: Promise<{ slug: string }> }
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await obtenerProyecto((await params).slug)
   if (!p) return { title: 'Proyecto no encontrado' }
@@ -23,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 export default async function PaginaProyecto({ params }: Props) {
+  if (!(await seccionVisible('proyectos'))) notFound()
   const proyecto = await obtenerProyecto((await params).slug)
   if (!proyecto) notFound()
   const cuerpo = await markdownAHtml(proyecto.cuerpo)
@@ -57,7 +59,7 @@ export default async function PaginaProyecto({ params }: Props) {
           <div className={estilos.imagen}>
             <Image
               src={proyecto.portada}
-              alt={`Imagen del proyecto ${proyecto.titulo}`}
+              alt={proyecto.portadaAlt ?? `Imagen del proyecto ${proyecto.titulo}`}
               width={1200}
               height={750}
               className={estilos.imagenFoto}

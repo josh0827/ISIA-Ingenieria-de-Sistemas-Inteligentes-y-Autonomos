@@ -1,4 +1,4 @@
-/** Configuración editorial de la demo. No contiene contactos ni cifras de ejemplo. */
+/** Configuración editorial y de contacto centralizada. */
 export const SITIO = {
   sigla: 'ISIA',
   nombre: 'Ingeniería de Sistemas Inteligentes y Autónomos',
@@ -11,7 +11,8 @@ export const SITIO = {
   ubicacion: 'Manizales, Colombia',
   locale: 'es_CO',
   modo: 'DEMO',
-  contactoPendiente: 'Canal de contacto pendiente de confirmar',
+  correo: 'isia_man@unal.edu.co',
+  correoHref: 'mailto:isia_man@unal.edu.co',
   repositorio: 'https://github.com/josh0827/ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos',
 } as const
 

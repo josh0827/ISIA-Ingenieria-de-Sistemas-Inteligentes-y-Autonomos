@@ -5,6 +5,7 @@ import { crearClienteAdmin } from '@/lib/supabase/server'
 import { grupoTrabajoSchema, type GrupoTrabajoEntrada } from '@/lib/validators/grupos'
 
 export type GrupoTrabajo = GrupoTrabajoEntrada & { id: string }
+export type ResumenGrupoTrabajo = Pick<GrupoTrabajo, 'id' | 'slug' | 'nombre' | 'integrantes'>
 
 const GRUPOS_BASE: GrupoTrabajo[] = [
   {
@@ -77,6 +78,30 @@ export async function listarGruposTrabajo(): Promise<GrupoTrabajo[]> {
     return (data ?? []).map((fila) => convertirFila(fila as FilaGrupo)).filter(Boolean) as GrupoTrabajo[]
   } catch {
     return GRUPOS_BASE
+  }
+}
+
+/** Consulta reducida para la tabla del panel; omite textos, enlaces y galeria. */
+export async function listarGruposTrabajoAdmin(): Promise<ResumenGrupoTrabajo[]> {
+  if (!supabaseServidorListo()) {
+    return GRUPOS_BASE.map(({ id, slug, nombre, integrantes }) => ({ id, slug, nombre, integrantes }))
+  }
+  try {
+    const { data, error } = await crearClienteAdmin()
+      .from('grupos_trabajo')
+      .select('id, slug, nombre, integrantes')
+      .order('nombre')
+    if (error) throw error
+    return (data ?? []).map((fila) => ({
+      id: String(fila.id),
+      slug: String(fila.slug),
+      nombre: String(fila.nombre),
+      integrantes: Array.isArray(fila.integrantes)
+        ? fila.integrantes.filter((valor): valor is string => typeof valor === 'string')
+        : [],
+    }))
+  } catch {
+    return GRUPOS_BASE.map(({ id, slug, nombre, integrantes }) => ({ id, slug, nombre, integrantes }))
   }
 }
 

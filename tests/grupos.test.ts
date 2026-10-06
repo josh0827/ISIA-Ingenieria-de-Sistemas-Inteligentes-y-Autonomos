@@ -23,3 +23,13 @@ test('rechaza slugs y enlaces inseguros', () => {
     repositorios: [{ nombre: 'Código', url: 'http://ejemplo.test/repo' }],
   }).success, false)
 })
+
+test('permite crear un grupo sin repositorios, documentos ni portada', () => {
+  const resultado = grupoTrabajoSchema.safeParse({
+    ...grupoValido,
+    imagenPortada: undefined,
+    repositorios: [],
+    documentos: [],
+  })
+  assert.equal(resultado.success, true)
+})

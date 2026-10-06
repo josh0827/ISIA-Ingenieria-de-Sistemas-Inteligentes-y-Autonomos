@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { Boton, EncabezadoPagina, EstadoVacio, Seccion } from '@/componentes/Base'
 import { listarGaleria } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import GaleriaFotos from './GaleriaFotos'
 import estilos from '../secundarias.module.css'
 
@@ -9,9 +11,11 @@ export const metadata: Metadata = {
   description: 'Espacio para el registro fotográfico del semillero ISIA. Fotografías reales y pies de foto pendientes de confirmación en esta demo.',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function PaginaGaleria() {
+  if (!(await seccionVisible('galeria'))) notFound()
+  const proyectosVisibles = await seccionVisible('proyectos')
   const fotos = await listarGaleria()
 
   return (
@@ -27,7 +31,7 @@ export default async function PaginaGaleria() {
             titulo="Registro fotográfico pendiente"
             descripcion="Aún no hay fotografías reales del semillero disponibles para esta demo. Aquí se compartirán imágenes autorizadas de proyectos, encuentros y actividades, acompañadas de su contexto."
           >
-            <Boton href="/proyectos" variante="sutil">Conocer los proyectos ilustrativos</Boton>
+            {proyectosVisibles && <Boton href="/proyectos" variante="sutil">Conocer los proyectos ilustrativos</Boton>}
           </EstadoVacio>
           <div className={estilos.notaEditorial}>
             <span className={estilos.sobretitulo}>Imágenes con contexto</span>

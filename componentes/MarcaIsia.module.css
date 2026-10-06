@@ -1,0 +1,22 @@
+.marco {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--ancho-marca);
+  height: var(--alto-marca);
+  overflow: hidden;
+}
+
+.imagen {
+  position: absolute;
+  left: var(--imagen-x);
+  top: var(--imagen-y);
+  width: var(--imagen-ancho);
+  height: var(--imagen-alto);
+  max-width: none;
+  transition: filter 220ms var(--curva);
+}
+
+.marco:hover .imagen {
+  filter: saturate(1.06) contrast(1.015);
+}

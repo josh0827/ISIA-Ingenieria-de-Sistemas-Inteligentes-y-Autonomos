@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { Boton, EncabezadoPagina, EstadoVacio, Etiqueta, Fecha, Seccion } from '@/componentes/Base'
 import { hoyColombia, listarReuniones, markdownAHtml, type Reunion } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
@@ -8,16 +10,17 @@ export const metadata: Metadata = {
   description: 'Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas. Demo sin reuniones ficticias anunciadas como actividades reales.',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 type ReunionConHtml = Reunion & { html: string }
 
-function FichaReunion({ reunion }: { reunion: ReunionConHtml }) {
+function FichaReunion({ reunion, finalizada = false }: { reunion: ReunionConHtml; finalizada?: boolean }) {
   return (
     <details className={estilos.reunion}>
       <summary className={estilos.resumenReunion}>
         <span className={estilos.fechaReunion}>
           {reunion.ilustrativo && <span className={estilos.nota}>Fecha de ejemplo</span>}
+          {finalizada && <span className={estilos.nota}>Finalizada</span>}
           <Fecha iso={reunion.fecha} corta />
         </span>
         <span className={estilos.textoReunion}>
@@ -54,6 +57,7 @@ function FichaReunion({ reunion }: { reunion: ReunionConHtml }) {
 }
 
 export default async function PaginaReuniones() {
+  if (!(await seccionVisible('reuniones'))) notFound()
   const listado = await listarReuniones()
   const reuniones = await Promise.all(listado.map(async (reunion) => ({
     ...reunion,
@@ -61,7 +65,10 @@ export default async function PaginaReuniones() {
   })))
   const hoy = hoyColombia()
   const agenda = reuniones.filter((reunion) => !reunion.ilustrativo && reunion.fecha >= hoy)
-  const historial = reuniones.filter((reunion) => !reunion.ilustrativo && reunion.fecha < hoy).reverse()
+  const historial = reuniones
+    .filter((reunion) => !reunion.ilustrativo && reunion.fecha < hoy)
+    .reverse()
+    .slice(0, 3)
   const ejemplos = reuniones.filter((reunion) => reunion.ilustrativo).reverse()
 
   return (
@@ -86,8 +93,8 @@ export default async function PaginaReuniones() {
         )}
       </section>
       <section className={estilos.archivo} aria-labelledby="historial">
-        <div className={estilos.cabeceraAgenda}><h2 id="historial">Historial de reuniones</h2></div>
-        {historial.length > 0 ? historial.map((reunion) => <FichaReunion key={reunion.slug} reunion={reunion} />) : (
+        <div className={estilos.cabeceraAgenda}><h2 id="historial">Últimas reuniones finalizadas</h2></div>
+        {historial.length > 0 ? historial.map((reunion) => <FichaReunion key={reunion.slug} reunion={reunion} finalizada />) : (
           <p className={estilos.introduccionArchivo}>Aún no hay un historial de encuentros confirmados disponible en esta demo.</p>
         )}
       </section>

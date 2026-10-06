@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import {
   AvisoDemo,
   EncabezadoPagina,
@@ -7,15 +8,17 @@ import {
 } from '@/componentes/Base'
 import { FiltrosNovedades } from '@/componentes/FiltrosContenido'
 import { listarNovedades } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../listados.module.css'
 export const metadata: Metadata = {
   title: 'Novedades',
   description:
     'Sección de novedades de la demo académica de ISIA. Notas ilustrativas, sin anuncios ni convocatorias vigentes.',
 }
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function PaginaNovedades() {
+  if (!(await seccionVisible('novedades'))) notFound()
   const novedades = await listarNovedades()
   return (
     <Seccion className={estilos.primeraSeccion}>

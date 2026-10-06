@@ -2,10 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { requerirGestionPracticas } from '@/lib/admin/datos'
+import { requerirAdministrador, requerirGestionPracticas } from '@/lib/admin/datos'
 import { ErrorAcceso } from '@/lib/autorizacion'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { practicaOfertaSchema, type PracticaOfertaEntrada } from '@/lib/validators/practicas'
+import { registrarAuditoria } from '@/lib/admin/auditoria'
 
 export type EstadoPractica = { ok: boolean; error?: string; codigo?: 401 | 403 }
 
@@ -68,8 +69,17 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
     : await supabase.from('practicas_ofertas').insert(datos)
   if (error) return { ok: false, error: `No se pudo guardar la oferta: ${error.message}` }
 
+  await registrarAuditoria({
+    usuarioId: sesion.id,
+    usuarioEmail: sesion.correo,
+    accion: idExistente ? 'actualizar' : 'crear',
+    recursoTipo: 'practica',
+    recursoId: idExistente ?? oferta.titulo,
+    detalle: { activa: oferta.activa },
+  })
+
   revalidarPracticas()
-  redirect('/admin/practicas')
+  redirect('/admin/practicas?guardado=1')
 }
 
 export async function cambiarEstadoPractica(id: string, activa: boolean): Promise<EstadoPractica> {
@@ -86,6 +96,41 @@ export async function cambiarEstadoPractica(id: string, activa: boolean): Promis
   }
   const { error } = await supabase.from('practicas_ofertas').update({ activa, actualizado_en: new Date().toISOString() }).eq('id', id)
   if (error) return { ok: false, error: `No se pudo actualizar la oferta: ${error.message}` }
+  await registrarAuditoria({
+    usuarioId: sesion.id,
+    usuarioEmail: sesion.correo,
+    accion: activa ? 'activar' : 'desactivar',
+    recursoTipo: 'practica',
+    recursoId: id,
+  })
+  revalidarPracticas()
+  return { ok: true }
+}
+
+export async function eliminarPractica(id: string): Promise<EstadoPractica> {
+  let sesion: Awaited<ReturnType<typeof requerirAdministrador>>
+  try {
+    sesion = await requerirAdministrador()
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : 'No se pudo comprobar la autorización.',
+      codigo: error instanceof ErrorAcceso ? error.codigo : undefined,
+    }
+  }
+
+  const { error } = await crearClienteAdmin()
+    .from('practicas_ofertas')
+    .delete()
+    .eq('id', id)
+  if (error) return { ok: false, error: `No se pudo eliminar la oferta: ${error.message}` }
+  await registrarAuditoria({
+    usuarioId: sesion.id,
+    usuarioEmail: sesion.correo,
+    accion: 'eliminar',
+    recursoTipo: 'practica',
+    recursoId: id,
+  })
   revalidarPracticas()
   return { ok: true }
 }

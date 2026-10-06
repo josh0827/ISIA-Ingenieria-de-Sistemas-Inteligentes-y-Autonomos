@@ -69,7 +69,7 @@ export function TarjetaProyecto({
         {proyecto.portada ? (
           <Image
             src={proyecto.portada}
-            alt={`Imagen del proyecto ${proyecto.titulo}`}
+            alt={proyecto.portadaAlt ?? `Imagen del proyecto ${proyecto.titulo}`}
             fill
             sizes="(max-width: 700px) 90vw, 400px"
             className={estilos.portadaImagen}
@@ -120,7 +120,7 @@ export function TarjetaIntegrante({ integrante }: { integrante: Integrante }) {
         {integrante.foto ? (
           <Image
             src={integrante.foto}
-            alt={integrante.nombre}
+            alt={integrante.fotoAlt ?? integrante.nombre}
             fill
             sizes="80px"
             className={estilos.retratoImagen}

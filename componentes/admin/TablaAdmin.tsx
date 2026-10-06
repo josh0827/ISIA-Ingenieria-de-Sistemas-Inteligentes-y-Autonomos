@@ -20,6 +20,7 @@ export default function TablaAdmin({ esquema, documentos }: { esquema: EsquemaCo
               <th key={columna.clave}>{columna.etiqueta}</th>
             ))}
             <th>Confirmado</th>
+            <th>Publicación</th>
             <th className={estilos.columnaAcciones}>Acciones</th>
           </tr>
         </thead>
@@ -31,6 +32,7 @@ export default function TablaAdmin({ esquema, documentos }: { esquema: EsquemaCo
                 <td key={columna.clave}>{valorColumna(documento, columna.clave)}</td>
               ))}
               <td>{documento.datos.confirmado === true ? 'Sí' : 'No'}</td>
+              <td>{String(documento.datos.estadoEditorial ?? 'Publicado')}</td>
               <td>
                 <div className={estilos.celdaAcciones}>
                   <Link href={`/admin/${esquema.coleccion}/${documento.slug}`} className={estilos.enlaceEditar}>

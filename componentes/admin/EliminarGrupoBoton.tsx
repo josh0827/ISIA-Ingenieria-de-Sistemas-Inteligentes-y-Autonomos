@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { eliminarGrupo } from '@/lib/admin/grupos-acciones'
+import { notificarAdmin } from './notificar'
 import estilos from './TablaAdmin.module.css'
 
 export default function EliminarGrupoBoton({ slug, nombre }: { slug: string; nombre: string }) {
@@ -15,7 +16,10 @@ export default function EliminarGrupoBoton({ slug, nombre }: { slug: string; nom
     iniciarTransicion(async () => {
       const resultado = await eliminarGrupo(slug)
       if (!resultado.ok) setError(resultado.error ?? 'No se pudo eliminar el grupo.')
-      else router.refresh()
+      else {
+        notificarAdmin('El grupo se eliminó correctamente.')
+        router.refresh()
+      }
     })
   }
 

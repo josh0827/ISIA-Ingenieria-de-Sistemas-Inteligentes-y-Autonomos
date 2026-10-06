@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { AvisoDemo, Boton, EncabezadoPagina, EstadoVacio, Seccion } from '@/componentes/Base'
 import { TarjetaIntegrante } from '@/componentes/Tarjetas'
 import { listarIntegrantes, type Integrante } from '@/lib/contenido'
+import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
@@ -9,7 +11,7 @@ export const metadata: Metadata = {
   description: 'Directorio de integrantes del semillero ISIA en modo demo. Identidades, roles y perfiles pendientes de confirmación.',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 const ROLES: { valor: Integrante['rol']; titulo: string; descripcion: string }[] = [
   { valor: 'director', titulo: 'Coordinación académica', descripcion: 'Información de la persona responsable pendiente de confirmar.' },
@@ -19,6 +21,7 @@ const ROLES: { valor: Integrante['rol']; titulo: string; descripcion: string }[]
 ]
 
 export default async function PaginaIntegrantes() {
+  if (!(await seccionVisible('integrantes'))) notFound()
   const integrantes = await listarIntegrantes()
 
   return (

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { SITIO, type ItemNavegacion } from '@/lib/sitio'
-import Escudo from './Escudo'
+import MarcaIsia from './MarcaIsia'
 import estilos from './Pie.module.css'
 export default function Pie({ items }: { items: ItemNavegacion[] }) {
   return (
@@ -8,14 +8,9 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
       <div className="contenedor">
         <div className={estilos.rejilla}>
           <div>
-            <Link href="/" className={estilos.marca}>
-              <Escudo alto={68} />
-              <span>
-                <strong>ISIA</strong>
-                <span>Semillero de investigación</span>
-              </span>
+            <Link href="/" className={estilos.marca} aria-label="ISIA, ir al inicio">
+              <MarcaIsia variante="simbolo" alto={34} decorativa />
             </Link>
-            <p className={estilos.nombre}>{SITIO.nombre}</p>
             <p className={estilos.ubicacion}>
               {SITIO.universidad}
               <br />
@@ -34,7 +29,8 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
           </nav>
           <div className={estilos.contacto}>
             <h2>Participación y contacto</h2>
-            <p>Canal de contacto pendiente de confirmar</p>
+            <p>Escríbenos para resolver inquietudes académicas o manifestar tu interés en participar.</p>
+            <a href={SITIO.correoHref}>{SITIO.correo}</a>
             <Link href="/unete">
               Conoce cómo participar <span aria-hidden>↗</span>
             </Link>
@@ -49,18 +45,6 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
         </div>
         <div className={estilos.cierre}>
           <p>Demo académica · Contenido pendiente de validación.</p>
-          <p>
-            Escudo provisional, sin modificaciones. César Puertas Céspedes, vía
-            Wikimedia Commons.{' '}
-            <a
-              href="https://commons.wikimedia.org/wiki/File:Escudo_de_la_Universidad_Nacional_de_Colombia_(2016).svg"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Fuente y licencia de atribución
-            </a>
-            .
-          </p>
         </div>
       </div>
     </footer>

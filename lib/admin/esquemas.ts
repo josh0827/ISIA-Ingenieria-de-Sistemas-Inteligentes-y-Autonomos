@@ -43,6 +43,25 @@ export type EsquemaColeccion = {
   campos: CampoEsquema[]
 }
 
+export const ESTADOS_EDITORIALES = ['Borrador', 'Publicado', 'Programado'] as const
+
+const CAMPOS_EDITORIALES: CampoEsquema[] = [
+  {
+    clave: 'estadoEditorial',
+    etiqueta: 'Estado editorial',
+    tipo: 'select',
+    opciones: ESTADOS_EDITORIALES,
+    requerido: true,
+    ayuda: 'Borrador no aparece públicamente. Programado se publica desde la fecha indicada.',
+  },
+  {
+    clave: 'publicarEn',
+    etiqueta: 'Fecha de publicación programada',
+    tipo: 'fecha',
+    ayuda: 'Obligatoria únicamente cuando el estado editorial sea Programado.',
+  },
+]
+
 export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
   proyectos: {
     coleccion: 'proyectos',
@@ -63,8 +82,10 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       { clave: 'linea', etiqueta: 'Línea de investigación', tipo: 'texto', ayuda: 'Debe coincidir exactamente con el título de una línea existente.' },
       { clave: 'resumen', etiqueta: 'Resumen', tipo: 'textarea', requerido: true },
       { clave: 'portada', etiqueta: 'Imagen de portada', tipo: 'imagen', ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
+      { clave: 'portadaAlt', etiqueta: 'Texto alternativo de la portada', tipo: 'texto', ayuda: 'Describe brevemente lo que aporta la imagen. Es obligatorio cuando existe una portada.' },
       { clave: 'integrantes', etiqueta: 'Integrantes (slugs separados por comas)', tipo: 'lista', ayuda: 'Usa el slug de cada persona tal como aparece en Integrantes.' },
       { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano' },
+      ...CAMPOS_EDITORIALES,
       { clave: 'cuerpo', etiqueta: 'Descripción completa (Markdown)', tipo: 'markdown' },
     ],
   },
@@ -87,8 +108,10 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       },
       { clave: 'resumen', etiqueta: 'Resumen', tipo: 'textarea', requerido: true },
       { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
+      { clave: 'imagenAlt', etiqueta: 'Texto alternativo de la imagen', tipo: 'texto', ayuda: 'Es obligatorio cuando existe una imagen.' },
       { clave: 'autor', etiqueta: 'Autor', tipo: 'texto' },
       { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano' },
+      ...CAMPOS_EDITORIALES,
       { clave: 'cuerpo', etiqueta: 'Contenido completo (Markdown)', tipo: 'markdown' },
     ],
   },
@@ -115,6 +138,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       { clave: 'enlace', etiqueta: 'Enlace de la sesión', tipo: 'url' },
       { clave: 'resumen', etiqueta: 'Resumen breve', tipo: 'textarea' },
       { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano' },
+      ...CAMPOS_EDITORIALES,
       { clave: 'cuerpo', etiqueta: 'Detalles completos (Markdown)', tipo: 'markdown' },
     ],
   },
@@ -136,10 +160,12 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       },
       { clave: 'area', etiqueta: 'Área de interés', tipo: 'texto' },
       { clave: 'foto', etiqueta: 'Foto', tipo: 'imagen', ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
+      { clave: 'fotoAlt', etiqueta: 'Texto alternativo de la foto', tipo: 'texto', ayuda: 'Es obligatorio cuando existe una fotografía.' },
       { clave: 'enlaces.github', etiqueta: 'GitHub', tipo: 'url' },
       { clave: 'enlaces.linkedin', etiqueta: 'LinkedIn', tipo: 'url' },
       { clave: 'enlaces.correo', etiqueta: 'Correo de contacto', tipo: 'correo' },
       { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano' },
+      ...CAMPOS_EDITORIALES,
       { clave: 'cuerpo', etiqueta: 'Presentación (Markdown)', tipo: 'markdown' },
     ],
   },
@@ -147,7 +173,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
     coleccion: 'publicaciones',
     etiqueta: 'Publicaciones',
     etiquetaSingular: 'publicación',
-    descripcion: 'Artículos, informes y otros recursos académicos. Solo se publican si están marcados como confirmados.',
+    descripcion: 'Artículos, informes y otros recursos académicos. Los no confirmados se muestran como ejemplos mientras el contenido ilustrativo esté activo.',
     columnas: [
       { clave: 'titulo', etiqueta: 'Título' },
       { clave: 'anio', etiqueta: 'Año' },
@@ -159,7 +185,8 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       { clave: 'autores', etiqueta: 'Autores (separados por comas)', tipo: 'lista', requerido: true },
       { clave: 'tipo', etiqueta: 'Tipo de recurso', tipo: 'texto', requerido: true },
       { clave: 'enlace', etiqueta: 'Enlace', tipo: 'url' },
-      { clave: 'confirmado', etiqueta: 'Confirmado', tipo: 'booleano', ayuda: 'Sin marcar, esta publicación se guarda pero no aparece en el sitio.' },
+      { clave: 'confirmado', etiqueta: 'Contenido confirmado (no ilustrativo)', tipo: 'booleano', ayuda: 'Sin marcar, se mostrará como ejemplo y sin enlace mientras el contenido ilustrativo esté activo.' },
+      ...CAMPOS_EDITORIALES,
       { clave: 'cuerpo', etiqueta: 'Detalle (Markdown)', tipo: 'markdown' },
     ],
   },
@@ -179,6 +206,7 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       { clave: 'pie', etiqueta: 'Pie de foto', tipo: 'texto', requerido: true },
       { clave: 'anio', etiqueta: 'Año', tipo: 'numero' },
       { clave: 'confirmado', etiqueta: 'Confirmado', tipo: 'booleano', ayuda: 'Sin marcar, esta fotografía se guarda pero no aparece en el sitio.' },
+      ...CAMPOS_EDITORIALES,
     ],
   },
 }

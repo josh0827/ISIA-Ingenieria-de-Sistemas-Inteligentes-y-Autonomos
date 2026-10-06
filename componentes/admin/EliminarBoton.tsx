@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { eliminarDocumento } from '@/lib/admin/acciones'
+import { notificarAdmin } from './notificar'
 import estilos from './TablaAdmin.module.css'
 
 export default function EliminarBoton({ coleccion, slug, etiqueta }: { coleccion: string; slug: string; etiqueta: string }) {
@@ -17,6 +18,7 @@ export default function EliminarBoton({ coleccion, slug, etiqueta }: { coleccion
       try {
         const resultado = await eliminarDocumento(coleccion, slug)
         if (!resultado.ok) throw new Error(resultado.error ?? 'No se pudo eliminar el elemento.')
+        notificarAdmin('El elemento se eliminó correctamente.')
         router.refresh()
       } catch (error_) {
         setError(error_ instanceof Error ? error_.message : 'No se pudo eliminar el elemento.')

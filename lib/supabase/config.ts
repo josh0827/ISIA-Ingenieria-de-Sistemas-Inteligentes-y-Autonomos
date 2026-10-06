@@ -29,18 +29,12 @@ export function urlSitio(): string | undefined {
 }
 
 export function clavePublicaSupabase(): string | undefined {
-  const publicable = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim()
-  const anonima = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
-  return publicable || anonima || undefined
+  // Acceso literal: Next.js solo inserta NEXT_PUBLIC_* en el navegador así.
+  return process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim() || undefined
 }
 
 export function claveServicioSupabase(): string | undefined {
-  // Las claves modernas sb_secret_* sustituyen gradualmente al JWT heredado
-  // service_role. Se admite el nombre anterior para instalaciones existentes.
-  return (
-    variableEntorno('SUPABASE_SECRET_KEY') ||
-    variableEntorno('SUPABASE_SERVICE_ROLE_KEY')
-  )
+  return variableEntorno('SUPABASE_SECRET_KEY')
 }
 
 export function supabaseClienteListo(): boolean {

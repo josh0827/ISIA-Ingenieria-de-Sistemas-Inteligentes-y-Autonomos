@@ -11,6 +11,11 @@ export type PracticaOferta = PracticaOfertaEntrada & {
   actualizadoEn: string
 }
 
+export type ResumenPracticaAdmin = Pick<
+  PracticaOferta,
+  'id' | 'titulo' | 'empresaNombre' | 'modalidad' | 'activa'
+>
+
 type FilaPractica = {
   id: string
   titulo: string
@@ -77,7 +82,44 @@ export async function listarPracticasAdmin(usuarioId: string, rol: 'admin' | 'ed
   }
 }
 
+/** Consulta reducida para el listado del panel. */
+export async function listarResumenPracticasAdmin(
+  usuarioId: string,
+  rol: 'admin' | 'editor' | 'empresa',
+): Promise<ResumenPracticaAdmin[]> {
+  if (!supabaseServidorListo()) return []
+  try {
+    let consulta = crearClienteAdmin()
+      .from('practicas_ofertas')
+      .select('id, titulo, empresa_nombre, modalidad, activa')
+      .order('creado_en', { ascending: false })
+    if (rol === 'empresa') consulta = consulta.eq('empresa_id', usuarioId)
+    const { data, error } = await consulta
+    if (error) throw error
+    return (data ?? []).map((fila) => ({
+      id: String(fila.id),
+      titulo: String(fila.titulo),
+      empresaNombre: String(fila.empresa_nombre),
+      modalidad: fila.modalidad as PracticaOferta['modalidad'],
+      activa: fila.activa === true,
+    }))
+  } catch {
+    return []
+  }
+}
+
 export async function obtenerPracticaAdmin(id: string, usuarioId: string, rol: 'admin' | 'editor' | 'empresa'): Promise<PracticaOferta | undefined> {
-  const ofertas = await listarPracticasAdmin(usuarioId, rol)
-  return ofertas.find((oferta) => oferta.id === id)
+  if (!supabaseServidorListo()) return undefined
+  try {
+    let consulta = crearClienteAdmin()
+      .from('practicas_ofertas')
+      .select(COLUMNAS)
+      .eq('id', id)
+    if (rol === 'empresa') consulta = consulta.eq('empresa_id', usuarioId)
+    const { data, error } = await consulta.maybeSingle()
+    if (error) throw error
+    return data ? convertirFila(data as FilaPractica) : undefined
+  } catch {
+    return undefined
+  }
 }

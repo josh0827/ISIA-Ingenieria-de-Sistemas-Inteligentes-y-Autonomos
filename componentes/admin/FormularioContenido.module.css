@@ -113,6 +113,7 @@
   border-radius: var(--r-sm);
   padding: 0.75rem 1rem;
   margin: 0;
+  animation: confirmarFormulario 240ms var(--curva);
 }
 
 .exito {
@@ -122,6 +123,7 @@
   border-radius: var(--r-sm);
   padding: 0.75rem 1rem;
   margin: 0;
+  animation: confirmarFormulario 240ms var(--curva);
 }
 
 .acciones {
@@ -138,14 +140,27 @@
   padding: 0.85rem 1.75rem;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s var(--curva);
+  transition: background-color 0.2s var(--curva), box-shadow 0.2s var(--curva), transform 0.16s var(--curva);
 }
 
 .enviar:hover:not(:disabled) {
   background: var(--verde);
+  box-shadow: 0 0.65rem 1.4rem rgb(53 82 47 / 18%);
+}
+
+.enviar:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .enviar:disabled {
   opacity: 0.6;
   cursor: wait;
+}
+
+@keyframes confirmarFormulario {
+  from { opacity: 0.4; transform: translateY(-0.3rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error, .exito { animation: none; }
 }

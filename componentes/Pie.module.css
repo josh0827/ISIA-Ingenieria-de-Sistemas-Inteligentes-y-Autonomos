@@ -10,33 +10,13 @@
   padding-bottom: 3rem;
 }
 .marca {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
+  display: inline-flex;
   width: fit-content;
 }
-.marca > span {
-  display: flex;
-  flex-direction: column;
-}
-.marca strong {
-  font-size: 1.9rem;
-  letter-spacing: 0.025em;
-  line-height: 1.2;
-}
-.marca > span > span {
-  color: var(--texto-tenue);
-  font-size: 0.73rem;
-}
-.nombre {
-  font-size: 0.9rem;
-  margin-top: 1.3rem;
-  max-width: 22rem;
-}
 .ubicacion {
+  margin-top: 1.25rem;
   font-size: 0.8rem;
   color: var(--texto-tenue);
-  margin-top: 0.75rem;
 }
 .pie h2 {
   font-size: 0.8rem;
@@ -69,9 +49,6 @@
   margin-top: 1rem;
 }
 .cierre {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 3rem;
   border-top: 1px solid var(--linea);
   padding-block: 1.5rem;
   color: var(--texto-tenue);
@@ -87,10 +64,6 @@
   }
   .rejilla > :first-child {
     grid-column: 1/-1;
-  }
-  .cierre {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
   }
 }
 @media (max-width: 500px) {

@@ -18,7 +18,7 @@
   padding: 0.85rem 1.5rem;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s var(--curva);
+  transition: background-color 0.2s var(--curva), box-shadow 0.2s var(--curva), transform 0.16s var(--curva);
 }
 
 .spinner {
@@ -40,6 +40,11 @@
 
 .boton:hover:not(:disabled) {
   background: var(--verde);
+  box-shadow: 0 0.65rem 1.4rem rgb(53 82 47 / 20%);
+}
+
+.boton:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .boton:disabled {

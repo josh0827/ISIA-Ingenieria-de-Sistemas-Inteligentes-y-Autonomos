@@ -1,29 +1,76 @@
 'use client'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useRef, useState } from 'react'
-import { SITIO, type ItemNavegacion } from '@/lib/sitio'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { type ItemNavegacion } from '@/lib/sitio'
 import { Menu, Cerrar } from './Iconos'
-import Escudo from './Escudo'
+import MarcaIsia from './MarcaIsia'
 import estilos from './Nav.module.css'
 
 export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) {
   const ruta = usePathname()
   const [rutaAbierta, setRutaAbierta] = useState<string | null>(null)
+  const [indicador, setIndicador] = useState({ izquierda: 0, ancho: 0 })
+  const [desplazada, setDesplazada] = useState(false)
   const boton = useRef<HTMLButtonElement>(null)
+  const navegacionRef = useRef<HTMLElement>(null)
   const abierto = rutaAbierta === ruta
+  const esAdmin = ruta.startsWith('/admin')
   const activa = (href: string) =>
     ruta === href || (href !== '/' && ruta.startsWith(href + '/'))
-  const items = [
+  const items = useMemo(() => [
     { href: '/', texto: 'Inicio' },
     ...navegacion.filter((item) => item.href !== '/' && item.href !== '/unete'),
-  ]
+  ], [navegacion])
+
+  useLayoutEffect(() => {
+    const nav = navegacionRef.current
+    if (!nav) return
+    function medir() {
+      const activo = nav?.querySelector<HTMLElement>('[aria-current="page"]')
+      setIndicador(activo
+        ? { izquierda: activo.offsetLeft, ancho: activo.offsetWidth }
+        : { izquierda: 0, ancho: 0 })
+    }
+    medir()
+    const observador = new ResizeObserver(medir)
+    observador.observe(nav)
+    return () => observador.disconnect()
+  }, [ruta, items])
+
+  useEffect(() => {
+    if (esAdmin) {
+      setDesplazada(false)
+      return
+    }
+
+    let frame: number | null = null
+    const actualizar = () => {
+      frame = null
+      setDesplazada(window.scrollY > 24)
+    }
+    const alDesplazar = () => {
+      if (frame === null) frame = window.requestAnimationFrame(actualizar)
+    }
+
+    actualizar()
+    window.addEventListener('scroll', alDesplazar, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', alDesplazar)
+      if (frame !== null) window.cancelAnimationFrame(frame)
+    }
+  }, [esAdmin])
+
   function cerrar() {
     setRutaAbierta(null)
   }
+
   return (
     <header
       className={estilos.barra}
+      data-desplazada={desplazada}
+      data-admin={esAdmin}
       onKeyDown={(event) => {
         if (event.key === 'Escape' && abierto) {
           cerrar()
@@ -32,27 +79,10 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
       }}
     >
       <div className={`contenedor ${estilos.fila}`}>
-        <Link
-          href="/"
-          className={estilos.marca}
-          onClick={cerrar}
-          aria-label="ISIA, ir al inicio"
-        >
-          <Escudo alto={55} />
-          <span className={estilos.identidad}>
-            <strong>{SITIO.nombre}</strong>
-            <span>Semillero de investigación</span>
-          </span>
+        <Link href="/" className={estilos.marca} onClick={cerrar} aria-label="ISIA, ir al inicio">
+          <MarcaIsia variante="simbolo" alto={40} decorativa prioridad />
         </Link>
-        <div className={estilos.institucion}>
-          <span>{SITIO.universidad}</span>
-          <span>Sede Manizales · Colombia</span>
-        </div>
-        <Link
-          href="/unete"
-          className={estilos.cta}
-          aria-current={activa('/unete') ? 'page' : undefined}
-        >
+        <Link href="/unete" className={estilos.cta} aria-current={activa('/unete') ? 'page' : undefined}>
           Quiero participar <span aria-hidden>↗</span>
         </Link>
         <button
@@ -68,10 +98,7 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
         </button>
       </div>
       <div className={estilos.navBorde}>
-        <nav
-          className={`contenedor ${estilos.enlaces}`}
-          aria-label="Navegación principal"
-        >
+        <nav ref={navegacionRef} className={`contenedor ${estilos.enlaces}`} aria-label="Navegación principal">
           {items.map((item) => (
             <Link
               key={item.href}
@@ -82,27 +109,33 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
               {item.texto}
             </Link>
           ))}
+          <span
+            className={estilos.indicador}
+            data-visible={indicador.ancho > 0}
+            style={{ left: indicador.izquierda, width: indicador.ancho }}
+            aria-hidden="true"
+          />
         </nav>
       </div>
       <nav
         id="menu-movil"
         className={estilos.panel}
-        hidden={!abierto}
+        data-abierto={abierto}
+        aria-hidden={!abierto}
         aria-label="Navegación móvil"
       >
-        {[...items, { href: '/unete', texto: 'Quiero participar' }].map(
-          (item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={cerrar}
-              aria-current={activa(item.href) ? 'page' : undefined}
-            >
-              {item.texto}
-              <span aria-hidden>↗</span>
-            </Link>
-          ),
-        )}
+        {[...items, { href: '/unete', texto: 'Quiero participar' }].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={cerrar}
+            tabIndex={abierto ? undefined : -1}
+            aria-current={activa(item.href) ? 'page' : undefined}
+          >
+            {item.texto}
+            <span aria-hidden>↗</span>
+          </Link>
+        ))}
       </nav>
     </header>
   )

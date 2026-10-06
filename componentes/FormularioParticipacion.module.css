@@ -1,0 +1,123 @@
+.formulario {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 1.6rem;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.campo {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.campo label,
+.leyenda {
+  color: var(--texto);
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.campo input,
+.campo textarea {
+  width: 100%;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--r-sm);
+  background: var(--superficie);
+  color: var(--texto);
+  padding: 0.72rem 0.8rem;
+}
+
+.campo textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.temas {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.opciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.7rem;
+}
+
+.opcion,
+.consentimiento {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: var(--texto-tenue);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.opcion input,
+.consentimiento input {
+  flex: 0 0 auto;
+  margin-top: 0.22rem;
+  accent-color: var(--verde);
+}
+
+.ayuda {
+  color: var(--texto-tenue);
+  font-size: 0.78rem;
+}
+
+.enviar {
+  justify-self: start;
+  min-height: 46px;
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: 0.75rem 1.35rem;
+  background: var(--verde);
+  color: #fff;
+  font-weight: 650;
+}
+
+.enviar:hover:not(:disabled) {
+  background: var(--verde-oscuro);
+}
+
+.enviar:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.respuesta {
+  padding: 0.9rem 1rem;
+  border-left: 3px solid var(--verde);
+  background: var(--verde-vel);
+  color: var(--verde-oscuro);
+  font-size: 0.86rem;
+}
+
+.error {
+  border-left-color: var(--rojo);
+  background: #fff2ef;
+  color: var(--rojo);
+}
+
+.trampa {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 680px) {
+  .fila,
+  .opciones {
+    grid-template-columns: 1fr;
+  }
+}

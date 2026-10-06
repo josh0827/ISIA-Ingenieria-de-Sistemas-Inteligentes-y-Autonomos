@@ -1,15 +1,20 @@
 import type { Metadata } from 'next'
 import { Boton, EncabezadoPagina, Seccion } from '@/componentes/Base'
 import { Correo, Pin } from '@/componentes/Iconos'
+import FormularioParticipacion from '@/componentes/FormularioParticipacion'
 import { SITIO } from '@/lib/sitio'
+import { obtenerConfiguracionNavegacion } from '@/lib/configuracion'
 import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Únete',
-  description: 'Información sobre participación en el semillero ISIA. Procedimiento de vinculación y canal de contacto pendientes de confirmación en esta demo.',
+  description: 'Conoce los temas de trabajo de ISIA y manifiesta tu interés en participar en el semillero.',
 }
 
-export default function PaginaUnete() {
+export const revalidate = 300
+
+export default async function PaginaUnete() {
+  const configuracion = await obtenerConfiguracionNavegacion()
   return (
     <>
       <Seccion className={estilos.primeraSeccion}>
@@ -23,21 +28,31 @@ export default function PaginaUnete() {
             <span className={estilos.sobretitulo}>Estudiantes de pregrado</span>
             <h2>Conoce el semillero</h2>
             <p>ISIA es el semillero de investigación en Ingeniería de Sistemas Inteligentes y Autónomos de la Universidad Nacional de Colombia, sede Manizales.</p>
-            <p>Esta demo presenta sus posibles temas de trabajo y ejemplos de proyectos para que puedas explorar tus intereses. Las líneas y los contenidos ilustrativos están pendientes de validación.</p>
+            <p>No exigimos una lista previa de herramientas para acercarte. Nos interesa conocer tu curiosidad técnica, los temas que quieres explorar y tu disposición para aprender mediante proyectos.</p>
+            <p>Entre los temas de interés se encuentran Edge AI, TinyML, visión por computador, procesamiento de lenguaje natural, sistemas embebidos y robótica autónoma.</p>
             <div className={estilos.enlacesParticipacion}>
-              <Boton href="/lineas" variante="sutil">Explorar líneas de investigación</Boton>
-              <Boton href="/proyectos" variante="sutil">Ver los proyectos</Boton>
+              {configuracion.lineas && <Boton href="/lineas" variante="sutil">Explorar líneas de investigación</Boton>}
+              {configuracion.proyectos && <Boton href="/proyectos" variante="sutil">Ver los proyectos</Boton>}
             </div>
           </div>
 
           <aside className={estilos.contacto} aria-labelledby="titulo-contacto">
             <Correo size={28} />
-            <span className={estilos.sobretitulo}>Información de vinculación</span>
-            <h2 id="titulo-contacto">Procedimiento pendiente de confirmar</h2>
-            <p>Las fechas, las condiciones de participación y los pasos para vincularse se compartirán cuando el semillero los confirme.</p>
-            <div className={estilos.estadoContacto}>{SITIO.contactoPendiente}</div>
-            <p className={estilos.nota}>Esta demo no recibe solicitudes ni registra inscripciones.</p>
+            <span className={estilos.sobretitulo}>Contacto institucional</span>
+            <h2 id="titulo-contacto">Conversemos sobre tus intereses</h2>
+            <p>El procedimiento formal de vinculación y las fechas de ingreso siguen pendientes de confirmación. Puedes manifestar tu interés sin que esto constituya una inscripción o admisión.</p>
+            <div className={estilos.estadoContacto}><a href={SITIO.correoHref}>{SITIO.correo}</a></div>
           </aside>
+        </div>
+      </Seccion>
+      <Seccion alterna className={estilos.seccionCompacta}>
+        <div className={estilos.preguntas}>
+          <div>
+            <span className={estilos.sobretitulo}>Manifestación de interés</span>
+            <h2>Cuéntanos qué quieres explorar</h2>
+            <p>El formulario registra tus datos para que el equipo del semillero pueda responder. No completa una inscripción ni garantiza una vinculación.</p>
+          </div>
+          <FormularioParticipacion />
         </div>
       </Seccion>
       <Seccion alterna className={estilos.seccionCompacta}>
@@ -49,16 +64,16 @@ export default function PaginaUnete() {
           <div className={estilos.respuestas}>
             <article>
               <h3>¿Cómo puedo vincularme?</h3>
-              <p>El procedimiento y el canal de contacto aún están pendientes. No hay una convocatoria confirmada publicada en esta demo.</p>
+              <p>Puedes enviar una manifestación de interés o escribir al correo institucional. El procedimiento formal y las fechas todavía deben ser confirmados por el semillero.</p>
             </article>
             <article>
               <h3>¿Cuáles son los requisitos?</h3>
-              <p>Los perfiles, requisitos y compromisos de participación deben ser definidos y confirmados por el semillero.</p>
+              <p>La sección prioriza la curiosidad y los intereses investigativos. Los compromisos de participación y el proceso de vinculación serán informados por el semillero.</p>
             </article>
             <article>
               <h3>¿Dónde y cuándo se reúne ISIA?</h3>
               <p>Los horarios, la modalidad y el espacio de reunión están pendientes de confirmación. Puedes consultar el estado de la agenda en la sección de reuniones.</p>
-              <Boton href="/reuniones" variante="sutil">Consultar reuniones</Boton>
+              {configuracion.reuniones && <Boton href="/reuniones" variante="sutil">Consultar reuniones</Boton>}
             </article>
           </div>
         </div>

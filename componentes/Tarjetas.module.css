@@ -3,11 +3,16 @@
   flex-direction: column;
   height: 100%;
   border-bottom: 1px solid var(--linea);
-  transition: transform 0.22s var(--curva), border-color 0.22s var(--curva);
+  transition:
+    transform 220ms var(--curva),
+    border-color 220ms var(--curva),
+    filter 220ms var(--curva);
 }
-.proyecto:hover {
+.proyecto:hover,
+.proyecto:focus-within {
   transform: translateY(-0.35rem);
   border-color: var(--verde);
+  filter: drop-shadow(0 0.9rem 1.1rem rgb(53 82 47 / 8%));
 }
 .portada {
   display: block;
@@ -17,11 +22,18 @@
   overflow: hidden;
   transition: box-shadow 0.22s var(--curva);
 }
-.proyecto:hover .portada {
+.proyecto:hover .portada,
+.proyecto:focus-within .portada {
   box-shadow: 0 0.8rem 1.8rem rgba(53, 82, 47, 0.16);
 }
 .portadaImagen {
   object-fit: cover;
+  transition: transform 360ms var(--curva), filter 260ms var(--curva);
+}
+.proyecto:hover .portadaImagen,
+.proyecto:focus-within .portadaImagen {
+  transform: scale(1.035);
+  filter: saturate(1.04);
 }
 .portadaVacia {
   width: 100%;
@@ -104,6 +116,13 @@
   font-size: 0.75rem;
   min-height: 32px;
 }
+.pieProyecto > a svg {
+  transition: transform 180ms var(--curva);
+}
+.pieProyecto > a:hover svg,
+.pieProyecto > a:focus-visible svg {
+  transform: translateX(0.25rem);
+}
 .pieProyecto > a:hover {
   text-decoration: underline;
 }
@@ -116,7 +135,8 @@
   border-top: 1px solid var(--linea);
   transition: border-color 0.2s var(--curva), transform 0.2s var(--curva);
 }
-.novedad:hover {
+.novedad:hover,
+.novedad:focus-within {
   border-color: var(--verde);
   transform: translateX(0.25rem);
 }
@@ -177,6 +197,12 @@
   border-top: 1px solid var(--linea);
   padding: 1.7rem 0;
   align-items: flex-start;
+  transition: border-color 200ms var(--curva), transform 200ms var(--curva);
+}
+.integrante:hover,
+.integrante:focus-within {
+  border-color: var(--verde);
+  transform: translateX(0.2rem);
 }
 .retrato {
   width: 64px;
@@ -190,6 +216,11 @@
 }
 .retratoImagen {
   object-fit: cover;
+  transition: transform 320ms var(--curva);
+}
+.integrante:hover .retratoImagen,
+.integrante:focus-within .retratoImagen {
+  transform: scale(1.04);
 }
 .rol {
   color: var(--verde);
@@ -235,12 +266,29 @@
   .proyecto,
   .novedad,
   .portada,
-  .flechaEnlace {
+  .flechaEnlace,
+  .portadaImagen,
+  .integrante,
+  .retratoImagen {
     transition: none;
   }
   .proyecto:hover,
+  .proyecto:focus-within,
   .novedad:hover,
-  .flechaEnlace:hover {
+  .novedad:focus-within,
+  .flechaEnlace:hover,
+  .integrante:hover,
+  .integrante:focus-within,
+  .proyecto:hover .portadaImagen,
+  .proyecto:focus-within .portadaImagen,
+  .integrante:hover .retratoImagen,
+  .integrante:focus-within .retratoImagen,
+  .pieProyecto > a:hover svg,
+  .pieProyecto > a:focus-visible svg {
     transform: none;
+  }
+  .proyecto:hover,
+  .proyecto:focus-within {
+    filter: none;
   }
 }

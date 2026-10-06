@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import { obtenerVisibilidadContenidoIlustrativo } from './configuracion'
 import { supabaseServidorListo } from './supabase/config'
 import { listarFilasContenido } from './supabase/contenido'
 
@@ -30,6 +31,7 @@ export type Novedad = EstadoEditorial & {
   tipo: 'convocatoria' | 'evento' | 'logro' | 'publicacion' | 'divulgacion'
   resumen: string
   imagen?: string
+  imagenAlt?: string
   autor?: string
   cuerpo: string
 }
@@ -54,6 +56,7 @@ export type Proyecto = EstadoEditorial & {
   linea: string
   resumen: string
   portada?: string
+  portadaAlt?: string
   integrantes: string[]
   cuerpo: string
 }
@@ -64,11 +67,12 @@ export type Integrante = EstadoEditorial & {
   rol: 'director' | 'investigador' | 'estudiante' | 'egresado'
   area: string
   foto?: string
+  fotoAlt?: string
   enlaces: { github?: string; linkedin?: string; correo?: string }
   cuerpo: string
 }
 
-export type Publicacion = {
+export type Publicacion = EstadoEditorial & {
   slug: string
   titulo: string
   anio: number
@@ -76,7 +80,6 @@ export type Publicacion = {
   tipo: string
   enlace?: string
   cuerpo: string
-  ilustrativo: false
 }
 
 export type FotoGaleria = {
@@ -239,9 +242,22 @@ export function correoSeguro(valor: unknown): string | undefined {
   return s
 }
 
+/** Registros antiguos sin estado explícito continúan publicados. */
+function contenidoPublicado(datos: Record<string, unknown>): boolean {
+  const estado = texto(datos.estadoEditorial)
+  if (estado === 'Borrador') return false
+  if (estado === 'Programado') {
+    const fecha = fechaISO(datos.publicarEn)
+    return Boolean(fecha && fecha <= hoyColombia())
+  }
+  return true
+}
+
 export async function listarNovedades(limite?: number): Promise<Novedad[]> {
   const novedades: Novedad[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('novedades')) {
+    if (!contenidoPublicado(datos)) continue
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
     if (!titulo || !fecha) {
@@ -249,11 +265,13 @@ export async function listarNovedades(limite?: number): Promise<Novedad[]> {
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     novedades.push({
       slug, titulo, fecha, ilustrativo, cuerpo,
       tipo: unaDeEstas(datos.tipo, ['convocatoria', 'evento', 'logro', 'publicacion', 'divulgacion'] as const, 'divulgacion'),
       resumen: texto(datos.resumen),
       imagen: ilustrativo ? undefined : imagenSegura(datos.imagen),
+      imagenAlt: ilustrativo ? undefined : texto(datos.imagenAlt) || undefined,
       autor: ilustrativo ? undefined : texto(datos.autor) || undefined,
     })
   }
@@ -267,7 +285,9 @@ export async function obtenerNovedad(slug: string): Promise<Novedad | undefined>
 
 export async function listarReuniones(): Promise<Reunion[]> {
   const reuniones: Reunion[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('reuniones')) {
+    if (!contenidoPublicado(datos)) continue
     const titulo = texto(datos.titulo)
     const fecha = fechaISO(datos.fecha)
     if (!titulo || !fecha) {
@@ -275,6 +295,7 @@ export async function listarReuniones(): Promise<Reunion[]> {
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     reuniones.push({
       slug, titulo, fecha, ilustrativo, cuerpo,
       hora: /^([01]\d|2[0-3]):[0-5]\d$/.test(texto(datos.hora)) ? texto(datos.hora) : '',
@@ -315,20 +336,24 @@ function estadoProyecto(valor: unknown): Proyecto['estado'] {
 
 export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
   const proyectos: Proyecto[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   const perfilesConfirmados = new Set((await listarIntegrantes()).filter((i) => !i.ilustrativo).map((i) => i.slug))
   for (const { slug, datos, cuerpo } of await leerFuente('proyectos')) {
+    if (!contenidoPublicado(datos)) continue
     const titulo = texto(datos.titulo)
     if (!titulo) {
       avisar('proyectos', `${slug}.md`, 'falta "titulo"')
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     proyectos.push({
       slug, titulo, ilustrativo, cuerpo,
       estado: estadoProyecto(datos.estado),
       linea: texto(datos.linea),
       resumen: texto(datos.resumen),
       portada: ilustrativo ? undefined : imagenSegura(datos.portada),
+      portadaAlt: ilustrativo ? undefined : texto(datos.portadaAlt) || undefined,
       integrantes: !ilustrativo && Array.isArray(datos.integrantes) ? datos.integrantes.map(texto).filter((s) => perfilesConfirmados.has(s)) : [],
     })
   }
@@ -344,19 +369,23 @@ const ORDEN_ROL = { director: 0, investigador: 1, estudiante: 2, egresado: 3 } a
 
 export async function listarIntegrantes(): Promise<Integrante[]> {
   const integrantes: Integrante[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('integrantes')) {
+    if (!contenidoPublicado(datos)) continue
     const nombre = texto(datos.nombre)
     if (!nombre) {
       avisar('integrantes', `${slug}.md`, 'falta "nombre"')
       continue
     }
     const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     const enlaces = datos.enlaces && typeof datos.enlaces === 'object' ? datos.enlaces as Record<string, unknown> : {}
     integrantes.push({
       slug, nombre, ilustrativo, cuerpo,
       rol: unaDeEstas(datos.rol, ['director', 'investigador', 'estudiante', 'egresado'] as const, 'estudiante'),
       area: texto(datos.area),
       foto: ilustrativo ? undefined : imagenSegura(datos.foto),
+      fotoAlt: ilustrativo ? undefined : texto(datos.fotoAlt) || undefined,
       enlaces: ilustrativo ? {} : {
         github: enlaceSeguro(enlaces.github),
         linkedin: enlaceSeguro(enlaces.linkedin),
@@ -368,11 +397,14 @@ export async function listarIntegrantes(): Promise<Integrante[]> {
   return integrantes
 }
 
-/** No se fabrican referencias bibliográficas: los borradores quedan fuera del listado. */
+/** Los ejemplos se muestran con una marca explícita y nunca activan enlaces ficticios. */
 export async function listarPublicaciones(): Promise<Publicacion[]> {
   const publicaciones: Publicacion[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
   for (const { slug, datos, cuerpo } of await leerFuente('publicaciones')) {
-    if (datos.confirmado !== true) continue
+    if (!contenidoPublicado(datos)) continue
+    const ilustrativo = datos.confirmado !== true
+    if (ilustrativo && !mostrarIlustrativos) continue
     const titulo = texto(datos.titulo)
     const anio = anioValido(datos.anio)
     const autores = Array.isArray(datos.autores) ? datos.autores.map(texto).filter(Boolean) : []
@@ -381,7 +413,16 @@ export async function listarPublicaciones(): Promise<Publicacion[]> {
       avisar('publicaciones', `${slug}.md`, 'faltan título, año válido, autores o tipo de recurso')
       continue
     }
-    publicaciones.push({ slug, titulo, anio, autores, tipo, enlace: enlaceSeguro(datos.enlace), cuerpo, ilustrativo: false })
+    publicaciones.push({
+      slug,
+      titulo,
+      anio,
+      autores,
+      tipo,
+      enlace: ilustrativo ? undefined : enlaceSeguro(datos.enlace),
+      cuerpo,
+      ilustrativo,
+    })
   }
   return publicaciones.sort((a, b) => b.anio - a.anio || a.titulo.localeCompare(b.titulo, 'es'))
 }
@@ -390,6 +431,7 @@ export async function listarPublicaciones(): Promise<Publicacion[]> {
 export async function listarGaleria(): Promise<FotoGaleria[]> {
   const fotos: FotoGaleria[] = []
   for (const { slug, datos } of await leerFuente('galeria')) {
+    if (!contenidoPublicado(datos)) continue
     if (datos.confirmado !== true) continue
     const titulo = texto(datos.titulo)
     const imagen = imagenSegura(datos.imagen)

@@ -36,19 +36,19 @@ export default function FormularioGrupo({ grupo }: { grupo?: GrupoTrabajo }) {
         <p className={estilos.ayuda}>Un nombre confirmado por línea.</p>
       </div>
       <div className={estilos.campo}>
-        <label htmlFor="repositorios">Repositorios</label>
+        <label htmlFor="repositorios">Repositorios (opcional)</label>
         <textarea id="repositorios" name="repositorios" rows={5} defaultValue={grupo ? serializarEnlaces(grupo.repositorios) : ''} placeholder="Nombre | https://github.com/organizacion/repositorio" />
-        <p className={estilos.ayuda}>Un recurso por línea: nombre, barra vertical y URL HTTPS.</p>
+        <p className={estilos.ayuda}>Puedes dejar este campo vacío. Si agregas recursos, usa una línea por elemento: nombre, barra vertical y URL HTTPS.</p>
       </div>
       <div className={estilos.campo}>
-        <label htmlFor="documentos">Documentos</label>
+        <label htmlFor="documentos">Documentos (opcional)</label>
         <textarea id="documentos" name="documentos" rows={5} defaultValue={grupo ? serializarEnlaces(grupo.documentos) : ''} placeholder="Informe | https://dominio.edu.co/documento.pdf" />
+        <p className={estilos.ayuda}>Puedes crear el grupo sin documentos y agregarlos más adelante.</p>
       </div>
       <div className={estilos.campo}>
-        <label htmlFor="imagenPortada">Imagen de portada</label>
+        <label htmlFor="imagenPortada">Imagen de portada (opcional)</label>
         <input id="imagenPortada" name="imagenPortada" type="file" accept="image/jpeg,image/png,image/webp,image/avif" />
-        <input name="imagenPortadaActual" type="hidden" value={grupo?.imagenPortada ?? ''} />
-        {grupo?.imagenPortada && <p className={estilos.archivoActual}>Hay una portada guardada. Selecciona otra para reemplazarla.</p>}
+        {grupo?.imagenPortada ? <p className={estilos.archivoActual}>Hay una portada guardada. Selecciona otra para reemplazarla.</p> : <p className={estilos.ayuda}>Si no cargas una imagen, la página mostrará un estado visual neutro.</p>}
       </div>
       <div className={estilos.campo}>
         <label htmlFor="galeriaExistente">Galería actual</label>

@@ -1,9 +1,14 @@
 import 'server-only'
 import { supabaseServidorListo } from '@/lib/supabase/config'
-import { listarFilasContenido, obtenerFilaContenido } from '@/lib/supabase/contenido'
+import { listarResumenesContenido, obtenerFilaContenido } from '@/lib/supabase/contenido'
 import { usuarioSesion } from '@/lib/sesion'
-import { obtenerUsuarioAutorizado, puedeEditarContenido, puedeGestionarPracticas } from '@/lib/usuarios-autorizados'
-import { ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
+import {
+  obtenerUsuarioAutorizado,
+  puedeEditarContenido,
+  puedeEliminarPracticas,
+  puedeGestionarPracticas,
+} from '@/lib/usuarios-autorizados'
+import { ESTADOS_EDITORIALES, ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
 import { ErrorAcceso } from '@/lib/autorizacion'
 
 export async function requerirEditor() {
@@ -23,6 +28,17 @@ export async function requerirGestionPracticas() {
   const autorizado = await obtenerUsuarioAutorizado(usuario.id)
   if (!puedeGestionarPracticas(autorizado)) {
     throw new ErrorAcceso('Tu cuenta no está autorizada para gestionar prácticas.', 403, 'editor')
+  }
+  return { ...usuario, autorizado }
+}
+
+export async function requerirAdministrador() {
+  if (!supabaseServidorListo()) throw new Error('Supabase no está configurado en este entorno.')
+  const usuario = await usuarioSesion()
+  if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
+  const autorizado = await obtenerUsuarioAutorizado(usuario.id)
+  if (!puedeEliminarPracticas(autorizado)) {
+    throw new ErrorAcceso('Solo una cuenta administradora puede eliminar prácticas.', 403, 'editor')
   }
   return { ...usuario, autorizado }
 }
@@ -51,9 +67,12 @@ function normalizarDatosAdmin(
   coleccion: string,
   datos: Record<string, unknown>,
 ): Record<string, unknown> {
-  if (coleccion !== 'proyectos') return datos
-  if (ESTADOS_PROYECTO.includes(datos.estado as (typeof ESTADOS_PROYECTO)[number])) return datos
-  return { ...datos, estado: 'En formulación' }
+  const normalizados = ESTADOS_EDITORIALES.includes(datos.estadoEditorial as (typeof ESTADOS_EDITORIALES)[number])
+    ? datos
+    : { ...datos, estadoEditorial: 'Publicado' }
+  if (coleccion !== 'proyectos') return normalizados
+  if (ESTADOS_PROYECTO.includes(normalizados.estado as (typeof ESTADOS_PROYECTO)[number])) return normalizados
+  return { ...normalizados, estado: 'En formulación' }
 }
 
 /** Lectura sin filtrar (a diferencia de lib/contenido.ts) para poblar tablas y formularios de edición. */
@@ -61,11 +80,11 @@ export async function listarDocumentos(coleccion: string): Promise<DocumentoAdmi
   await requerirEditor()
   const esquema = esquemaDe(coleccion)
   if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  return (await listarFilasContenido(coleccion))
+  return (await listarResumenesContenido(coleccion))
     .map((fila) => ({
       slug: fila.slug,
       datos: normalizarDatosAdmin(coleccion, fila.datos),
-      cuerpo: fila.cuerpo,
+      cuerpo: '',
     }))
     .sort((a, b) => a.slug.localeCompare(b.slug))
 }
