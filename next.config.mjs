@@ -1,3 +1,13 @@
+// El optimizador de imágenes solo acepta el proyecto Supabase configurado;
+// con un comodín serviría de proxy para cualquier proyecto ajeno.
+function hostSupabase() {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').hostname || '*.supabase.co'
+  } catch {
+    return '*.supabase.co'
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -10,7 +20,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '*.supabase.co',
+        hostname: hostSupabase(),
         pathname: '/storage/v1/object/public/**',
       },
     ],

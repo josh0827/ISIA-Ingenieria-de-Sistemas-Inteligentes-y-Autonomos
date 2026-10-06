@@ -16,6 +16,7 @@ export type EstadoSolicitud = {
 }
 
 const ESTADO_INICIAL: EstadoSolicitud = { ok: false }
+const LIMITE_SOLICITUDES_POR_HORA = 30
 export { ESTADO_INICIAL as ESTADO_INICIAL_SOLICITUD }
 
 function leerSolicitud(formData: FormData): SolicitudParticipacion | undefined {
@@ -63,18 +64,32 @@ export async function enviarSolicitudParticipacion(
 
   const supabase = crearClienteAdmin()
   const desde = new Date(Date.now() - 15 * 60 * 1000).toISOString()
-  const { data: reciente, error: errorConsulta } = await supabase
-    .from('solicitudes_participacion')
-    .select('id')
-    .ilike('correo', solicitud.correo)
-    .gte('creado_en', desde)
-    .limit(1)
+  const haceUnaHora = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+  // El esquema ya normaliza el correo a minúsculas, así que basta una
+  // comparación exacta. Con ilike, un "_" del correo actuaba como comodín.
+  const [{ data: reciente, error: errorConsulta }, { count: ultimaHora, error: errorCupo }] = await Promise.all([
+    supabase
+      .from('solicitudes_participacion')
+      .select('id')
+      .eq('correo', solicitud.correo)
+      .gte('creado_en', desde)
+      .limit(1),
+    // Tope global: un bot que cambie de correo en cada envío no puede llenar
+    // la tabla ni disparar avisos de Resend sin límite.
+    supabase
+      .from('solicitudes_participacion')
+      .select('id', { count: 'exact', head: true })
+      .gte('creado_en', haceUnaHora),
+  ])
 
-  if (errorConsulta) {
+  if (errorConsulta || errorCupo) {
     return { ok: false, error: 'No pudimos comprobar la solicitud. Intenta nuevamente en unos minutos.' }
   }
   if ((reciente ?? []).length > 0) {
     return { ok: false, error: 'Ya recibimos una solicitud reciente con este correo. Espera unos minutos antes de intentar de nuevo.' }
+  }
+  if ((ultimaHora ?? 0) >= LIMITE_SOLICITUDES_POR_HORA) {
+    return { ok: false, error: 'El formulario recibió muchas solicitudes en poco tiempo. Intenta de nuevo en una hora o escribe al correo del semillero.' }
   }
 
   const { data, error } = await supabase

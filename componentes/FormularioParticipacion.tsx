@@ -9,7 +9,11 @@ import {
   esquemaSolicitudParticipacion,
   TEMAS_INTERES,
 } from '@/lib/participacion-esquema'
+import { SITIO } from '@/lib/sitio'
 import estilos from './FormularioParticipacion.module.css'
+
+const POLITICA_DATOS = 'https://legal.unal.edu.co/rlunal/home/doc.jsp?d_i=97992'
+const CORREO_DATOS_UNAL = 'protecdatos_na@unal.edu.co'
 
 export default function FormularioParticipacion() {
   const [estado, accion, enviando] = useActionState(enviarSolicitudParticipacion, ESTADO_INICIAL_SOLICITUD)
@@ -76,10 +80,25 @@ export default function FormularioParticipacion() {
         <p className={estilos.ayuda}>Máximo 1200 caracteres. No incluyas contraseñas ni datos sensibles.</p>
       </div>
 
-      <label className={estilos.consentimiento}>
-        <input type="checkbox" name="consentimiento" required />
-        <span>Autorizo el uso de estos datos únicamente para que el semillero responda esta manifestación de interés. *</span>
-      </label>
+      {/* Aviso de privacidad exigido por la Ley 1581 de 2012: responsable,
+          finalidad, política aplicable y canal para ejercer los derechos. */}
+      <div className={estilos.campo}>
+        <label className={estilos.consentimiento}>
+          <input type="checkbox" name="consentimiento" required />
+          <span>
+            Autorizo a la Universidad Nacional de Colombia, a través del semillero ISIA, a tratar estos
+            datos solo para responder esta manifestación de interés, según su{' '}
+            <a href={POLITICA_DATOS} target="_blank" rel="noopener noreferrer">
+              Política de Tratamiento de Datos Personales
+            </a>{' '}
+            (Resolución 207 de 2021). *
+          </span>
+        </label>
+        <p className={estilos.ayuda}>
+          Puedes conocer, actualizar, rectificar o pedir que se borren tus datos escribiendo
+          a {SITIO.correo} o a {CORREO_DATOS_UNAL}.
+        </p>
+      </div>
 
       <div className={estilos.trampa} aria-hidden="true">
         <label htmlFor="participacion-sitio">Sitio web</label>

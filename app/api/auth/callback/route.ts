@@ -39,9 +39,11 @@ export async function GET(request: Request) {
     dominioCorreo: email?.split('@')[1] ?? 'sin_correo',
   })
 
+  // Solo un correo verificado por el proveedor puede reclamar una fila
+  // preparada por correo; el acceso por UID ya vinculado no depende de esto.
   const resultado = await resolverUsuarioAutorizado({
     id: data.user.id,
-    email,
+    email: data.user.email_confirmed_at ? email : undefined,
   })
 
   if (resultado.error) {

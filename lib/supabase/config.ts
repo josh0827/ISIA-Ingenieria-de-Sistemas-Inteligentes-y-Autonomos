@@ -16,6 +16,15 @@ export function urlSupabase(): string | undefined {
   }
 }
 
+/**
+ * Las imágenes solo se aceptan desde el proyecto Supabase configurado. Sin
+ * variables (desarrollo local y tests) se admite cualquier *.supabase.co.
+ */
+export function esHostSupabasePropio(hostname: string): boolean {
+  const propia = urlSupabase()
+  return propia ? hostname === new URL(propia).hostname : hostname.endsWith('.supabase.co')
+}
+
 export function urlSitio(): string | undefined {
   const valor = process.env.NEXT_PUBLIC_SITE_URL?.trim()
   if (!valor) return undefined

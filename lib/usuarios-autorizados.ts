@@ -109,10 +109,18 @@ export async function resolverUsuarioAutorizado(
   }
 
   const candidato = coincidencias[0]
+  // Solo se vincula una fila preparada que todavía no tiene dueño. Si ya está
+  // ligada a otra cuenta, otro proveedor de acceso con el mismo correo no
+  // puede quedarse con sus permisos.
+  if (candidato.id) {
+    return { vinculadoPorCorreo: false, error: 'email_vinculado_a_otra_cuenta' }
+  }
+
   const { data: vinculado, error: errorVinculacion } = await admin
     .from('usuarios_autorizados')
     .update({ id: identidad.id, email })
     .eq('email', candidato.email)
+    .is('id', null)
     .select(seleccion)
     .single<FilaUsuarioAutorizado>()
 

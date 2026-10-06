@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { esHostSupabasePropio } from '../supabase/config.ts'
 
 export const ESTADOS_PROYECTO = [
   'En formulación',
@@ -23,7 +24,7 @@ export const urlImagenSupabaseSchema = z
       const url = new URL(valor)
       return (
         url.protocol === 'https:' &&
-        url.hostname.endsWith('.supabase.co') &&
+        esHostSupabasePropio(url.hostname) &&
         url.pathname.startsWith('/storage/v1/object/public/imagenes/')
       )
     } catch {
