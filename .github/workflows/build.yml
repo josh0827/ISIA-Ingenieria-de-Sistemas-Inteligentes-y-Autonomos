@@ -29,4 +29,7 @@ jobs:
       # package-lock.json, sin actualizar nada por su cuenta.
       - run: npm ci
 
+      # Los tests no necesitan Supabase: validan esquemas, roles e imágenes.
+      - run: npm test
+
       - run: npm run build

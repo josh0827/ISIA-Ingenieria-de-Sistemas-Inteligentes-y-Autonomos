@@ -2,6 +2,7 @@ import 'server-only'
 
 import { randomUUID } from 'node:crypto'
 import path from 'node:path'
+import { esHostSupabasePropio } from '@/lib/supabase/config'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import {
   bufferImagenValidada,
@@ -52,7 +53,7 @@ function rutaObjetoDesdeUrl(urlImagen: string): string | undefined {
   try {
     const url = new URL(urlImagen)
     const prefijo = '/storage/v1/object/public/imagenes/'
-    if (url.protocol !== 'https:' || !url.hostname.endsWith('.supabase.co') || !url.pathname.startsWith(prefijo)) return undefined
+    if (url.protocol !== 'https:' || !esHostSupabasePropio(url.hostname) || !url.pathname.startsWith(prefijo)) return undefined
     const ruta = decodeURIComponent(url.pathname.slice(prefijo.length))
     if (!ruta || ruta.includes('..') || ruta.startsWith('/')) return undefined
     return ruta

@@ -147,22 +147,22 @@ Además de editar los archivos Markdown, el sitio incluye un panel protegido en 
 
 - El contenido se guarda en la tabla **`contenido` de PostgreSQL**. Cada fila se identifica mediante `coleccion` y `slug`, y conserva los datos editables en JSONB.
 - Si Supabase no está configurado o no responde, el sitio público sigue leyendo `contenido/*.md`; `/admin` muestra un aviso de configuración pendiente.
-- Iniciar sesión con Google no basta para editar: el UUID de Supabase Auth debe estar activo en la tabla `editores`. Esta tabla se administra desde Supabase Dashboard, fuera del sitio.
-- Las páginas que muestran contenido (`/`, `/proyectos`, `/novedades`, `/lineas`, `/integrantes`, `/publicaciones`, `/galeria`, `/reuniones` y sus fichas) se renderizan de forma dinámica (`export const dynamic = 'force-dynamic'`) para que lo publicado desde `/admin` aparezca de inmediato, sin necesidad de un nuevo despliegue.
+- Iniciar sesión con Google no basta para editar: la cuenta necesita una fila activa en la tabla `usuarios_autorizados` con rol `admin` o `editor` (el rol `empresa` solo gestiona prácticas). Esta tabla se administra desde Supabase Dashboard, fuera del sitio; los permisos de cada rol están en [MANUAL_ADMIN.md](MANUAL_ADMIN.md).
+- Las páginas públicas se regeneran como máximo cada 5 minutos (`revalidate = 300`), y cada guardado en `/admin` las revalida al momento con `revalidatePath`. Lo publicado aparece sin un nuevo despliegue.
 
 ### Puesta en marcha (una sola vez por entorno)
 
 1. Crea un proyecto en [Supabase](https://supabase.com/dashboard).
-2. Ejecuta en orden los archivos de `supabase/migrations/` desde SQL Editor o con Supabase CLI. Crean las tablas, activan RLS, preparan el bucket `imagenes` y normalizan la clave `editores.id`.
+2. Ejecuta en orden los archivos de `supabase/migrations/` desde SQL Editor o con Supabase CLI. Crean las tablas (entre ellas `usuarios_autorizados`, las solicitudes de participación y la auditoría), activan RLS y preparan el bucket `imagenes`.
 3. En **Authentication → Providers**, habilita Google. Crea un cliente OAuth de tipo web en Google Cloud, registra el callback de Supabase y configura en Supabase las URLs autorizadas del sitio, incluida `/api/auth/callback`.
 4. Copia [.env.local.example](.env.local.example) a `.env.local` y completa la URL, la clave publishable (`sb_publishable_...`) y la secret (`sb_secret_...`). `.env.local` está excluido por `.gitignore`; nunca lo subas.
-5. Inicia sesión una vez para crear el usuario. Luego copia su UUID desde **Authentication → Users** e insértalo en `public.editores` con `activo = true`.
+5. Añade el correo de cada persona en `public.usuarios_autorizados` con su `rol` (`admin`, `editor` o `empresa`) y `activo = true`. En su primer inicio de sesión con Google, la cuenta se vincula sola a esa fila.
 6. En la fila `configuracion/navegacion`, el mapa `secciones` controla qué enlaces aparecen en el menú público. También puede editarse desde **Panel Admin → Navegación pública**.
 7. (Opcional) Si quieres partir del contenido Markdown existente en vez de capturarlo de nuevo, ejecuta una sola vez:
    ```bash
    npm run migrar-contenido
    ```
-   Esto importa `contenido/**/*.md` a PostgreSQL. Vuelve a ejecutarlo si cambias los Markdown y quieres reflejarlos otra vez; la operación actualiza por colección y slug.
+   Esto importa `contenido/**/*.md` a PostgreSQL. La operación actualiza por colección y slug, así que **sobrescribe lo que se haya editado desde `/admin`** en los elementos con el mismo slug. Con el panel en uso, la fuente es PostgreSQL y los Markdown quedan como respaldo.
 8. Reinicia `npm run dev` (o el despliegue) para cargar las variables. Entra a `/admin/iniciar-sesion`.
 
 Los campos de imagen usan `lib/storage/upload.ts` y el bucket público `imagenes`. Para conservar una imagen al editar, deja el selector vacío. No expongas `SUPABASE_SECRET_KEY` al navegador.

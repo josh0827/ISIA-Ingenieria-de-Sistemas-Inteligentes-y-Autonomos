@@ -73,6 +73,22 @@
   font-size: 0.78rem;
 }
 
+/* Aviso de privacidad: el texto de ayuda se alinea con el de la casilla. */
+.aviso {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.aviso .ayuda {
+  padding-left: 1.875rem;
+}
+
+.consentimiento a {
+  color: var(--verde-oscuro);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .enviar {
   justify-self: start;
   min-height: 46px;

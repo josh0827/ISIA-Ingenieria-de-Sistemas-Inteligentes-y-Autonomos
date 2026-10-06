@@ -266,11 +266,18 @@ export async function eliminarDocumento(
       codigo: error instanceof ErrorAcceso ? error.codigo : undefined,
     }
   }
+  // Se devuelve el error en vez de lanzarlo: en producción Next.js oculta el
+  // mensaje de un error lanzado y el panel solo mostraría un fallo genérico.
   const esquema = esquemaDe(coleccion)
-  if (!esquema) throw new Error('Tipo de contenido desconocido.')
-  const existente = await obtenerFilaContenido(coleccion, slug)
-  await eliminarFilaContenido(coleccion, slug)
-  if (existente) await Promise.all(imagenesDelDocumento(esquema, existente.datos).map(eliminarImagen))
+  if (!esquema) return { ok: false, error: 'Tipo de contenido desconocido.' }
+  try {
+    const existente = await obtenerFilaContenido(coleccion, slug)
+    if (!existente) return { ok: false, error: 'El elemento ya no existe. Recarga la página.' }
+    await eliminarFilaContenido(coleccion, slug)
+    await Promise.all(imagenesDelDocumento(esquema, existente.datos).map(eliminarImagen))
+  } catch {
+    return { ok: false, error: 'No se pudo eliminar el elemento. Intenta nuevamente.' }
+  }
   await registrarAuditoria({
     usuarioId: usuario.id,
     usuarioEmail: usuario.correo,
