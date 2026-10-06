@@ -82,7 +82,7 @@ export default function FormularioParticipacion() {
 
       {/* Aviso de privacidad exigido por la Ley 1581 de 2012: responsable,
           finalidad, política aplicable y canal para ejercer los derechos. */}
-      <div className={estilos.campo}>
+      <div className={estilos.aviso}>
         <label className={estilos.consentimiento}>
           <input type="checkbox" name="consentimiento" required />
           <span>
