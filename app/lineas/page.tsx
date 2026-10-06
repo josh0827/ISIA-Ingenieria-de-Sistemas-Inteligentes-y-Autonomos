@@ -10,7 +10,7 @@ import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Líneas de investigación',
-  description: 'Explora las seis líneas de referencia de la demo del semillero ISIA. Contenido provisional pendiente de validación.',
+  description: 'Explora las seis líneas de referencia del semillero ISIA. Contenido provisional pendiente de validación.',
 }
 
 const ICONOS = { ojo: Ojo, brujula: Brujula, antena: Antena, red: Red, brazo: Brazo, onda: Onda }
@@ -31,7 +31,7 @@ export default async function PaginaLineas() {
           descripcion="Una mirada a los sistemas que perciben su entorno, procesan información y actúan sobre el mundo físico."
         />
         <AvisoDemo>
-          Estas seis líneas son una referencia ilustrativa para la demo. Su denominación y alcance están pendientes de validación por el semillero.
+          Estas seis líneas son una referencia provisional. Su denominación y alcance están pendientes de validación por el semillero.
         </AvisoDemo>
         <div className={estilos.lineas}>
           {LINEAS.map((linea, indice) => {

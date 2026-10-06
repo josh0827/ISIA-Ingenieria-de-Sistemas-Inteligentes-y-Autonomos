@@ -7,7 +7,7 @@ import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Publicaciones y recursos',
-  description: 'Espacio de publicaciones y recursos académicos de ISIA. Demo con contenido pendiente de validación.',
+  description: 'Espacio de publicaciones y recursos académicos del semillero ISIA.',
 }
 
 export const revalidate = 300
@@ -33,7 +33,7 @@ export default async function PaginaPublicaciones() {
         <>
           <EstadoVacio
             titulo="Publicaciones pendientes de validación"
-            descripcion="Esta demo aún no incluye publicaciones ni recursos académicos confirmados. Aquí podrás consultar su título, autoría, año y enlace cuando estén disponibles."
+            descripcion="Aún no hay publicaciones ni recursos académicos confirmados. Aquí podrás consultar su título, autoría, año y enlace cuando estén disponibles."
           >
             {proyectosVisibles && <Boton href="/proyectos" variante="sutil">Explorar proyectos ilustrativos</Boton>}
           </EstadoVacio>
@@ -57,7 +57,7 @@ export default async function PaginaPublicaciones() {
                     <p className={estilos.autores}>{publicacion.autores.join(' · ')}</p>
                     {publicacion.ilustrativo && (
                       <AvisoDemo>
-                        Recurso de demostración. La referencia, la autoría y el año están pendientes de validación.
+                        Recurso ilustrativo. La referencia, la autoría y el año están pendientes de validación.
                       </AvisoDemo>
                     )}
                     {publicacion.html && <div className="prosa" dangerouslySetInnerHTML={{ __html: publicacion.html }} />}

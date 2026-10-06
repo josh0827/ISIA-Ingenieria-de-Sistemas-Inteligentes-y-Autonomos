@@ -7,7 +7,7 @@ import estilos from '../secundarias.module.css'
 
 export const metadata: Metadata = {
   title: 'Reuniones',
-  description: 'Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas. Demo sin reuniones ficticias anunciadas como actividades reales.',
+  description: 'Consulta el estado de la agenda del semillero ISIA y un archivo de sesiones ilustrativas, sin reuniones de ejemplo anunciadas como actividades reales.',
 }
 
 export const revalidate = 300
@@ -95,12 +95,12 @@ export default async function PaginaReuniones() {
       <section className={estilos.archivo} aria-labelledby="historial">
         <div className={estilos.cabeceraAgenda}><h2 id="historial">Últimas reuniones finalizadas</h2></div>
         {historial.length > 0 ? historial.map((reunion) => <FichaReunion key={reunion.slug} reunion={reunion} finalizada />) : (
-          <p className={estilos.introduccionArchivo}>Aún no hay un historial de encuentros confirmados disponible en esta demo.</p>
+          <p className={estilos.introduccionArchivo}>Aún no hay un historial de encuentros confirmados.</p>
         )}
       </section>
       {ejemplos.length > 0 && (
         <section className={estilos.archivo} aria-labelledby="archivo-ilustrativo">
-          <span className={estilos.sobretitulo}>Contenido de demostración</span>
+          <span className={estilos.sobretitulo}>Contenido ilustrativo</span>
           <div className={estilos.cabeceraAgenda}><h2 id="archivo-ilustrativo">Archivo ilustrativo</h2></div>
           <p className={estilos.introduccionArchivo}>Estas fichas muestran cómo se podrá consultar una sesión. Los temas, las fechas y los demás datos son ejemplos; no documentan reuniones realizadas ni anuncian actividades programadas.</p>
           {ejemplos.map((reunion) => <FichaReunion key={reunion.slug} reunion={reunion} />)}

@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: n.ilustrativo ? 'Nota académica ilustrativa' : n.titulo,
     description: n.ilustrativo
-      ? 'Nota de demostración de la sección de novedades de ISIA. Su contenido y fecha son ilustrativos y no anuncian una actividad vigente.'
+      ? 'Nota ilustrativa de la sección de novedades de ISIA. Su contenido y fecha son de ejemplo y no anuncian una actividad vigente.'
       : n.resumen,
   }
 }

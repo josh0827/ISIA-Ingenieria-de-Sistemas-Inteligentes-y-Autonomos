@@ -275,7 +275,7 @@ export function EncabezadoPagina({
 export function AvisoDemo({ children }: { children?: ReactNode }) {
   return (
     <aside className={estilos.aviso}>
-      <span className={estilos.avisoEtiqueta}>DEMO</span>
+      <span className={estilos.avisoEtiqueta}>Provisional</span>
       <p>
         {children ??
           'Contenido ilustrativo pendiente de validación por el semillero.'}
