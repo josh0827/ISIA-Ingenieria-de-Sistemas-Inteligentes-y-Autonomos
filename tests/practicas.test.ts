@@ -4,6 +4,7 @@ import { practicaOfertaSchema } from '../lib/validators/practicas.ts'
 
 const ofertaValida = {
   titulo: 'Práctica en sistemas embebidos',
+  tipo: 'práctica',
   empresaNombre: 'Organización autorizada',
   ubicacion: 'Manizales, Caldas',
   modalidad: 'Híbrida',
@@ -11,6 +12,9 @@ const ofertaValida = {
   requisitos: ['Interés por sistemas embebidos'],
   contactoEmail: 'contacto@empresa.co',
   urlPostulacion: 'https://empresa.co/practicas',
+  estado: 'abierta',
+  fechaCierre: '2026-12-15',
+  contactoPublico: false,
   activa: true,
 }
 
@@ -20,6 +24,7 @@ test('acepta una oferta de práctica con modalidad y postulación HTTPS', () => 
 
 test('rechaza una modalidad, correo o URL de postulación inválidos', () => {
   assert.equal(practicaOfertaSchema.safeParse({ ...ofertaValida, modalidad: 'Mixta' }).success, false)
+  assert.equal(practicaOfertaSchema.safeParse({ ...ofertaValida, tipo: 'consultoría' }).success, false)
   assert.equal(practicaOfertaSchema.safeParse({ ...ofertaValida, contactoEmail: 'correo-invalido' }).success, false)
   assert.equal(practicaOfertaSchema.safeParse({ ...ofertaValida, urlPostulacion: 'http://empresa.co/practicas' }).success, false)
 })

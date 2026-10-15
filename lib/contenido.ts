@@ -14,6 +14,8 @@ const PUBLICO = path.join(process.cwd(), 'public')
 /** Nombres editoriales compartidos por PostgreSQL y las carpetas Markdown. */
 export const COLECCIONES = [
   'proyectos',
+  'ideas',
+  'servicios',
   'novedades',
   'reuniones',
   'integrantes',
@@ -59,6 +61,36 @@ export type Proyecto = EstadoEditorial & {
   portada?: string
   portadaAlt?: string
   integrantes: string[]
+  cuerpo: string
+}
+
+export type IdeaReto = EstadoEditorial & {
+  slug: string
+  titulo: string
+  resumen: string
+  problema: string
+  solucion: string
+  proceso: string
+  area: string
+  estado: 'Abierta' | 'En evaluación' | 'En desarrollo' | 'Archivada'
+  madurez: 'Idea' | 'Concepto' | 'Prototipo'
+  autor: string
+  necesidades: string[]
+  portada?: string
+  portadaAlt?: string
+  cuerpo: string
+}
+
+export type ServicioPrototipado = EstadoEditorial & {
+  slug: string
+  titulo: string
+  resumen: string
+  areas: string[]
+  responsable?: string
+  condiciones: string
+  activo: boolean
+  portada?: string
+  portadaAlt?: string
   cuerpo: string
 }
 
@@ -187,8 +219,8 @@ export function enlaceSeguro(valor: unknown): string | undefined {
     if (ruta.includes('..') || ruta.includes('%')) return undefined
     const segmentos = ruta.split('/').filter(Boolean)
     if (segmentos.length === 0) return s
-    if (segmentos.length === 1 && ['lineas', 'proyectos', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'grupos', 'practicas', 'unete'].includes(segmentos[0])) return s
-    if (segmentos.length === 2 && ['proyectos', 'novedades', 'grupos'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
+    if (segmentos.length === 1 && ['semillero', 'lineas', 'proyectos', 'ideas', 'prototipado', 'oportunidades', 'comunidad', 'actividades', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'grupos', 'practicas', 'unete'].includes(segmentos[0])) return s
+    if (segmentos.length === 2 && ['proyectos', 'ideas', 'prototipado', 'novedades', 'grupos'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
     if (/^\/recursos\/[a-zA-Z0-9/_-]+\.pdf$/i.test(ruta)) {
       const archivo = path.resolve(PUBLICO, `.${ruta}`)
       if (archivo.startsWith(`${PUBLICO}${path.sep}`) && fs.existsSync(archivo) && fs.statSync(archivo).isFile()) return s
@@ -367,6 +399,85 @@ export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
 
 export async function obtenerProyecto(slug: string): Promise<Proyecto | undefined> {
   return (await listarProyectos()).find((p) => p.slug === slug)
+}
+
+export async function listarIdeas(): Promise<IdeaReto[]> {
+  const ideas: IdeaReto[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
+  for (const { slug, datos, cuerpo } of await leerFuente('ideas')) {
+    if (!contenidoPublicado(datos)) continue
+    const titulo = texto(datos.titulo)
+    const resumen = texto(datos.resumen)
+    const problema = texto(datos.problema)
+    const ilustrativo = datos.confirmado !== true
+    if (!titulo || !resumen || !problema || (ilustrativo && !mostrarIlustrativos)) continue
+    const estadoCrudo = texto(datos.estado).toLocaleLowerCase('es')
+    const estado: IdeaReto['estado'] = estadoCrudo === 'en evaluación'
+      ? 'En evaluación'
+      : estadoCrudo === 'en desarrollo'
+        ? 'En desarrollo'
+        : estadoCrudo === 'archivada'
+          ? 'Archivada'
+          : 'Abierta'
+    const madurezCruda = texto(datos.madurez).toLocaleLowerCase('es')
+    const madurez: IdeaReto['madurez'] = madurezCruda === 'concepto'
+      ? 'Concepto'
+      : madurezCruda === 'prototipo'
+        ? 'Prototipo'
+        : 'Idea'
+    ideas.push({
+      slug,
+      titulo,
+      resumen,
+      problema,
+      solucion: texto(datos.solucion),
+      proceso: texto(datos.proceso),
+      area: texto(datos.area) || 'Área por definir',
+      estado,
+      madurez,
+      autor: texto(datos.autor) || 'Equipo por confirmar',
+      necesidades: Array.isArray(datos.necesidades) ? datos.necesidades.map(texto).filter(Boolean) : [],
+      portada: ilustrativo ? undefined : imagenSegura(datos.portada),
+      portadaAlt: ilustrativo ? undefined : texto(datos.portadaAlt) || undefined,
+      cuerpo,
+      ilustrativo,
+    })
+  }
+  return ideas.sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'))
+}
+
+export async function obtenerIdea(slug: string): Promise<IdeaReto | undefined> {
+  return (await listarIdeas()).find((idea) => idea.slug === slug)
+}
+
+export async function listarServicios(): Promise<ServicioPrototipado[]> {
+  const servicios: ServicioPrototipado[] = []
+  const mostrarIlustrativos = await obtenerVisibilidadContenidoIlustrativo()
+  for (const { slug, datos, cuerpo } of await leerFuente('servicios')) {
+    if (!contenidoPublicado(datos)) continue
+    const titulo = texto(datos.titulo)
+    const resumen = texto(datos.resumen)
+    const ilustrativo = datos.confirmado !== true
+    if (!titulo || !resumen || datos.activo === false || (ilustrativo && !mostrarIlustrativos)) continue
+    servicios.push({
+      slug,
+      titulo,
+      resumen,
+      areas: Array.isArray(datos.areas) ? datos.areas.map(texto).filter(Boolean) : [],
+      responsable: texto(datos.responsable) || undefined,
+      condiciones: texto(datos.condiciones),
+      activo: true,
+      portada: ilustrativo ? undefined : imagenSegura(datos.portada),
+      portadaAlt: ilustrativo ? undefined : texto(datos.portadaAlt) || undefined,
+      cuerpo,
+      ilustrativo,
+    })
+  }
+  return servicios.sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'))
+}
+
+export async function obtenerServicio(slug: string): Promise<ServicioPrototipado | undefined> {
+  return (await listarServicios()).find((servicio) => servicio.slug === slug)
 }
 
 const ORDEN_ROL = { director: 0, investigador: 1, estudiante: 2, egresado: 3 } as const

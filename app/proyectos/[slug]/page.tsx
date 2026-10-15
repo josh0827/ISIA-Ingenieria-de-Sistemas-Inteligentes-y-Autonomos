@@ -10,7 +10,9 @@ import {
 } from '@/lib/contenido'
 import { seccionVisible } from '@/lib/configuracion'
 import { LINEAS } from '@/lib/sitio'
+import FormularioColaboracion from '@/componentes/FormularioColaboracion'
 import estilos from '../../detalle.module.css'
+import red from '../../networking.module.css'
 type Props = { params: Promise<{ slug: string }> }
 export const revalidate = 300
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -97,6 +99,17 @@ export default async function PaginaProyecto({ params }: Props) {
           </div>
         )}
         <div className="prosa" dangerouslySetInnerHTML={{ __html: cuerpo }} />
+        <section className={red.formularioCaja}>
+          <h2>Apoyar o colaborar con este proyecto</h2>
+          {proyecto.ilustrativo ? (
+            <p>El contacto se habilitará cuando la ficha y su equipo sean validados por el semillero.</p>
+          ) : (
+            <>
+              <p>Indica cómo te gustaría participar. La solicitud llega a la bandeja privada del semillero y no publica tu correo.</p>
+              <FormularioColaboracion tipo="proyecto" slug={proyecto.slug} />
+            </>
+          )}
+        </section>
         <footer className={estilos.pieArticulo}>
           <Boton href="/proyectos" variante="sutil">
             Volver a proyectos

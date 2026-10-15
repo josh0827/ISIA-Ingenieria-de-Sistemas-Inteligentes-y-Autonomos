@@ -50,8 +50,15 @@ export async function seccionVisible(clave: ClaveSeccion): Promise<boolean> {
 
 export async function navegacionVisible(): Promise<ItemNavegacion[]> {
   const configuracion = await obtenerConfiguracionNavegacion()
+  const grupos: Record<string, ClaveSeccion[]> = {
+    '/semillero': ['lineas', 'grupos', 'publicaciones'],
+    '/proyectos': ['proyectos'],
+    '/oportunidades': ['practicas'],
+    '/comunidad': ['integrantes', 'grupos'],
+    '/actividades': ['novedades', 'reuniones', 'galeria'],
+  }
   return NAVEGACION.filter((item) => {
-    const clave = claveDesdeHref(item.href)
-    return !clave || configuracion[clave]
+    const claves = grupos[item.href]
+    return !claves || claves.some((clave) => configuracion[clave])
   })
 }

@@ -160,3 +160,16 @@ Completar una ficha por oportunidad vigente:
 - [ ] Adjuntar créditos, licencias y autorizaciones.
 - [ ] Evitar enviar contraseñas, claves de API o datos personales que no se publicarán.
 - [ ] Registrar nombre de quien entrega, nombre de quien aprueba y fecha de aprobación.
+# Información para networking, ideas y prototipado
+
+Para completar las nuevas secciones, el semillero debe entregar o validar:
+
+- Objetivo de networking y personas responsables de revisar la bandeja.
+- Ideas o retos: título, problema, solución propuesta, área, madurez, equipo visible, apoyo requerido e imagen autorizada.
+- Proyectos: responsable de contacto interno y tipos de colaboración que puede recibir.
+- Capacidades de prototipado: nombre, resumen, áreas, equipo responsable, alcance, recursos disponibles y condiciones.
+- Criterios para aceptar, priorizar o rechazar un reto externo.
+- Lineamientos sobre confidencialidad, propiedad intelectual y uso de resultados.
+- Oportunidades: organización, título, modalidad, ubicación, descripción, fecha de cierre, canal de postulación y autorización para conservar contacto histórico.
+- Política de conservación y eliminación de solicitudes recibidas.
+- Personas que tendrán rol `admin`, `editor` o `empresa`.

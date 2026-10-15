@@ -15,10 +15,11 @@ export async function requerirEditor() {
   if (!supabaseServidorListo()) throw new Error('Supabase no está configurado en este entorno.')
   const usuario = await usuarioSesion()
   if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
-  if (!puedeEditarContenido(await obtenerUsuarioAutorizado(usuario.id))) {
+  const autorizado = await obtenerUsuarioAutorizado(usuario.id)
+  if (!puedeEditarContenido(autorizado)) {
     throw new ErrorAcceso('Tu cuenta no está autorizada para editar contenido.', 403, 'editor')
   }
-  return usuario
+  return { ...usuario, autorizado }
 }
 
 export async function requerirGestionPracticas() {
