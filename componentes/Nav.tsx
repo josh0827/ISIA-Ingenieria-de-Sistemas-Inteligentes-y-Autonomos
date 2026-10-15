@@ -8,6 +8,14 @@ import { Menu, Cerrar } from './Iconos'
 import MarcaIsia from './MarcaIsia'
 import estilos from './Nav.module.css'
 
+const RUTAS_AGRUPADAS: Record<string, string[]> = {
+  '/semillero': ['/semillero', '/lineas', '/grupos', '/publicaciones'],
+  '/proyectos': ['/proyectos', '/ideas', '/prototipado'],
+  '/oportunidades': ['/oportunidades', '/practicas'],
+  '/comunidad': ['/comunidad', '/integrantes'],
+  '/actividades': ['/actividades', '/novedades', '/reuniones', '/galeria'],
+}
+
 export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) {
   const ruta = usePathname()
   const [rutaAbierta, setRutaAbierta] = useState<string | null>(null)
@@ -20,8 +28,10 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
   const navegacionRef = useRef<HTMLElement>(null)
   const abierto = rutaAbierta === ruta
   const esAdmin = ruta.startsWith('/admin')
-  const activa = (href: string) =>
-    ruta === href || (href !== '/' && ruta.startsWith(href + '/'))
+  const activa = (href: string) => {
+    const rutas = RUTAS_AGRUPADAS[href] ?? [href]
+    return rutas.some((base) => ruta === base || (base !== '/' && ruta.startsWith(base + '/')))
+  }
   const items = useMemo(() => [
     { href: '/', texto: 'Inicio' },
     ...navegacion.filter((item) => item.href !== '/' && item.href !== '/unete'),
@@ -107,7 +117,7 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
           </span>
         </Link>
         <Link href="/unete" className={estilos.cta} aria-current={activa('/unete') ? 'page' : undefined}>
-          Quiero participar <span aria-hidden>↗</span>
+          Participar <span aria-hidden>↗</span>
         </Link>
         <button
           ref={boton}
@@ -148,7 +158,7 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
         aria-hidden={!abierto}
         aria-label="Navegación móvil"
       >
-        {[...items, { href: '/unete', texto: 'Quiero participar' }].map((item) => (
+        {[...items, { href: '/unete', texto: 'Participar' }].map((item) => (
           <Link
             key={item.href}
             href={item.href}

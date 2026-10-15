@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { COLECCIONES } from '@/lib/contenido'
-import { ESQUEMAS } from '@/lib/admin/esquemas'
 import estilos from '../../admin.module.css'
 
 export const metadata: Metadata = { title: 'Panel' }
@@ -17,35 +15,26 @@ export default function PanelAdmin() {
         </div>
       </div>
       <div className={estilos.tarjetas}>
-        <Link href="/admin/configuracion" className={estilos.tarjeta}>
-          <h2>Configuración</h2>
-          <p>Mostrar u ocultar secciones de la navegación pública.</p>
-        </Link>
-        <Link href="/admin/grupos" className={estilos.tarjeta}>
-          <h2>Grupos de trabajo</h2>
-          <p>Integrantes, repositorios, documentos e imágenes de los equipos.</p>
+        <Link href="/admin/proyectos" className={estilos.tarjeta}>
+          <h2>Contenido</h2>
+          <p>Proyectos, ideas, novedades, agenda, publicaciones y multimedia.</p>
         </Link>
         <Link href="/admin/practicas" className={estilos.tarjeta}>
-          <h2>Prácticas e iniciativas</h2>
-          <p>Consulta y administra las ofertas publicadas por organizaciones autorizadas.</p>
+          <h2>Oportunidades</h2>
+          <p>Prácticas activas, cerradas y archivadas de organizaciones autorizadas.</p>
         </Link>
-        <Link href="/admin/solicitudes" className={estilos.tarjeta}>
-          <h2>Solicitudes de participación</h2>
-          <p>Consulta y gestiona las manifestaciones de interés enviadas desde Únete.</p>
+        <Link href="/admin/grupos" className={estilos.tarjeta}>
+          <h2>Comunidad</h2>
+          <p>Integrantes y grupos de trabajo que sostienen la red del semillero.</p>
         </Link>
-        <Link href="/admin/multimedia" className={estilos.tarjeta}>
-          <h2>Biblioteca multimedia</h2>
-          <p>Consulta las imágenes almacenadas, sus referencias y archivos sin uso.</p>
+        <Link href="/admin/servicios" className={estilos.tarjeta}>
+          <h2>Prototipado</h2>
+          <p>Capacidades publicadas para evaluar retos y pruebas de concepto.</p>
         </Link>
-        {COLECCIONES.map((coleccion) => {
-          const esquema = ESQUEMAS[coleccion]
-          return (
-            <Link key={coleccion} href={`/admin/${coleccion}`} className={estilos.tarjeta}>
-              <h2>{esquema.etiqueta}</h2>
-              <p>{esquema.descripcion}</p>
-            </Link>
-          )
-        })}
+        <Link href="/admin/configuracion" className={estilos.tarjeta}>
+          <h2>Administración</h2>
+          <p>Configuración, auditoría y respaldo del portal.</p>
+        </Link>
       </div>
     </>
   )

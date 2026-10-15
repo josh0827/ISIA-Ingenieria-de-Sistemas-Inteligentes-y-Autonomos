@@ -16,12 +16,12 @@ Tener una cuenta no concede permisos por sí solo. El usuario debe existir en `u
 | --- | :---: | :---: | :---: |
 | Acceder al panel general | Sí | Sí | No |
 | Configurar secciones públicas | Sí | Sí | No |
-| Gestionar proyectos, novedades, reuniones, integrantes, publicaciones y galería | Sí | Sí | No |
+| Gestionar proyectos, ideas, prototipado, novedades, reuniones, integrantes, publicaciones y galería | Sí | Sí | No |
 | Gestionar grupos de trabajo | Sí | Sí | No |
 | Ver todas las prácticas | Sí | Sí | No |
 | Crear, editar y activar prácticas | Sí | Sí | Solo las propias |
 | Eliminar definitivamente una práctica | Sí | No | No |
-| Consultar y responder solicitudes de participación | Sí | Sí | No |
+| Consultar la bandeja de participación, colaboración y prototipado | Sí | Sí | No |
 | Eliminar datos de una solicitud | Sí | No | No |
 | Consultar la biblioteca multimedia | Sí | Sí | No |
 | Eliminar archivos multimedia sin uso | Sí | No | No |
@@ -54,7 +54,7 @@ La versión mínima actual no mantiene una conexión en tiempo real con pestaña
 
 ## 5. Flujo editorial general
 
-Las colecciones **Proyectos**, **Novedades**, **Reuniones**, **Integrantes**, **Publicaciones** y **Galería** comparten este flujo:
+Las colecciones **Proyectos**, **Ideas y retos**, **Prototipado y colaboración**, **Novedades**, **Reuniones**, **Integrantes**, **Publicaciones** y **Galería** comparten este flujo:
 
 1. Abre la colección desde el menú lateral.
 2. Selecciona **Añadir**.
@@ -76,6 +76,18 @@ Los ejemplos pueden conservarse durante el desarrollo y ocultarse juntos desde *
 Campos principales: título, estado, línea, resumen, integrantes, descripción e imagen. Los estados válidos son **En formulación**, **Fase inicial** y **Prototipado**.
 
 Los integrantes se relacionan mediante sus slugs. Verifica que los perfiles existan y estén confirmados antes de presentar un equipo como real.
+
+Cada proyecto confirmado muestra un formulario **Apoyar o colaborar**. La persona propietaria no publica su correo: el mensaje entra en **Administración > Bandeja de entrada**.
+
+## 6.1. Ideas y retos
+
+Una idea necesita problema, solución propuesta, área, madurez, estado y apoyo requerido. Los registros se muestran como fichas visuales con búsqueda y filtro por área.
+
+Cuando una idea haya sido aprobada, abre su editor y selecciona **Convertir en proyecto**. El panel crea un proyecto en estado **En formulación** y como **Borrador**, conserva la idea en estado **En desarrollo** y dirige al nuevo proyecto para completar equipo, línea e imagen.
+
+## 6.2. Prototipado y colaboración
+
+Admin y editor pueden publicar capacidades, áreas relacionadas, equipo responsable y condiciones. La página pública permite proponer un reto general o asociado a una capacidad confirmada. El envío inicia una evaluación: no constituye contrato ni garantiza ejecución.
 
 ## 7. Novedades
 
@@ -116,7 +128,16 @@ Los roles `admin` y `editor` conservan el menú completo al entrar a Prácticas.
 - **Editor:** crea, edita, activa y desactiva; no puede eliminar.
 - **Empresa:** crea, edita, activa y desactiva únicamente sus propias ofertas; no puede eliminar.
 
-Eliminar es permanente. Cuando una oferta solo ha dejado de estar vigente, utiliza **Desactivar**.
+Cada oferta tiene uno de cuatro estados:
+
+- **Borrador:** solo se ve en el panel.
+- **Abierta:** aparece entre las oportunidades disponibles y admite postulación.
+- **Cerrada:** deja de aceptar postulaciones y pasa al histórico.
+- **Archivada:** permanece en el histórico como referencia.
+
+El campo **Tipo** permite clasificar cada registro como práctica, empleo, convocatoria o reto.
+
+La fecha de cierre ayuda a ordenar el histórico. El correo de la organización solo se publica en una ficha histórica si se activa expresamente **Mostrar el correo de la organización**. Eliminar es permanente y se reserva para admin; normalmente se debe cerrar o archivar.
 
 ## 13. Imágenes
 
@@ -126,19 +147,20 @@ Antes de cargar una imagen, confirma su autoría, autorización de uso y texto a
 
 En **Panel > Multimedia** puedes consultar los archivos del bucket y cuántos registros los utilizan. Solo admin puede eliminar un archivo marcado como **Sin uso**; la acción vuelve a comprobar las referencias antes de borrarlo. Conserva en el Drive institucional los originales de alta resolución y utiliza Supabase Storage para las copias publicadas en la web.
 
-## 14. Solicitudes de participación
+## 14. Bandeja de entrada
 
 La sección pública **Únete** permite manifestar interés en el semillero. No representa una inscripción ni una admisión.
 
-1. Abre **Panel > Solicitudes**.
-2. Revisa nombre, correo, programa, intereses y mensaje.
-3. Cambia el estado entre **Nueva**, **En revisión**, **Contactada** y **Cerrada**.
-4. Responde desde el correo institucional.
-5. Cuando los datos ya no deban conservarse, un administrador puede eliminarlos.
+1. Abre **Administración > Bandeja de entrada**.
+2. Identifica si el origen es participación, colaboración o reto de prototipado.
+3. Revisa nombre, correo, contexto y mensaje.
+4. Cambia el estado entre **Nueva**, **En revisión**, **Contactada** y **Cerrada**.
+5. Responde desde el correo institucional.
+6. Cuando los datos ya no deban conservarse, un administrador puede eliminarlos.
 
 Admin y editor pueden consultar y actualizar solicitudes. Solo admin puede eliminarlas. Los datos no son públicos y deben usarse únicamente para responder a la persona interesada.
 
-El formulario limita envíos repetidos desde el mismo correo durante quince minutos e incluye un campo trampa antispam. La notificación automática requiere `RESEND_API_KEY` y `RESEND_FROM_EMAIL`; si el proveedor no está configurado, la solicitud continúa guardándose en Supabase.
+Los formularios limitan envíos repetidos desde el mismo correo durante quince minutos e incluyen un campo trampa antispam. La notificación automática requiere `RESEND_API_KEY` y `RESEND_FROM_EMAIL`; si el proveedor no está configurado, la solicitud continúa guardándose en Supabase.
 
 ## 15. Auditoría y respaldos
 

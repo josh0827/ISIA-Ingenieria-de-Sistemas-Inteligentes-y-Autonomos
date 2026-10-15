@@ -113,6 +113,16 @@
   gap: 0.35rem;
 }
 
+.navTitulo {
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.85rem 0;
+  color: var(--texto-tenue);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .navEnlace {
   padding: 0.6rem 0.85rem;
   border-radius: var(--r-sm);
@@ -306,6 +316,7 @@
 .solicitudCabecera a { color: var(--verde); font-size: 0.88rem; }
 .solicitudCabecera time { color: var(--texto-tenue); font-size: 0.78rem; }
 .solicitud p { color: var(--texto-tenue); font-size: 0.88rem; }
+.origenSolicitud { display: inline-block; margin-bottom: .35rem; color: var(--verde); font-size: .68rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
 .mensajeSolicitud { padding: 0.85rem; background: var(--fondo-2); white-space: pre-wrap; }
 
 .accionesSolicitud,

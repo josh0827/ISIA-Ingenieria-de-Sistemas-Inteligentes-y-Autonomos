@@ -32,8 +32,7 @@ export default async function LayoutProtegido({ children }: { children: React.Re
   return (
     <PanelAdminShell
       usuario={usuario.correo ?? usuario.nombre}
-      soloPracticas={autorizado.rol === 'empresa'}
-      esAdmin={autorizado.rol === 'admin'}
+      rol={autorizado.rol}
     >
       {children}
     </PanelAdminShell>

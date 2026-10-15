@@ -1,18 +1,19 @@
 import Link from 'next/link'
-import { COLECCIONES } from '@/lib/contenido'
 import { ESQUEMAS } from '@/lib/admin/esquemas'
 import CerrarSesionBoton from './CerrarSesionBoton'
 import NotificacionesAdmin from './NotificacionesAdmin'
 import estilos from '@/app/admin/admin.module.css'
+import type { RolUsuario } from '@/lib/roles'
 
 type Props = {
   children: React.ReactNode
   usuario: string
-  soloPracticas?: boolean
-  esAdmin?: boolean
+  rol: RolUsuario
 }
 
-export default function PanelAdminShell({ children, usuario, soloPracticas = false, esAdmin = false }: Props) {
+export default function PanelAdminShell({ children, usuario, rol }: Props) {
+  const soloPracticas = rol === 'empresa'
+  const esAdmin = rol === 'admin'
   return (
     <div className={estilos.envoltorio}>
       <NotificacionesAdmin />
@@ -31,20 +32,29 @@ export default function PanelAdminShell({ children, usuario, soloPracticas = fal
       <div className={estilos.cuerpo}>
         <nav className={estilos.nav} aria-label="Contenido administrativo">
           {soloPracticas ? (
-            <Link href="/admin/practicas" className={estilos.navEnlace}>Mis prácticas e iniciativas</Link>
+            <>
+              <span className={estilos.navTitulo}>Oportunidades</span>
+              <Link href="/admin/practicas" className={estilos.navEnlace}>Mis prácticas e iniciativas</Link>
+            </>
           ) : (
             <>
+              <span className={estilos.navTitulo}>Resumen</span>
               <Link href="/admin" className={estilos.navEnlace}>Panel</Link>
-              <Link href="/admin/configuracion" className={estilos.navEnlace}>Configuración</Link>
-              <Link href="/admin/grupos" className={estilos.navEnlace}>Grupos de trabajo</Link>
-              <Link href="/admin/practicas" className={estilos.navEnlace}>Prácticas e iniciativas</Link>
-              <Link href="/admin/solicitudes" className={estilos.navEnlace}>Solicitudes</Link>
-              <Link href="/admin/multimedia" className={estilos.navEnlace}>Multimedia</Link>
-              {COLECCIONES.map((coleccion) => (
-                <Link key={coleccion} href={`/admin/${coleccion}`} className={estilos.navEnlace}>
-                  {ESQUEMAS[coleccion].etiqueta}
-                </Link>
+              <span className={estilos.navTitulo}>Contenido</span>
+              {(['proyectos', 'ideas', 'novedades', 'reuniones', 'publicaciones', 'galeria'] as const).map((coleccion) => (
+                <Link key={coleccion} href={'/admin/' + coleccion} className={estilos.navEnlace}>{ESQUEMAS[coleccion].etiqueta}</Link>
               ))}
+              <Link href="/admin/multimedia" className={estilos.navEnlace}>Multimedia</Link>
+              <span className={estilos.navTitulo}>Oportunidades</span>
+              <Link href="/admin/practicas" className={estilos.navEnlace}>Prácticas e iniciativas</Link>
+              <span className={estilos.navTitulo}>Comunidad</span>
+              <Link href="/admin/integrantes" className={estilos.navEnlace}>Integrantes</Link>
+              <Link href="/admin/grupos" className={estilos.navEnlace}>Grupos de trabajo</Link>
+              <span className={estilos.navTitulo}>Prototipado</span>
+              <Link href="/admin/servicios" className={estilos.navEnlace}>Capacidades</Link>
+              <span className={estilos.navTitulo}>Administración</span>
+              <Link href="/admin/bandeja" className={estilos.navEnlace}>Bandeja de entrada</Link>
+              <Link href="/admin/configuracion" className={estilos.navEnlace}>Configuración</Link>
               {esAdmin && <Link href="/admin/auditoria" className={estilos.navEnlace}>Auditoría</Link>}
               <a href="/api/admin/exportar" className={estilos.navEnlace}>Descargar respaldo</a>
             </>

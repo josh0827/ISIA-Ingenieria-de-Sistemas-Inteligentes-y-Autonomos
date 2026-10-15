@@ -7,9 +7,11 @@ import {
   Seccion,
 } from '@/componentes/Base'
 import { FiltrosProyectos } from '@/componentes/FiltrosContenido'
+import Link from 'next/link'
 import { listarProyectos } from '@/lib/contenido'
 import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../listados.module.css'
+import red from '../networking.module.css'
 export const metadata: Metadata = {
   title: 'Proyectos',
   description:
@@ -27,6 +29,10 @@ export default async function PaginaProyectos() {
         titulo="Proyectos"
         descripcion="Preguntas, métodos y posibilidades de exploración en sistemas inteligentes y autónomos."
       />
+      <nav className={red.enlacesContexto} aria-label="Explorar proyectos y colaboración">
+        <Link href="/ideas">Ideas y retos</Link>
+        <Link href="/prototipado">Prototipado y colaboración</Link>
+      </nav>
       {proyectos.some((proyecto) => proyecto.ilustrativo) && <AvisoDemo>
         Los proyectos de ejemplo permiten recorrer sus fichas y conocer posibles
         enfoques de investigación. No representan proyectos, resultados ni

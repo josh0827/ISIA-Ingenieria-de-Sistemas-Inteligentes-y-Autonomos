@@ -16,6 +16,7 @@ function lineas(valor: FormDataEntryValue | null): string[] {
 
 function revalidarPracticas() {
   revalidatePath('/practicas')
+  revalidatePath('/oportunidades')
   revalidatePath('/admin/practicas')
 }
 
@@ -30,6 +31,7 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
   const esEmpresa = sesion.autorizado.rol === 'empresa'
   const entrada: PracticaOfertaEntrada = {
     titulo: String(formData.get('titulo') ?? '').trim(),
+    tipo: String(formData.get('tipo') ?? 'práctica') as PracticaOfertaEntrada['tipo'],
     empresaNombre: esEmpresa
       ? (sesion.autorizado.nombreEmpresaOUsuario ?? sesion.autorizado.email)
       : String(formData.get('empresaNombre') ?? '').trim(),
@@ -39,7 +41,10 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
     requisitos: lineas(formData.get('requisitos')),
     contactoEmail: String(formData.get('contactoEmail') ?? '').trim(),
     urlPostulacion: String(formData.get('urlPostulacion') ?? '').trim(),
-    activa: formData.get('activa') === 'on',
+    estado: String(formData.get('estado') ?? 'borrador') as PracticaOfertaEntrada['estado'],
+    fechaCierre: String(formData.get('fechaCierre') ?? '').trim(),
+    contactoPublico: formData.get('contactoPublico') === 'on',
+    activa: String(formData.get('estado') ?? '') === 'abierta',
   }
   const validacion = practicaOfertaSchema.safeParse(entrada)
   if (!validacion.success) return { ok: false, error: validacion.error.issues[0]?.message ?? 'Revisa los datos de la oferta.' }
@@ -53,6 +58,7 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
   const oferta = validacion.data
   const datos = {
     titulo: oferta.titulo,
+    tipo_oportunidad: oferta.tipo,
     empresa_nombre: oferta.empresaNombre,
     ubicacion: oferta.ubicacion,
     modalidad: oferta.modalidad,
@@ -60,7 +66,10 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
     requisitos: oferta.requisitos,
     contacto_email: oferta.contactoEmail,
     url_postulacion: oferta.urlPostulacion || null,
-    activa: oferta.activa,
+    estado: oferta.estado,
+    fecha_cierre: oferta.fechaCierre || null,
+    contacto_publico: oferta.contactoPublico,
+    activa: oferta.estado === 'abierta',
     actualizado_en: new Date().toISOString(),
     ...(esEmpresa ? { empresa_id: sesion.id } : {}),
   }
@@ -75,7 +84,7 @@ export async function guardarPractica(idExistente: string | null, _estado: Estad
     accion: idExistente ? 'actualizar' : 'crear',
     recursoTipo: 'practica',
     recursoId: idExistente ?? oferta.titulo,
-    detalle: { activa: oferta.activa },
+    detalle: { estado: oferta.estado },
   })
 
   revalidarPracticas()
@@ -94,7 +103,8 @@ export async function cambiarEstadoPractica(id: string, activa: boolean): Promis
     const { data, error } = await supabase.from('practicas_ofertas').select('empresa_id').eq('id', id).maybeSingle()
     if (error || !data || data.empresa_id !== sesion.id) return { ok: false, error: 'No puedes modificar una oferta de otra empresa.', codigo: 403 }
   }
-  const { error } = await supabase.from('practicas_ofertas').update({ activa, actualizado_en: new Date().toISOString() }).eq('id', id)
+  const estado = activa ? 'abierta' : 'cerrada'
+  const { error } = await supabase.from('practicas_ofertas').update({ activa, estado, actualizado_en: new Date().toISOString() }).eq('id', id)
   if (error) return { ok: false, error: `No se pudo actualizar la oferta: ${error.message}` }
   await registrarAuditoria({
     usuarioId: sesion.id,

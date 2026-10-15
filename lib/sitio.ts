@@ -18,15 +18,11 @@ export const SITIO = {
 export type ItemNavegacion = { href: string; texto: string }
 
 export const NAVEGACION: ItemNavegacion[] = [
-  { href: '/lineas', texto: 'Líneas' },
-  { href: '/grupos', texto: 'Grupos' },
-  { href: '/practicas', texto: 'Prácticas' },
+  { href: '/semillero', texto: 'Semillero' },
   { href: '/proyectos', texto: 'Proyectos' },
-  { href: '/novedades', texto: 'Novedades' },
-  { href: '/reuniones', texto: 'Reuniones' },
-  { href: '/integrantes', texto: 'Integrantes' },
-  { href: '/publicaciones', texto: 'Publicaciones' },
-  { href: '/galeria', texto: 'Galería' },
+  { href: '/oportunidades', texto: 'Oportunidades' },
+  { href: '/comunidad', texto: 'Comunidad' },
+  { href: '/actividades', texto: 'Actividades' },
 ]
 
 export type ClaveSeccion =
@@ -67,11 +63,12 @@ export const NAVEGACION_PREDETERMINADA: ConfiguracionNavegacion = {
 }
 
 export const PRESENTACION = {
-  titular: 'Comprender, diseñar y explorar sistemas inteligentes',
+  titular: 'Conectar personas, ideas y capacidades',
   aviso: 'Presentación y objetivos propuestos; pendientes de validación por el semillero.',
   parrafos: [
     'ISIA es el semillero de investigación en Ingeniería de Sistemas Inteligentes y Autónomos de la Universidad Nacional de Colombia, sede Manizales.',
-    'Proponemos una mirada a los sistemas que perciben su entorno, procesan información y actúan a partir de ella. Presenta posibles temas de estudio que conectan software, electrónica, datos y control, con especial atención a la formación de estudiantes de pregrado.',
+    'El portal facilita conexiones entre estudiantes de pregrado y posgrado, egresados, docentes, investigadores, organizaciones y personas externas alrededor de ideas, proyectos, oportunidades y retos de prototipado.',
+    'Los sistemas inteligentes y autónomos aportan el contexto técnico: software, electrónica, datos, control e inteligencia artificial se articulan mediante preguntas y colaboraciones con alcance verificable.',
   ],
 }
 

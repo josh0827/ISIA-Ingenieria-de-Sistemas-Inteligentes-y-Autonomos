@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { esquemaDe } from '@/lib/admin/esquemas'
 import { obtenerDocumento, obtenerAnidado } from '@/lib/admin/datos'
 import FormularioContenido from '@/componentes/admin/FormularioContenido'
+import { convertirIdeaEnProyecto } from '@/lib/admin/acciones'
 import estilos from '../../../../admin.module.css'
 
 type Props = { params: Promise<{ coleccion: string; id: string }> }
@@ -37,6 +38,11 @@ export default async function PaginaEditarElemento({ params }: Props) {
           <p>Los campos marcados con * son obligatorios.</p>
         </div>
         <div className={estilos.accionesCabecera}>
+          {coleccion === 'ideas' && documento.datos.confirmado === true && (
+            <form action={convertirIdeaEnProyecto.bind(null, id)}>
+              <button type="submit" className={estilos.botonNuevo}>Convertir en proyecto</button>
+            </form>
+          )}
           <Link href={`/admin/${coleccion}/${id}/vista-previa`} className={estilos.botonNuevo}>Vista previa</Link>
           <Link href={`/admin/${coleccion}`} className={estilos.enlaceVolver}>← Volver a {esquema.etiqueta.toLowerCase()}</Link>
         </div>

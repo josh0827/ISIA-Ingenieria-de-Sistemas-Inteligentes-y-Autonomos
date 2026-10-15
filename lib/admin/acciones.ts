@@ -33,8 +33,45 @@ import {
 
 export type EstadoFormulario = { ok: boolean; error?: string; codigo?: 401 | 403 }
 
+export async function convertirIdeaEnProyecto(slug: string): Promise<void> {
+  const usuario = await requerirEditor()
+  const idea = await obtenerFilaContenido('ideas', slug)
+  if (!idea) throw new Error('La idea ya no existe.')
+  if (idea.datos.confirmado !== true) throw new Error('Confirma editorialmente la idea antes de convertirla en proyecto.')
+  if (await obtenerFilaContenido('proyectos', slug)) throw new Error('Ya existe un proyecto con este identificador.')
+  const titulo = texto(idea.datos.titulo)
+  const resumen = texto(idea.datos.resumen)
+  if (!titulo || !resumen) throw new Error('La idea necesita título y resumen antes de convertirse.')
+  const datosProyecto: Record<string, unknown> = {
+    titulo,
+    estado: 'En formulación',
+    linea: texto(idea.datos.area),
+    resumen,
+    integrantes: [],
+    confirmado: false,
+    estadoEditorial: 'Borrador',
+  }
+  const cuerpo = [
+    '## Problema u oportunidad',
+    texto(idea.datos.problema),
+    '## Solución propuesta',
+    texto(idea.datos.solucion),
+    idea.cuerpo,
+  ].filter(Boolean).join('\n\n')
+  await guardarFilaContenido('proyectos', slug, datosProyecto, cuerpo)
+  await guardarFilaContenido('ideas', slug, { ...idea.datos, estado: 'En desarrollo' }, idea.cuerpo)
+  await registrarAuditoria({ usuarioId: usuario.id, usuarioEmail: usuario.correo, accion: 'convertir_a_proyecto', recursoTipo: 'idea', recursoId: slug })
+  revalidatePath('/ideas')
+  revalidatePath('/proyectos')
+  revalidatePath('/admin/ideas')
+  revalidatePath('/admin/proyectos')
+  redirect('/admin/proyectos/' + slug)
+}
+
 const CARPETAS_IMAGEN: Record<string, string> = {
   proyectos: 'proyectos',
+  ideas: 'ideas',
+  servicios: 'servicios',
   novedades: 'noticias',
   reuniones: 'eventos',
   integrantes: 'integrantes',
@@ -43,6 +80,8 @@ const CARPETAS_IMAGEN: Record<string, string> = {
 
 const CAMPOS_ALT: Record<string, { imagen: string; alt: string }> = {
   proyectos: { imagen: 'portada', alt: 'portadaAlt' },
+  ideas: { imagen: 'portada', alt: 'portadaAlt' },
+  servicios: { imagen: 'portada', alt: 'portadaAlt' },
   novedades: { imagen: 'imagen', alt: 'imagenAlt' },
   integrantes: { imagen: 'foto', alt: 'fotoAlt' },
 }
@@ -52,6 +91,10 @@ function revalidarContenido(coleccion: string, slug: string): void {
   revalidatePath(`/${coleccion}`)
   revalidatePath(`/${coleccion}/${slug}`)
   revalidatePath(`/admin/${coleccion}`)
+  if (coleccion === 'ideas' || coleccion === 'servicios' || coleccion === 'proyectos') {
+    revalidatePath('/proyectos')
+  }
+  if (coleccion === 'servicios') revalidatePath('/prototipado')
 }
 
 function validarCampo(campo: CampoEsquema, crudo: FormDataEntryValue | null): unknown {
