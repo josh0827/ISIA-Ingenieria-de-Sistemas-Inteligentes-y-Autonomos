@@ -47,6 +47,7 @@ export async function convertirIdeaEnProyecto(slug: string): Promise<void> {
     estado: 'En formulación',
     linea: texto(idea.datos.area),
     resumen,
+    origen: 'Manual',
     integrantes: [],
     confirmado: false,
     estadoEditorial: 'Borrador',

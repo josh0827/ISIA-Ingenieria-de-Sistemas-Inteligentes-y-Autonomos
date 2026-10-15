@@ -10,9 +10,9 @@ import estilos from './Nav.module.css'
 
 const RUTAS_AGRUPADAS: Record<string, string[]> = {
   '/semillero': ['/semillero', '/lineas', '/grupos', '/publicaciones'],
-  '/proyectos': ['/proyectos', '/ideas', '/prototipado'],
+  '/proyectos': ['/proyectos', '/ideas', '/prototipado', '/innovacion'],
   '/oportunidades': ['/oportunidades', '/practicas'],
-  '/comunidad': ['/comunidad', '/integrantes'],
+  '/comunidad': ['/comunidad', '/integrantes', '/preguntas'],
   '/actividades': ['/actividades', '/novedades', '/reuniones', '/galeria'],
 }
 

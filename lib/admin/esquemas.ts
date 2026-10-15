@@ -81,6 +81,8 @@ export const ESQUEMAS: Record<NombreColeccion, EsquemaColeccion> = {
       },
       { clave: 'linea', etiqueta: 'Línea de investigación', tipo: 'texto', ayuda: 'Debe coincidir exactamente con el título de una línea existente.' },
       { clave: 'resumen', etiqueta: 'Resumen', tipo: 'textarea', requerido: true },
+      { clave: 'repositorio', etiqueta: 'Repositorio', tipo: 'url', ayuda: 'URL HTTPS del repositorio, si existe.' },
+      { clave: 'origen', etiqueta: 'Origen del registro', tipo: 'select', opciones: ['Manual', 'GitHub'], requerido: true },
       { clave: 'portada', etiqueta: 'Imagen de portada', tipo: 'imagen', ayuda: 'JPG, PNG, WebP o AVIF, máximo 8 MB. Se guarda en Supabase Storage.' },
       { clave: 'portadaAlt', etiqueta: 'Texto alternativo de la portada', tipo: 'texto', ayuda: 'Describe brevemente lo que aporta la imagen. Es obligatorio cuando existe una portada.' },
       { clave: 'integrantes', etiqueta: 'Integrantes (slugs separados por comas)', tipo: 'lista', ayuda: 'Usa el slug de cada persona tal como aparece en Integrantes.' },

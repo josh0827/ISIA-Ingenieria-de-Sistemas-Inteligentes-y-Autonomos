@@ -81,6 +81,12 @@ export default async function PaginaProyecto({ params }: Props) {
               )}
             </dd>
           </div>
+          {proyecto.repositorio && (
+            <div className={estilos.fichaDato}>
+              <dt>Repositorio</dt>
+              <dd><a href={proyecto.repositorio} target="_blank" rel="noreferrer">Consultar código ↗</a></dd>
+            </div>
+          )}
           <div className={estilos.fichaDato}>
             <dt>Estado</dt>
             <dd>

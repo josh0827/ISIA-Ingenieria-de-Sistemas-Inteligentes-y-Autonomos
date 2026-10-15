@@ -72,8 +72,11 @@ function normalizarDatosAdmin(
     ? datos
     : { ...datos, estadoEditorial: 'Publicado' }
   if (coleccion !== 'proyectos') return normalizados
-  if (ESTADOS_PROYECTO.includes(normalizados.estado as (typeof ESTADOS_PROYECTO)[number])) return normalizados
-  return { ...normalizados, estado: 'En formulación' }
+  const conOrigen = normalizados.origen === 'GitHub' || normalizados.origen === 'Manual'
+    ? normalizados
+    : { ...normalizados, origen: 'Manual' }
+  if (ESTADOS_PROYECTO.includes(conOrigen.estado as (typeof ESTADOS_PROYECTO)[number])) return conOrigen
+  return { ...conOrigen, estado: 'En formulación' }
 }
 
 /** Lectura sin filtrar (a diferencia de lib/contenido.ts) para poblar tablas y formularios de edición. */

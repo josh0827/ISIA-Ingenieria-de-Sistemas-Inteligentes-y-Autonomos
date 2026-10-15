@@ -173,3 +173,6 @@ Para completar las nuevas secciones, el semillero debe entregar o validar:
 - Oportunidades: organización, título, modalidad, ubicación, descripción, fecha de cierre, canal de postulación y autorización para conservar contacto histórico.
 - Política de conservación y eliminación de solicitudes recibidas.
 - Personas que tendrán rol `admin`, `editor` o `empresa`.
+- Cuenta u organización de GitHub autorizada para originar borradores y persona responsable de revisar cada importación.
+- Categorías de preguntas públicas, responsables de moderación y plazo de conservación de nombres y correos.
+- Criterios institucionales para recibir mentoría, equipos, alianzas o apoyo material sin tramitar pagos desde el portal.

@@ -20,6 +20,8 @@ Configura las siguientes variables desde **Project Settings → Environment Vari
 | `NEXT_PUBLIC_SITE_URL` | Dominio de producción | URL estable de preview o dominio de pruebas | `http://localhost:3000` | Pública |
 | `RESEND_API_KEY` | Opcional | Opcional | Opcional | Secreto; activa avisos del formulario |
 | `RESEND_FROM_EMAIL` | Opcional | Opcional | Opcional | Remitente de un dominio verificado en Resend |
+| `GITHUB_WEBHOOK_SECRET` | Opcional | Entorno de prueba separado | Opcional | Secreto aleatorio para verificar eventos de GitHub |
+| `GITHUB_ALLOWED_OWNER` | Opcional | Entorno de prueba separado | Opcional | Cuenta u organización autorizada para originar borradores |
 
 Marca `SUPABASE_SECRET_KEY` como **Sensitive** en Production y Preview. Las claves Legacy (`SUPABASE_SERVICE_ROLE_KEY`) ya no se leen. Vercel no permite esa clasificación en Development; limita el acceso al proyecto y evita compartir el valor.
 
@@ -28,6 +30,8 @@ La clave pública Legacy (`NEXT_PUBLIC_SUPABASE_ANON_KEY`) ya no se lee: configu
 El formulario de participación guarda solicitudes aunque Resend no esté configurado. Para activar avisos, el remitente debe pertenecer a un dominio verificado; no uses la contraseña del correo institucional como variable de entorno.
 
 Los previews no deberían escribir en la base de producción. Cuando sea posible, usa un proyecto Supabase separado o variables de Preview limitadas a una rama de pruebas.
+
+Si se activa GitHub, configura el webhook del repositorio de origen hacia `https://DOMINIO/api/integraciones/github/webhook`, selecciona `application/json`, limita los eventos a **Forks** y usa el mismo secreto de `GITHUB_WEBHOOK_SECRET`. Un evento válido solo crea un proyecto en borrador; la publicación sigue siendo editorial.
 
 ## 3. Callbacks OAuth
 

@@ -27,5 +27,10 @@
 .formularioCaja > p { margin-top: .65rem; max-width: 48rem; color: var(--texto-tenue); line-height: 1.7; }
 .estadoHistorico { opacity: .82; }
 .separadorTitulo { margin: 3rem 0 1.25rem; font-size: clamp(1.5rem, 3vw, 2rem); }
+.listaPreguntas { display: grid; gap: 1rem; margin-top: 2rem; }
+.pregunta { padding: clamp(1.1rem, 3vw, 1.6rem); border: 1px solid var(--linea); background: var(--superficie); overflow-wrap: anywhere; }
+.pregunta span { color: var(--verde); font: 650 .72rem var(--fuente-mono); text-transform: uppercase; letter-spacing: .06em; }
+.pregunta h2 { margin-top: .65rem; font-size: clamp(1.1rem, 2vw, 1.35rem); }
+.pregunta p { margin-top: .8rem; color: var(--texto-tenue); line-height: 1.7; white-space: pre-wrap; }
 @media (max-width: 820px) { .rejillaHub { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 620px) { .rejillaHub, .filtros { grid-template-columns: 1fr; } .rejillaIdeas { columns: 1; } }

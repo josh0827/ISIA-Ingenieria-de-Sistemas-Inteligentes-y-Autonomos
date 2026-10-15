@@ -36,10 +36,12 @@ npm start
 - **Semillero**: acceso agrupado a líneas, grupos de trabajo y publicaciones.
 - **Líneas**: seis áreas de referencia, con carácter provisional.
 - **Proyectos**: fichas de proyecto, contacto mediado e ingreso a Ideas y Prototipado.
+- **Innovación y apoyo**: rutas para explorar ideas, proponer pruebas de concepto y apoyar proyectos sin transacciones dentro del portal.
 - **Ideas y retos**: catálogo visual filtrable, fichas detalladas y necesidades de colaboración.
 - **Prototipado y colaboración**: capacidades administrables y recepción privada de retos externos.
 - **Oportunidades**: prácticas abiertas e histórico de ofertas cerradas o archivadas.
 - **Comunidad**: integrantes, grupos y participación de pregrado, posgrado y aliados.
+- **Preguntas y respuestas**: consultas moderadas; solo se publican la pregunta y la respuesta aprobada.
 - **Actividades**: acceso agrupado a reuniones, novedades y galería.
 - **Novedades**: tres notas ilustrativas, ordenadas por fechas de ejemplo, con detalle.
 - **Reuniones**: agenda e historial confirmados separados de las sesiones ilustrativas.
@@ -72,7 +74,7 @@ supabase/migrations/       esquema PostgreSQL, seguridad y cambios versionados
 
 El contenido se edita en Markdown. Las instrucciones y formatos completos están en [CONTRIBUTING.md](CONTRIBUTING.md).
 
-La información pendiente que debe solicitarse al semillero está organizada en [PLANTILLA_INFORMACION_SEMILLERO.md](PLANTILLA_INFORMACION_SEMILLERO.md). El uso del panel y la matriz de permisos se describen en [MANUAL_ADMIN.md](MANUAL_ADMIN.md). Las decisiones de producto y alcance de networking están en [PLAN_NETWORKING_FASES_0_5.md](PLAN_NETWORKING_FASES_0_5.md).
+La información pendiente que debe solicitarse al semillero está organizada en [PLANTILLA_INFORMACION_SEMILLERO.md](PLANTILLA_INFORMACION_SEMILLERO.md). El uso del panel y la matriz de permisos se describen en [MANUAL_ADMIN.md](MANUAL_ADMIN.md). Las decisiones de producto y alcance de networking están en [PLAN_NETWORKING_FASES_0_5.md](PLAN_NETWORKING_FASES_0_5.md) y [PLAN_NETWORKING_FASES_6_9.md](PLAN_NETWORKING_FASES_6_9.md); la aceptación completa se encuentra en [VERIFICACION_FASES_1_9.md](VERIFICACION_FASES_1_9.md).
 
 La entrega de Supabase, Vercel y Google OAuth a una cuenta institucional está documentada en [TRANSFERENCIA_INSTITUCIONAL.md](TRANSFERENCIA_INSTITUCIONAL.md). La guía incluye inventario, permisos, pruebas de aceptación y reversión; no contiene secretos reales.
 

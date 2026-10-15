@@ -340,6 +340,13 @@
 .accionesSolicitud button { color: var(--verde-oscuro); font-weight: 700; }
 .accionesSolicitud .botonPeligro { color: var(--rojo); border-color: var(--rojo); }
 
+.respuestaPregunta { display: grid; gap: .75rem; }
+.respuestaPregunta label { display: grid; gap: .4rem; font-size: .82rem; font-weight: 650; }
+.respuestaPregunta textarea { width: 100%; min-height: 8rem; resize: vertical; border: 1px solid var(--linea-fuerte); border-radius: var(--r-sm); padding: .7rem; font: inherit; }
+.respuestaPregunta button { justify-self: start; min-height: 38px; border: 0; border-radius: var(--r-sm); padding: .5rem .85rem; background: var(--verde-oscuro); color: #fff; font-weight: 700; }
+.casillaAdmin { display: flex !important; grid-template-columns: auto 1fr; align-items: center; gap: .5rem !important; font-weight: 500 !important; }
+.casillaAdmin input { accent-color: var(--verde); }
+
 .tablaSimple { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--r); }
 .tablaSimple table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 .tablaSimple th, .tablaSimple td { padding: 0.7rem; text-align: left; border-bottom: 1px solid var(--linea-suave); white-space: nowrap; }

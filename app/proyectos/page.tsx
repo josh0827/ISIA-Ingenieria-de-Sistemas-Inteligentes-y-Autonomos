@@ -30,6 +30,7 @@ export default async function PaginaProyectos() {
         descripcion="Preguntas, métodos y posibilidades de exploración en sistemas inteligentes y autónomos."
       />
       <nav className={red.enlacesContexto} aria-label="Explorar proyectos y colaboración">
+        <Link href="/innovacion">Innovación y apoyo</Link>
         <Link href="/ideas">Ideas y retos</Link>
         <Link href="/prototipado">Prototipado y colaboración</Link>
       </nav>

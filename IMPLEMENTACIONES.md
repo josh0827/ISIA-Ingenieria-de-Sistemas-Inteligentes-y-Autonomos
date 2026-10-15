@@ -19,6 +19,10 @@ La rama principal mantiene la interfaz pública y el panel `/admin` en Next.js A
 - **Ideas y retos:** fichas administrables, búsqueda, detalle y conversión controlada a proyecto.
 - **Prototipado:** catálogo de capacidades y formulario de retos externos con alcance y confidencialidad explícitos.
 - **Histórico de oportunidades:** estados borrador, abierta, cerrada y archivada, con contacto público opcional.
+- **Innovación y apoyo:** hub público que conecta ideas, prototipado y colaboración sin procesar pagos.
+- **GitHub:** webhook firmado y restringido a una cuenta u organización; crea proyectos en borrador y registra entregas idempotentes.
+- **Preguntas de la comunidad:** recepción privada, respuesta editorial y publicación anónima moderada.
+- **Operación:** endpoint `/api/salud`, vista administrativa de integraciones y verificación consolidada de nueve fases.
 
 El contenido Markdown de `contenido/` continúa como respaldo de lectura si Supabase no está configurado o no responde. Las mutaciones del panel requieren la configuración completa y nunca escriben directamente desde componentes de cliente.
 
@@ -37,7 +41,7 @@ Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta a
 2. Ejecutar `supabase/migrations/202609260001_backend_inicial.sql` desde SQL Editor o mediante Supabase CLI.
 3. Habilitar Google en **Authentication > Providers** y configurar las URLs de redirección.
 4. Copiar `.env.local.example` a `.env.local` y completar las variables obligatorias de Supabase. Las variables de Resend son opcionales.
-5. Ejecutar, en orden, `supabase/migrations/202609260002_editores_id.sql`, `202609260003_grupos_roles_practicas.sql`, `202609260004_autorizacion_por_email.sql`, `202610050001_solicitudes_auditoria_editorial.sql` y `202610140001_networking_fases_1_5.sql`.
+5. Ejecutar, en orden, `supabase/migrations/202609260002_editores_id.sql`, `202609260003_grupos_roles_practicas.sql`, `202609260004_autorizacion_por_email.sql`, `202610050001_solicitudes_auditoria_editorial.sql`, `202610140001_networking_fases_1_5.sql` y `202610140002_networking_fases_6_9.sql`.
 6. Crear una fila en `public.usuarios_autorizados` con correo, rol y `activo = true`. El campo `id` puede quedar vacío hasta el primer acceso con Google.
 7. Iniciar sesión y verificar que la callback complete `id` con el UUID de **Authentication > Users**.
 8. Ejecutar `npm run migrar-contenido` si se desea importar el contenido Markdown inicial.
@@ -47,6 +51,8 @@ Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta a
 `public.contenido` usa `coleccion` y `slug` como clave compuesta. La columna JSONB `datos` conserva los campos editables y `cuerpo` almacena Markdown. `public.configuracion` guarda la visibilidad del menú. Las imágenes se almacenan bajo carpetas del bucket `imagenes` y la base solo conserva la URL pública.
 
 `public.grupos_trabajo` conserva la estructura de cada equipo. `public.usuarios_autorizados` controla los roles `admin`, `editor` y `empresa`; `public.practicas_ofertas` conserva oportunidades activas e históricas. `public.solicitudes_participacion`, `public.solicitudes_colaboracion` y `public.solicitudes_prototipado` mantienen privados los formularios recibidos. `public.auditoria_admin` registra las operaciones administrativas.
+
+`public.preguntas_comunidad` mantiene privadas las identidades y publica únicamente respuestas moderadas a través del servidor. `public.integraciones_github_eventos` conserva metadatos mínimos de las entregas verificadas y evita procesar dos veces el mismo identificador.
 
 ## Pendiente de validación humana
 

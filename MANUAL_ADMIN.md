@@ -22,7 +22,9 @@ Tener una cuenta no concede permisos por sí solo. El usuario debe existir en `u
 | Crear, editar y activar prácticas | Sí | Sí | Solo las propias |
 | Eliminar definitivamente una práctica | Sí | No | No |
 | Consultar la bandeja de participación, colaboración y prototipado | Sí | Sí | No |
+| Responder, publicar o archivar preguntas | Sí | Sí | No |
 | Eliminar datos de una solicitud | Sí | No | No |
+| Consultar eventos de integración con GitHub | Sí | No | No |
 | Consultar la biblioteca multimedia | Sí | Sí | No |
 | Eliminar archivos multimedia sin uso | Sí | No | No |
 | Descargar respaldo editorial | Sí | Sí | No |
@@ -88,6 +90,12 @@ Cuando una idea haya sido aprobada, abre su editor y selecciona **Convertir en p
 ## 6.2. Prototipado y colaboración
 
 Admin y editor pueden publicar capacidades, áreas relacionadas, equipo responsable y condiciones. La página pública permite proponer un reto general o asociado a una capacidad confirmada. El envío inicia una evaluación: no constituye contrato ni garantiza ejecución.
+
+## 6.3. Innovación y apoyo
+
+La página **Innovación y apoyo** reúne ideas, prototipado y proyectos confirmados. No existe una cuenta financiera, pasarela de pagos ni promesa de inversión dentro del portal. Cuando una persona ofrece mentoría, conocimiento, equipos, una alianza o apoyo material, el mensaje llega a la bandeja privada y debe revisarse por canales institucionales.
+
+Los proyectos importados desde GitHub muestran **Origen = GitHub**, pero permanecen como Borrador y no confirmados hasta que una persona editora complete y valide la ficha.
 
 ## 7. Novedades
 
@@ -162,11 +170,36 @@ Admin y editor pueden consultar y actualizar solicitudes. Solo admin puede elimi
 
 Los formularios limitan envíos repetidos desde el mismo correo durante quince minutos e incluyen un campo trampa antispam. La notificación automática requiere `RESEND_API_KEY` y `RESEND_FROM_EMAIL`; si el proveedor no está configurado, la solicitud continúa guardándose en Supabase.
 
+## 14.1. Preguntas de la comunidad
+
+1. Abre **Comunidad > Preguntas y respuestas**.
+2. Revisa la pregunta y su categoría. El nombre y el correo son privados y solo se usan si hace falta aclarar el mensaje.
+3. Escribe una respuesta general que no revele datos personales.
+4. Guarda sin activar **Publicar la respuesta** si requiere otra revisión.
+5. Activa la casilla y guarda para publicar la pregunta y la respuesta en `/preguntas`.
+6. Usa **Archivar** para retirarla del sitio. Solo admin puede eliminar definitivamente sus datos.
+
+El sitio ofrece preguntas y respuestas asincrónicas; no es un chat en tiempo real. Nunca copies el correo, nombre u otra información de identificación en la respuesta pública.
+
+## 14.2. Integración con GitHub
+
+La integración requiere un webhook de GitHub dirigido a `/api/integraciones/github/webhook`, con tipo de contenido `application/json`, evento **Forks** y el mismo secreto configurado en `GITHUB_WEBHOOK_SECRET`. `GITHUB_ALLOWED_OWNER` debe contener exactamente el nombre de la cuenta u organización institucional autorizada.
+
+- Una firma inválida se rechaza.
+- Un propietario diferente se registra como rechazado y no crea contenido.
+- Una entrega repetida no crea otro proyecto.
+- Un fork válido crea una ficha en **Proyectos** como Borrador, En formulación y no confirmada.
+- Solo admin consulta **Administración > Integraciones**.
+
+El correo de una cuenta de GitHub no se usa para autorizar la importación. El control se hace por firma del webhook y nombre exacto del propietario autorizado.
+
 ## 15. Auditoría y respaldos
 
 Cada creación, edición, eliminación, cambio de configuración y gestión de solicitudes genera un evento de auditoría cuando la migración correspondiente está aplicada. Solo admin puede consultar **Panel > Auditoría**.
 
 Admin y editor pueden seleccionar **Descargar respaldo** en el menú. El archivo JSON contiene contenido, configuración, grupos y prácticas. No incluye credenciales, usuarios autorizados ni solicitudes de participación. Guarda periódicamente este archivo en el Drive institucional del semillero.
+
+La ruta `/api/salud` permite comprobar el estado general sin iniciar sesión. Responde `operativo` cuando la aplicación puede consultar Supabase y `degradado` con código 503 cuando falta configuración o conexión. No devuelve secretos ni mensajes internos de la base de datos.
 
 ## 16. Comprobación antes de publicar contenido real
 

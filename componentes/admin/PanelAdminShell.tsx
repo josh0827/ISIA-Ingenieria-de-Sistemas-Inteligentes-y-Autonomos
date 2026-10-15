@@ -50,12 +50,14 @@ export default function PanelAdminShell({ children, usuario, rol }: Props) {
               <span className={estilos.navTitulo}>Comunidad</span>
               <Link href="/admin/integrantes" className={estilos.navEnlace}>Integrantes</Link>
               <Link href="/admin/grupos" className={estilos.navEnlace}>Grupos de trabajo</Link>
+              <Link href="/admin/preguntas" className={estilos.navEnlace}>Preguntas y respuestas</Link>
               <span className={estilos.navTitulo}>Prototipado</span>
               <Link href="/admin/servicios" className={estilos.navEnlace}>Capacidades</Link>
               <span className={estilos.navTitulo}>Administración</span>
               <Link href="/admin/bandeja" className={estilos.navEnlace}>Bandeja de entrada</Link>
               <Link href="/admin/configuracion" className={estilos.navEnlace}>Configuración</Link>
               {esAdmin && <Link href="/admin/auditoria" className={estilos.navEnlace}>Auditoría</Link>}
+              {esAdmin && <Link href="/admin/integraciones" className={estilos.navEnlace}>Integraciones</Link>}
               <a href="/api/admin/exportar" className={estilos.navEnlace}>Descargar respaldo</a>
             </>
           )}

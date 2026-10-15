@@ -107,6 +107,8 @@ Este proyecto no guarda secretos en `vercel.json`. Las variables requeridas debe
 | `SUPABASE_SECRET_KEY` | Solo servidor | Operaciones administrativas (`sb_secret_...`) |
 | `RESEND_API_KEY` | Solo servidor | Avisos opcionales de nuevas solicitudes |
 | `RESEND_FROM_EMAIL` | Solo servidor | Remitente de un dominio verificado en Resend |
+| `GITHUB_WEBHOOK_SECRET` | Solo servidor | Verificación HMAC del webhook de forks |
+| `GITHUB_ALLOWED_OWNER` | Solo servidor | Cuenta u organización institucional autorizada |
 
 La clave `SUPABASE_SECRET_KEY` nunca debe llevar el prefijo `NEXT_PUBLIC_`. Después de modificar variables, crea un nuevo despliegue; los despliegues anteriores no reciben cambios retroactivos.
 
