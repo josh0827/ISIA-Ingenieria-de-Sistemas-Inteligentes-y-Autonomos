@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { requerirAdministrador, requerirEditor } from '@/lib/admin/datos'
 import { registrarAuditoria } from '@/lib/admin/auditoria'
 import { esquemaRespuestaPregunta } from '@/lib/preguntas-esquemas'
@@ -32,6 +33,7 @@ export async function responderPregunta(formData: FormData): Promise<void> {
   })
   revalidatePath('/preguntas')
   revalidatePath('/admin/preguntas')
+  redirect(`/admin/preguntas?resultado=${datos.publicar ? 'respuesta-publicada' : 'respuesta-guardada'}`)
 }
 
 export async function archivarPregunta(formData: FormData): Promise<void> {
@@ -44,6 +46,7 @@ export async function archivarPregunta(formData: FormData): Promise<void> {
   await registrarAuditoria({ usuarioId: usuario.id, usuarioEmail: usuario.correo, accion: 'archivar', recursoTipo: 'pregunta', recursoId: id })
   revalidatePath('/preguntas')
   revalidatePath('/admin/preguntas')
+  redirect('/admin/preguntas?resultado=pregunta-archivada')
 }
 
 export async function eliminarPregunta(formData: FormData): Promise<void> {
@@ -54,4 +57,5 @@ export async function eliminarPregunta(formData: FormData): Promise<void> {
   await registrarAuditoria({ usuarioId: usuario.id, usuarioEmail: usuario.correo, accion: 'eliminar', recursoTipo: 'pregunta', recursoId: id })
   revalidatePath('/preguntas')
   revalidatePath('/admin/preguntas')
+  redirect('/admin/preguntas?resultado=pregunta-eliminada')
 }

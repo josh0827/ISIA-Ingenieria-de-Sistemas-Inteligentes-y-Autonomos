@@ -9,6 +9,8 @@
 .opciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem 1rem; margin-top: .7rem; }
 .casilla, .consentimiento { display: flex !important; align-items: flex-start; gap: .55rem !important; color: var(--texto-tenue) !important; font-weight: 400 !important; line-height: 1.5; }
 .casilla input, .consentimiento input { width: auto; margin-top: .25rem; accent-color: var(--verde); }
+.privacidad { padding: .9rem 1rem; border: 1px solid var(--verde); border-left: 4px solid var(--verde-oscuro); border-radius: var(--r-sm); background: var(--verde-vel); color: var(--texto) !important; }
+.privacidad strong { color: var(--verde-oscuro); font-weight: 750; }
 .formulario button { justify-self: start; min-height: 46px; border: 0; border-radius: var(--r-sm); padding: .75rem 1.35rem; background: var(--verde); color: #fff; font-weight: 700; }
 .formulario button:disabled { opacity: .6; }
 .error, .exito { padding: .8rem 1rem; border-left: 3px solid var(--rojo); background: #fff2ef; color: var(--rojo); }

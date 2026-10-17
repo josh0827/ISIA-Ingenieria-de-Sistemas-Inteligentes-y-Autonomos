@@ -38,7 +38,7 @@ export default function FormularioColaboracion({ tipo, slug }: { tipo: 'proyecto
     </div>
     <label>Organización o programa académico<input name="organizacion" maxLength={180} /></label>
     <label>Propuesta *<textarea name="mensaje" minLength={20} maxLength={1800} required /><span>Explica qué puedes aportar o qué información necesitas.</span></label>
-    <label className={estilos.consentimiento}><input type="checkbox" name="consentimiento" required /><span>Autorizo el tratamiento de estos datos únicamente para gestionar esta solicitud de contacto. *</span></label>
+    <label className={`${estilos.consentimiento} ${estilos.privacidad}`}><input type="checkbox" name="consentimiento" required /><span><strong>Tratamiento de datos.</strong> Autorizo el uso de estos datos únicamente para gestionar esta solicitud de contacto. *</span></label>
     <div className={estilos.trampa} aria-hidden><label>Sitio web<input name="sitioWeb" tabIndex={-1} autoComplete="off" /></label></div>
     {estado.error && <p className={estilos.error} role="alert">{estado.error}</p>}
     {estado.ok && <p className={estilos.exito} role="status">{estado.mensaje}</p>}

@@ -86,6 +86,7 @@ export default function FormularioParticipacion() {
         <label className={estilos.consentimiento}>
           <input type="checkbox" name="consentimiento" required />
           <span>
+            <strong>Tratamiento de datos.</strong>{' '}
             Autorizo a la Universidad Nacional de Colombia, a través del semillero ISIA, a tratar estos
             datos solo para responder esta manifestación de interés, según su{' '}
             <a href={POLITICA_DATOS} target="_blank" rel="noopener noreferrer">

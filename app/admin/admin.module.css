@@ -318,6 +318,12 @@
 .solicitud p { color: var(--texto-tenue); font-size: 0.88rem; }
 .origenSolicitud { display: inline-block; margin-bottom: .35rem; color: var(--verde); font-size: .68rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
 .mensajeSolicitud { padding: 0.85rem; background: var(--fondo-2); white-space: pre-wrap; }
+.metadatosPregunta { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; margin-bottom: .35rem; }
+.metadatosPregunta .origenSolicitud { margin-bottom: 0; }
+.estadoPregunta { padding: .2rem .5rem; border-radius: 999px; background: var(--fondo-2); color: var(--texto-tenue); font-size: .68rem; line-height: 1.2; }
+.estadoPregunta[data-estado='respondida'] { background: var(--verde-vel); color: var(--verde-oscuro); }
+.estadoPregunta[data-estado='pendiente'] { background: #fff4d6; color: #705000; }
+.estadoPregunta[data-estado='archivada'] { background: #eceeec; color: #555b56; }
 
 .accionesSolicitud,
 .accionesSolicitud form {
