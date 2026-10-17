@@ -32,12 +32,25 @@ export type FilaAuditoria = {
   creado_en: string
 }
 
-export async function listarAuditoria(limite = 100): Promise<FilaAuditoria[]> {
-  const { data, error } = await crearClienteAdmin()
+export const TAMANO_PAGINA_AUDITORIA = 50
+
+export type FiltroAuditoria = { pagina?: number; usuario?: string; recurso?: string }
+
+export async function listarAuditoria(filtro: FiltroAuditoria = {}): Promise<{ filas: FilaAuditoria[]; hayMas: boolean }> {
+  const pagina = Math.max(Math.trunc(filtro.pagina ?? 1), 1)
+  const desde = (pagina - 1) * TAMANO_PAGINA_AUDITORIA
+  let consulta = crearClienteAdmin()
     .from('auditoria_admin')
     .select('id, usuario_email, accion, recurso_tipo, recurso_id, creado_en')
     .order('creado_en', { ascending: false })
-    .limit(Math.min(Math.max(limite, 1), 250))
+  // Los comodines de ilike se eliminan: el texto escrito se busca de forma literal.
+  const usuario = filtro.usuario?.replace(/[%_,()\\]/g, '').trim().slice(0, 80)
+  if (usuario) consulta = consulta.ilike('usuario_email', `%${usuario}%`)
+  const recurso = filtro.recurso?.trim().slice(0, 60)
+  if (recurso) consulta = consulta.eq('recurso_tipo', recurso)
+  // Se pide una fila de más para saber si existe una página siguiente.
+  const { data, error } = await consulta.range(desde, desde + TAMANO_PAGINA_AUDITORIA)
   if (error) throw new Error(error.message)
-  return (data ?? []) as FilaAuditoria[]
+  const filas = (data ?? []) as FilaAuditoria[]
+  return { filas: filas.slice(0, TAMANO_PAGINA_AUDITORIA), hayMas: filas.length > TAMANO_PAGINA_AUDITORIA }
 }

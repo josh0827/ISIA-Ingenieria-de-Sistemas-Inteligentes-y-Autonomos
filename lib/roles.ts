@@ -17,6 +17,8 @@ export function puedeGestionarPracticas(usuario: UsuarioAutorizado | undefined):
   return Boolean(usuario?.activo && ROLES_USUARIO.includes(usuario.rol))
 }
 
-export function puedeEliminarPracticas(usuario: UsuarioAutorizado | undefined): usuario is UsuarioAutorizado {
+export function puedeAdministrar(usuario: UsuarioAutorizado | undefined): usuario is UsuarioAutorizado {
   return Boolean(usuario?.activo && usuario.rol === 'admin')
 }
+
+export const puedeEliminarPracticas = puedeAdministrar

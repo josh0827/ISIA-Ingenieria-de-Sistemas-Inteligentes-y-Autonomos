@@ -36,6 +36,10 @@ type FilaPractica = {
   actualizado_en: string
 }
 
+function registrarError(contexto: string, error: unknown): void {
+  console.error(`[practicas] ${contexto}`, error instanceof Error ? error.message : error)
+}
+
 const COLUMNAS = 'id, titulo, tipo_oportunidad, empresa_nombre, empresa_id, ubicacion, modalidad, descripcion, requisitos, contacto_email, url_postulacion, activa, estado, fecha_cierre, contacto_publico, creado_en, actualizado_en'
 
 function convertirFila(fila: FilaPractica): PracticaOferta | undefined {
@@ -70,7 +74,8 @@ export async function listarPracticasPublicas(): Promise<PracticaOferta[]> {
     if (error) throw error
     return ((data ?? []).map((fila) => convertirFila(fila as FilaPractica)).filter(Boolean) as PracticaOferta[])
       .map((oferta) => ({ ...oferta, contactoEmail: '' }))
-  } catch {
+  } catch (error) {
+    registrarError('listarPracticasPublicas falló.', error)
     return []
   }
 }
@@ -90,7 +95,8 @@ export async function listarOportunidadesPublicas(): Promise<PracticaOferta[]> {
         ...oferta,
         contactoEmail: oferta.estado !== 'abierta' && oferta.contactoPublico ? oferta.contactoEmail : '',
       }))
-  } catch {
+  } catch (error) {
+    registrarError('listarOportunidadesPublicas falló.', error)
     return []
   }
 }
@@ -106,7 +112,8 @@ export async function listarPracticasAdmin(usuarioId: string, rol: 'admin' | 'ed
     const { data, error } = await consulta
     if (error) throw error
     return (data ?? []).map((fila) => convertirFila(fila as FilaPractica)).filter(Boolean) as PracticaOferta[]
-  } catch {
+  } catch (error) {
+    registrarError('listarPracticasAdmin falló.', error)
     return []
   }
 }
@@ -136,7 +143,8 @@ export async function listarResumenPracticasAdmin(
       fechaCierre: typeof fila.fecha_cierre === 'string' ? fila.fecha_cierre : '',
       contactoPublico: fila.contacto_publico === true,
     }))
-  } catch {
+  } catch (error) {
+    registrarError('listarResumenPracticasAdmin falló.', error)
     return []
   }
 }
@@ -152,7 +160,8 @@ export async function obtenerPracticaAdmin(id: string, usuarioId: string, rol: '
     const { data, error } = await consulta.maybeSingle()
     if (error) throw error
     return data ? convertirFila(data as FilaPractica) : undefined
-  } catch {
+  } catch (error) {
+    registrarError('obtenerPracticaAdmin falló.', error)
     return undefined
   }
 }

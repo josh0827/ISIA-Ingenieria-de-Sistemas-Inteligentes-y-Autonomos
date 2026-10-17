@@ -513,3 +513,48 @@
     transform: none;
   }
 }
+
+.insignia {
+  color: var(--rojo);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.filtrosAuditoria {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+}
+.filtrosAuditoria label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.filtrosAuditoria input {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--r-sm);
+  font: inherit;
+}
+.filtrosAuditoria button {
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--verde);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.paginacionAuditoria {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.9rem;
+}
+.paginacionAuditoria a {
+  color: var(--verde-oscuro);
+  text-decoration: underline;
+}

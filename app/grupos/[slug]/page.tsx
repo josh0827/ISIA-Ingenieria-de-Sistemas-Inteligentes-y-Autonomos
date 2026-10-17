@@ -44,10 +44,10 @@ export default async function DetalleGrupo({ params }: Props) {
             {grupo.integrantes.length ? <ul className={estilos.lista}>{grupo.integrantes.map((nombre) => <li key={nombre}>{nombre}</li>)}</ul> : <p className={estilos.pendiente}>Integrantes pendientes de registrar.</p>}
           </section>
           <section><h2>Repositorios</h2>
-            {grupo.repositorios.length ? <ul className={estilos.recursos}>{grupo.repositorios.map((recurso) => <li key={recurso.url}><a href={recurso.url} target="_blank" rel="noreferrer noopener">{recurso.nombre} ↗</a></li>)}</ul> : <p className={estilos.pendiente}>Repositorios pendientes de publicar.</p>}
+            {grupo.repositorios.length ? <ul className={estilos.recursos}>{grupo.repositorios.map((recurso) => <li key={recurso.url}><a href={recurso.url} target="_blank" rel="noreferrer noopener">{recurso.nombre} ↗<span className="solo-lectores"> (se abre en una pestaña nueva)</span></a></li>)}</ul> : <p className={estilos.pendiente}>Repositorios pendientes de publicar.</p>}
           </section>
           <section><h2>Documentos</h2>
-            {grupo.documentos.length ? <ul className={estilos.recursos}>{grupo.documentos.map((recurso) => <li key={recurso.url}><a href={recurso.url} target="_blank" rel="noreferrer noopener">{recurso.nombre} ↗</a></li>)}</ul> : <p className={estilos.pendiente}>Documentos pendientes de publicar.</p>}
+            {grupo.documentos.length ? <ul className={estilos.recursos}>{grupo.documentos.map((recurso) => <li key={recurso.url}><a href={recurso.url} target="_blank" rel="noreferrer noopener">{recurso.nombre} ↗<span className="solo-lectores"> (se abre en una pestaña nueva)</span></a></li>)}</ul> : <p className={estilos.pendiente}>Documentos pendientes de publicar.</p>}
           </section>
         </div>
         <section className={estilos.galeria}>

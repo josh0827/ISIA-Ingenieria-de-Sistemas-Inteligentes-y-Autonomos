@@ -58,34 +58,42 @@ export async function POST(request: Request) {
   if (errorRegistro?.code === '23505') return NextResponse.json({ ok: true, estado: 'duplicado' })
   if (errorRegistro) return NextResponse.json({ ok: false, error: 'registro_fallido' }, { status: 500 })
 
-  if (borrador.propietario.toLowerCase() !== propietarioPermitido) {
-    await actualizarEvento(entrega, 'rechazado', { motivo: 'propietario_no_permitido' })
-    return NextResponse.json({ ok: true, estado: 'rechazado' }, { status: 202 })
-  }
+  try {
+    if (borrador.propietario.toLowerCase() !== propietarioPermitido) {
+      await actualizarEvento(entrega, 'rechazado', { motivo: 'propietario_no_permitido' })
+      return NextResponse.json({ ok: true, estado: 'rechazado' }, { status: 202 })
+    }
 
-  if (await obtenerFilaContenido('proyectos', borrador.slug)) {
-    await actualizarEvento(entrega, 'ignorado', { motivo: 'proyecto_existente', slug: borrador.slug })
-    return NextResponse.json({ ok: true, estado: 'existente', slug: borrador.slug })
-  }
+    if (await obtenerFilaContenido('proyectos', borrador.slug)) {
+      await actualizarEvento(entrega, 'ignorado', { motivo: 'proyecto_existente', slug: borrador.slug })
+      return NextResponse.json({ ok: true, estado: 'existente', slug: borrador.slug })
+    }
 
-  await guardarFilaContenido('proyectos', borrador.slug, {
-    titulo: borrador.titulo,
-    estado: 'En formulación',
-    linea: '',
-    resumen: borrador.resumen,
-    repositorio: borrador.repositorio,
-    origen: 'GitHub',
-    integrantes: [],
-    confirmado: false,
-    estadoEditorial: 'Borrador',
-  }, [
-    '## Origen',
-    `Borrador creado a partir de un fork de \`${borrador.repositorioOrigen}\`.`,
-    '',
-    'Debe revisarse, completarse y confirmarse editorialmente antes de publicarlo.',
-  ].join('\n'))
-  await actualizarEvento(entrega, 'borrador_creado', { slug: borrador.slug })
-  revalidatePath('/admin/proyectos')
-  revalidatePath('/admin/integraciones')
-  return NextResponse.json({ ok: true, estado: 'borrador_creado', slug: borrador.slug }, { status: 201 })
+    await guardarFilaContenido('proyectos', borrador.slug, {
+      titulo: borrador.titulo,
+      estado: 'En formulación',
+      linea: '',
+      resumen: borrador.resumen,
+      repositorio: borrador.repositorio,
+      origen: 'GitHub',
+      integrantes: [],
+      confirmado: false,
+      estadoEditorial: 'Borrador',
+    }, [
+      '## Origen',
+      `Borrador creado a partir de un fork de \`${borrador.repositorioOrigen}\`.`,
+      '',
+      'Debe revisarse, completarse y confirmarse editorialmente antes de publicarlo.',
+    ].join('\n'))
+    await actualizarEvento(entrega, 'borrador_creado', { slug: borrador.slug })
+    revalidatePath('/admin/proyectos')
+    revalidatePath('/admin/integraciones')
+    return NextResponse.json({ ok: true, estado: 'borrador_creado', slug: borrador.slug }, { status: 201 })
+  } catch (error) {
+    // Se libera la entrega para que el reintento de GitHub pueda procesarla
+    // en vez de responder "duplicado" sobre un borrador que nunca se creó.
+    console.error('[github-webhook] Falló el procesamiento.', error instanceof Error ? error.message : error)
+    await crearClienteAdmin().from('integraciones_github_eventos').delete().eq('entrega_id', entrega)
+    return NextResponse.json({ ok: false, error: 'procesamiento_fallido' }, { status: 500 })
+  }
 }

@@ -17,7 +17,7 @@
 ## Fase 2. Networking y privacidad
 
 - [ ] Un proyecto confirmado recibe una propuesta de colaboración y esta aparece en Administración > Bandeja.
-- [ ] Un segundo envío con el mismo correo antes de 15 minutos se rechaza.
+- [ ] Un segundo envío con el mismo correo antes de 15 minutos se rechaza; superar 30 solicitudes por hora en una misma tabla también se rechaza.
 - [ ] Ningún listado público expone correos de remitentes o responsables internos.
 - [ ] Editor puede cambiar el estado; solo admin puede eliminar los datos.
 
@@ -68,7 +68,10 @@
 
 ## Fase 9. Operación y cierre
 
-- [ ] `/api/salud` responde 200 y `operativo` con Supabase disponible, o 503 y `degradado` sin configuración/conexión.
+- [ ] `/api/salud` responde 200 y `operativo` con Supabase disponible, o 503 y `degradado` sin configuración/conexión; incluye `version`, `entorno` y `correo`.
+- [ ] En DEMO, el HTML contiene `noindex`, la respuesta lleva `X-Robots-Tag` y `/sitemap.xml` está vacío; `/privacidad` responde 200.
+- [ ] El menú del panel muestra los contadores de solicitudes nuevas y preguntas pendientes, y la auditoría filtra y pagina.
+- [ ] Un editor que descarga el respaldo no recibe `contacto_email` de las prácticas; un admin sí.
 - [ ] La ruta de salud no expone claves, URLs privadas ni mensajes internos de base de datos.
 - [ ] La auditoría registra respuestas, publicaciones, archivos y eliminaciones administrativas.
 - [ ] Manual, variables y migraciones coinciden con el despliegue Preview.

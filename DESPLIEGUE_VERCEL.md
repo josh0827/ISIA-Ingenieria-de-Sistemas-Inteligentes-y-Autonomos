@@ -18,6 +18,7 @@ Configura las siguientes variables desde **Project Settings → Environment Vari
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Sí | Sí | Sí | Pública recomendada por Supabase |
 | `SUPABASE_SECRET_KEY` | Sí | Sí | Sí | Secreto moderno `sb_secret_...`; solo servidor |
 | `NEXT_PUBLIC_SITE_URL` | Dominio de producción | URL estable de preview o dominio de pruebas | `http://localhost:3000` | Pública |
+| `NEXT_PUBLIC_SITIO_INDEXABLE` | Solo al salir de DEMO (`true`) | No definir | No definir | Pública; permite la indexación (ver `SALIR_DE_DEMO.md`) |
 | `RESEND_API_KEY` | Opcional | Opcional | Opcional | Secreto; activa avisos del formulario |
 | `RESEND_FROM_EMAIL` | Opcional | Opcional | Opcional | Remitente de un dominio verificado en Resend |
 | `GITHUB_WEBHOOK_SECRET` | Opcional | Entorno de prueba separado | Opcional | Secreto aleatorio para verificar eventos de GitHub |
@@ -26,6 +27,8 @@ Configura las siguientes variables desde **Project Settings → Environment Vari
 Marca `SUPABASE_SECRET_KEY` como **Sensitive** en Production y Preview. Las claves Legacy (`SUPABASE_SERVICE_ROLE_KEY`) ya no se leen. Vercel no permite esa clasificación en Development; limita el acceso al proyecto y evita compartir el valor.
 
 La clave pública Legacy (`NEXT_PUBLIC_SUPABASE_ANON_KEY`) ya no se lee: configura `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (`sb_publishable_...`) y elimina la variable antigua.
+
+Mientras `NEXT_PUBLIC_SITIO_INDEXABLE` no valga `true` (o falte `NEXT_PUBLIC_SITE_URL`), el sitio envía `noindex` en metadatos y en la cabecera `X-Robots-Tag`, y el sitemap queda vacío. Al cambiar la variable hay que volver a desplegar porque la cabecera se calcula en la compilación.
 
 El formulario de participación guarda solicitudes aunque Resend no esté configurado. Para activar avisos, el remitente debe pertenecer a un dominio verificado; no uses la contraseña del correo institucional como variable de entorno.
 
@@ -83,9 +86,13 @@ Después del despliegue verifica:
 - Envío del formulario de Únete y aparición en `/admin/solicitudes`.
 - Estados Borrador, Publicado y Programado.
 - Descarga del respaldo administrativo.
+- `/api/salud`: `estado` operativo, `version` igual al commit esperado y `correo` acorde con la configuración de Resend.
+- Cabeceras de seguridad (HSTS, `Content-Security-Policy-Report-Only`) y consola del navegador sin informes de CSP inesperados.
 - Ausencia de errores relevantes en Runtime Logs.
 
 ## 5. CI/CD
+
+GitHub Actions (`.github/workflows/build.yml`) ejecuta en cada pull request y push a `main`: `npm ci`, `typecheck`, `lint`, `npm test`, `npm run build` y una auditoría informativa de dependencias (`npm audit`, no bloqueante). `.github/dependabot.yml` propone actualizaciones de npm (semanales, agrupadas) y de GitHub Actions (mensuales).
 
 Con la integración Git de Vercel:
 

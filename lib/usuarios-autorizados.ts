@@ -6,7 +6,12 @@ import { crearClienteAdmin } from '@/lib/supabase/server'
 import { ROLES_USUARIO, type RolUsuario, type UsuarioAutorizado } from '@/lib/roles'
 
 export { ROLES_USUARIO }
-export { puedeEditarContenido, puedeEliminarPracticas, puedeGestionarPracticas } from '@/lib/roles'
+export {
+  puedeAdministrar,
+  puedeEditarContenido,
+  puedeEliminarPracticas,
+  puedeGestionarPracticas,
+} from '@/lib/roles'
 export type { RolUsuario, UsuarioAutorizado }
 
 type IdentidadAutenticada = {

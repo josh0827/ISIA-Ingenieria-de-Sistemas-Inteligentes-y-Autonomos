@@ -27,7 +27,7 @@ Tener una cuenta no concede permisos por sí solo. El usuario debe existir en `u
 | Consultar eventos de integración con GitHub | Sí | No | No |
 | Consultar la biblioteca multimedia | Sí | Sí | No |
 | Eliminar archivos multimedia sin uso | Sí | No | No |
-| Descargar respaldo editorial | Sí | Sí | No |
+| Descargar respaldo editorial | Sí | Sí (sin correos de contacto de organizaciones) | No |
 | Consultar la auditoría administrativa | Sí | No | No |
 
 El rol `empresa` entra a un panel limitado a sus propias prácticas. El servidor comprueba los permisos en cada operación; ocultar un botón no sustituye esa validación.
@@ -159,7 +159,7 @@ En **Panel > Multimedia** puedes consultar los archivos del bucket y cuántos re
 
 La sección pública **Únete** permite manifestar interés en el semillero. No representa una inscripción ni una admisión.
 
-1. Abre **Administración > Bandeja de entrada**.
+1. Abre **Administración > Bandeja de entrada**. El menú lateral indica entre paréntesis cuántas solicitudes están en estado **Nueva**; si alguna tabla no se puede consultar, la bandeja lo avisa en un recuadro en lugar de mostrarla vacía.
 2. Identifica si el origen es participación, colaboración o reto de prototipado.
 3. Revisa nombre, correo, contexto y mensaje.
 4. Cambia el estado entre **Nueva**, **En revisión**, **Contactada** y **Cerrada**.
@@ -168,11 +168,11 @@ La sección pública **Únete** permite manifestar interés en el semillero. No 
 
 Admin y editor pueden consultar y actualizar solicitudes. Solo admin puede eliminarlas. Los datos no son públicos y deben usarse únicamente para responder a la persona interesada.
 
-Los formularios limitan envíos repetidos desde el mismo correo durante quince minutos e incluyen un campo trampa antispam. La notificación automática requiere `RESEND_API_KEY` y `RESEND_FROM_EMAIL`; si el proveedor no está configurado, la solicitud continúa guardándose en Supabase.
+Los formularios limitan envíos repetidos desde el mismo correo durante quince minutos, aplican un tope de 30 solicitudes por hora en cada tabla e incluyen un campo trampa antispam. La notificación automática requiere `RESEND_API_KEY` y `RESEND_FROM_EMAIL`; si el proveedor no está configurado, la solicitud continúa guardándose en Supabase.
 
 ## 14.1. Preguntas de la comunidad
 
-1. Abre **Comunidad > Preguntas y respuestas**.
+1. Abre **Comunidad > Preguntas y respuestas**. El menú indica cuántas preguntas están pendientes y cada acción confirma su resultado en la parte superior de la página.
 2. Revisa la pregunta y su categoría. El nombre y el correo son privados y solo se usan si hace falta aclarar el mensaje.
 3. Escribe una respuesta general que no revele datos personales.
 4. Guarda sin activar **Publicar la respuesta** si requiere otra revisión.
@@ -195,11 +195,11 @@ El correo de una cuenta de GitHub no se usa para autorizar la importación. El c
 
 ## 15. Auditoría y respaldos
 
-Cada creación, edición, eliminación, cambio de configuración y gestión de solicitudes genera un evento de auditoría cuando la migración correspondiente está aplicada. Solo admin puede consultar **Panel > Auditoría**.
+Cada creación, edición, eliminación, cambio de configuración y gestión de solicitudes genera un evento de auditoría cuando la migración correspondiente está aplicada. Solo admin puede consultar **Panel > Auditoría**, que muestra 50 eventos por página y permite filtrar por usuario y por recurso.
 
-Admin y editor pueden seleccionar **Descargar respaldo** en el menú. El archivo JSON contiene contenido, configuración, grupos y prácticas. No incluye credenciales, usuarios autorizados ni solicitudes de participación. Guarda periódicamente este archivo en el Drive institucional del semillero.
+Admin y editor pueden seleccionar **Descargar respaldo** en el menú. El archivo JSON contiene contenido, configuración, grupos y prácticas. No incluye credenciales, usuarios autorizados ni solicitudes de participación, y solo el respaldo descargado por un admin conserva el correo de contacto de las organizaciones. Guarda periódicamente este archivo en el Drive institucional del semillero.
 
-La ruta `/api/salud` permite comprobar el estado general sin iniciar sesión. Responde `operativo` cuando la aplicación puede consultar Supabase y `degradado` con código 503 cuando falta configuración o conexión. No devuelve secretos ni mensajes internos de la base de datos.
+La ruta `/api/salud` permite comprobar el estado general sin iniciar sesión. Responde `operativo` cuando la aplicación puede consultar Supabase y `degradado` con código 503 cuando falta configuración o conexión. Además informa la versión desplegada (7 primeros caracteres del commit), el entorno y si el correo de avisos está configurado (`correo`: verdadero o falso). No devuelve secretos ni mensajes internos de la base de datos.
 
 ## 16. Comprobación antes de publicar contenido real
 
@@ -209,6 +209,10 @@ La ruta `/api/salud` permite comprobar el estado general sin iniciar sesión. Re
 - Comprueba que una sección desactivada no abra mediante URL directa.
 - Mantén el contenido ilustrativo activo hasta que cada sección tenga información suficiente.
 - Usa la lista `PLANTILLA_INFORMACION_SEMILLERO.md` para solicitar y validar los datos faltantes.
+
+## 16.1. Aviso de privacidad
+
+Los formularios enlazan a `/privacidad`. El texto está pendiente de revisión por la Universidad (en particular el plazo de conservación); no lo presentes como definitivo hasta recibir su validación. El procedimiento para retirar el modo DEMO está en `SALIR_DE_DEMO.md`.
 
 ## 17. Contacto y dominio institucional
 

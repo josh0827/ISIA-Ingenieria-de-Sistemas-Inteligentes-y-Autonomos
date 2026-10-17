@@ -45,6 +45,7 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
               rel="noreferrer noopener"
             >
               Repositorio del sitio <span aria-hidden>↗</span>
+              <span className="solo-lectores"> (se abre en una pestaña nueva)</span>
             </a>
           </div>
         </div>
@@ -52,6 +53,7 @@ export default function Pie({ items }: { items: ItemNavegacion[] }) {
           <p>
             © {new Date().getFullYear()} {SITIO.nombreCorto} · {SITIO.universidad}, {SITIO.sede}
           </p>
+          <Link href="/privacidad">Aviso de privacidad</Link>
         </div>
       </div>
     </footer>

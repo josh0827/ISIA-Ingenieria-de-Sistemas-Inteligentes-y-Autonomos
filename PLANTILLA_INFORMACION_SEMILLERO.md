@@ -139,7 +139,7 @@ Completar una ficha por oportunidad vigente:
 - [x] Canal institucional de contacto: `isia_man@unal.edu.co`.
 - [ ] Persona o rol responsable de responder.
 - [ ] Temas de interés que se desean destacar.
-- [ ] Texto de privacidad si se incorpora un formulario en el futuro.
+- [ ] Revisión institucional del aviso de privacidad publicado en `/privacidad` y del texto de autorización de los formularios.
 - [ ] Responsable y plazo de conservación de las manifestaciones de interés recibidas por el formulario.
 
 ## 12. Dominio y publicación institucional

@@ -4,13 +4,16 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { AvisoDemo, Seccion } from '@/componentes/Base'
 import FormularioReto from '@/componentes/FormularioReto'
-import { markdownAHtml, obtenerServicio } from '@/lib/contenido'
+import { listarServicios, markdownAHtml, obtenerServicio } from '@/lib/contenido'
 import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../../detalle.module.css'
 import red from '../../networking.module.css'
 
 type Props = { params: Promise<{ slug: string }> }
 export const revalidate = 300
+export async function generateStaticParams() {
+  return (await listarServicios()).map(({ slug }) => ({ slug }))
+}
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const servicio = await obtenerServicio((await params).slug)
   return { title: servicio?.titulo ?? 'Capacidad no encontrada', description: servicio?.resumen }

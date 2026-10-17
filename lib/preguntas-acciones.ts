@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { esquemaPreguntaPublica, type EstadoFormularioPregunta } from '@/lib/preguntas-esquemas'
+import { comprobarLimiteSolicitudes } from '@/lib/limite-solicitudes'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { supabaseServidorListo } from '@/lib/supabase/config'
 
@@ -25,18 +26,12 @@ export async function enviarPregunta(
   if (!supabaseServidorListo()) return { ok: false, error: 'El formulario no está disponible temporalmente.' }
 
   const datos = validacion.data
-  const haceQuinceMinutos = new Date(Date.now() - 15 * 60 * 1000).toISOString()
-  const haceUnaHora = new Date(Date.now() - 60 * 60 * 1000).toISOString()
-  const cliente = crearClienteAdmin()
-  const [{ data: duplicada, error: errorDuplicada }, { count, error: errorLimite }] = await Promise.all([
-    cliente.from('preguntas_comunidad').select('id').eq('correo', datos.correo).gte('creado_en', haceQuinceMinutos).limit(1),
-    cliente.from('preguntas_comunidad').select('id', { count: 'exact', head: true }).gte('creado_en', haceUnaHora),
-  ])
-  if (errorDuplicada || errorLimite) return { ok: false, error: 'No pudimos comprobar la solicitud. Intenta nuevamente.' }
-  if ((duplicada ?? []).length) return { ok: false, error: 'Ya recibimos una pregunta reciente con este correo.' }
-  if ((count ?? 0) >= 30) return { ok: false, error: 'Se recibieron muchas preguntas. Intenta de nuevo en una hora.' }
+  const limite = await comprobarLimiteSolicitudes('preguntas_comunidad', datos.correo)
+  if (limite === 'error') return { ok: false, error: 'No pudimos comprobar la solicitud. Intenta nuevamente.' }
+  if (limite === 'duplicada') return { ok: false, error: 'Ya recibimos una pregunta reciente con este correo.' }
+  if (limite === 'limite') return { ok: false, error: 'Se recibieron muchas preguntas. Intenta de nuevo en una hora.' }
 
-  const { error } = await cliente.from('preguntas_comunidad').insert({
+  const { error } = await crearClienteAdmin().from('preguntas_comunidad').insert({
     nombre: datos.nombre,
     correo: datos.correo,
     categoria: datos.categoria,

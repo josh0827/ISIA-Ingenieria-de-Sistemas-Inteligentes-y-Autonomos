@@ -21,6 +21,8 @@ La aplicación compila con Next.js 15.5.25 y conserva la interfaz pública, el p
 
 El entorno de automatización no ofreció un navegador gráfico para repetir capturas de escritorio y móvil en esta revisión. La verificación visual histórica no se presenta como resultado actual. Debe repetirse en el Preview de Vercel antes de promover el despliegue.
 
+Actualización del 16 de octubre de 2026: sobre el árbol de trabajo vigente `typecheck`, `lint`, `npm test` (32 pruebas) y `npm run build` terminan correctamente. Los resultados de la tabla anterior corresponden a la revisión del 5 de octubre y se conservan como histórico. La verificación funcional vigente está en `VERIFICACION_FASES_1_9.md`.
+
 ## Pruebas manuales necesarias después de aplicar la migración
 
 Aplicar `supabase/migrations/202610050001_solicitudes_auditoria_editorial.sql` y comprobar:

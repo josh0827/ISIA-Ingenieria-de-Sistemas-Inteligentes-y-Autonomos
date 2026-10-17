@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
 import {
   enviarSolicitudParticipacion,
@@ -12,17 +13,21 @@ import {
 import { SITIO } from '@/lib/sitio'
 import estilos from './FormularioParticipacion.module.css'
 
-const POLITICA_DATOS = 'https://legal.unal.edu.co/rlunal/home/doc.jsp?d_i=97992'
-const CORREO_DATOS_UNAL = 'protecdatos_na@unal.edu.co'
-
 export default function FormularioParticipacion() {
   const [estado, accion, enviando] = useActionState(enviarSolicitudParticipacion, ESTADO_INICIAL_SOLICITUD)
   const [errorCliente, setErrorCliente] = useState<string>()
   const formularioRef = useRef<HTMLFormElement>(null)
+  const respuestaRef = useRef<HTMLParagraphElement>(null)
+  const hayError = Boolean(errorCliente ?? estado.error)
 
   useEffect(() => {
     if (estado.ok) formularioRef.current?.reset()
   }, [estado.ok])
+
+  // Lleva el foco al mensaje de error para que quien usa lector de pantalla o teclado lo encuentre.
+  useEffect(() => {
+    if (hayError) respuestaRef.current?.focus()
+  }, [hayError, errorCliente, estado.error])
 
   function validar(evento: FormEvent<HTMLFormElement>) {
     const formulario = evento.currentTarget
@@ -76,8 +81,8 @@ export default function FormularioParticipacion() {
 
       <div className={estilos.campo}>
         <label htmlFor="participacion-mensaje">¿Qué te gustaría explorar?</label>
-        <textarea id="participacion-mensaje" name="mensaje" maxLength={1200} />
-        <p className={estilos.ayuda}>Máximo 1200 caracteres. No incluyas contraseñas ni datos sensibles.</p>
+        <textarea id="participacion-mensaje" name="mensaje" maxLength={1200} aria-describedby="participacion-mensaje-ayuda" />
+        <p id="participacion-mensaje-ayuda" className={estilos.ayuda}>Máximo 1200 caracteres. No incluyas contraseñas ni datos sensibles.</p>
       </div>
 
       {/* Aviso de privacidad exigido por la Ley 1581 de 2012: responsable,
@@ -89,15 +94,16 @@ export default function FormularioParticipacion() {
             <strong>Tratamiento de datos.</strong>{' '}
             Autorizo a la Universidad Nacional de Colombia, a través del semillero ISIA, a tratar estos
             datos solo para responder esta manifestación de interés, según su{' '}
-            <a href={POLITICA_DATOS} target="_blank" rel="noopener noreferrer">
+            <a href={SITIO.politicaDatos} target="_blank" rel="noopener noreferrer">
               Política de Tratamiento de Datos Personales
+              <span className="solo-lectores"> (se abre en una pestaña nueva)</span>
             </a>{' '}
-            (Resolución 207 de 2021). *
+            (Resolución 207 de 2021). Más detalles en el <Link href="/privacidad">aviso de privacidad</Link>. *
           </span>
         </label>
         <p className={estilos.ayuda}>
           Puedes conocer, actualizar, rectificar o pedir que se borren tus datos escribiendo
-          a {SITIO.correo} o a {CORREO_DATOS_UNAL}.
+          a {SITIO.correo} o a {SITIO.correoDatos}.
         </p>
       </div>
 
@@ -107,7 +113,7 @@ export default function FormularioParticipacion() {
       </div>
 
       {(errorCliente || estado.error) && (
-        <p className={`${estilos.respuesta} ${estilos.error}`} role="alert">{errorCliente ?? estado.error}</p>
+        <p ref={respuestaRef} tabIndex={-1} className={`${estilos.respuesta} ${estilos.error}`} role="alert">{errorCliente ?? estado.error}</p>
       )}
       {estado.ok && estado.mensaje && (
         <p className={estilos.respuesta} role="status">{estado.mensaje}</p>

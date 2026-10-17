@@ -14,7 +14,7 @@ La rama principal mantiene la interfaz pública y el panel `/admin` en Next.js A
 - **Rendimiento público:** las páginas usan regeneración cada cinco minutos y revalidación inmediata tras las mutaciones; se eliminó la transición de opacidad entre rutas.
 - **Grupos de trabajo:** tabla dedicada, páginas públicas y CRUD con integrantes, repositorios, documentos e imágenes.
 - **Prácticas e iniciativas:** listado público filtrable, gestión por empresas autorizadas y administración global por roles ISIA.
-- **Permisos de prácticas:** solo `admin` puede eliminar definitivamente; `editor` y `empresa` pueden desactivar dentro de su alcance.
+- **Permisos de prácticas:** solo `admin` puede eliminar definitivamente (`puedeAdministrar` en `lib/roles.ts`); `editor` y `empresa` pueden desactivar dentro de su alcance.
 - **Networking:** proyectos e ideas reciben solicitudes mediadas sin publicar correos de propietarios.
 - **Ideas y retos:** fichas administrables, búsqueda, detalle y conversión controlada a proyecto.
 - **Prototipado:** catálogo de capacidades y formulario de retos externos con alcance y confidencialidad explícitos.
@@ -22,7 +22,14 @@ La rama principal mantiene la interfaz pública y el panel `/admin` en Next.js A
 - **Innovación y apoyo:** hub público que conecta ideas, prototipado y colaboración sin procesar pagos.
 - **GitHub:** webhook firmado y restringido a una cuenta u organización; crea proyectos en borrador y registra entregas idempotentes.
 - **Preguntas de la comunidad:** recepción privada, respuesta editorial y publicación anónima moderada.
-- **Operación:** endpoint `/api/salud`, vista administrativa de integraciones y verificación consolidada de nueve fases.
+- **Operación:** endpoint `/api/salud` (estado, base de datos, versión desplegada, entorno y si el correo está configurado), vista administrativa de integraciones y verificación consolidada de nueve fases.
+- **Modo DEMO / indexación:** un único interruptor, `NEXT_PUBLIC_SITIO_INDEXABLE=true` (con `NEXT_PUBLIC_SITE_URL`), controla `noindex`, la cabecera `X-Robots-Tag`, `robots.txt`, el sitemap dinámico y los datos estructurados (`lib/indexacion.ts`, `next.config.mjs`). Sin la variable el sitio permanece en DEMO. Ver `SALIR_DE_DEMO.md`.
+- **Privacidad:** página `/privacidad` enlazada desde el pie y los formularios.
+- **Límite de envíos:** `lib/limite-solicitudes.ts` rechaza un segundo envío del mismo correo en quince minutos y aplica un tope global de 30 solicitudes por hora y tabla (regla pura en `lib/limite-regla.ts`, con pruebas).
+- **Panel:** contadores de solicitudes nuevas y preguntas pendientes en el menú, mensajes de resultado en bandeja y preguntas, aviso cuando falla la consulta de una tabla, y auditoría con filtros por usuario y recurso y paginación de 50 filas.
+- **Experiencia pública:** filtros de contenido sincronizados con la URL y botón para quitarlos, sección «Colabora con el semillero» en el inicio, página de error propia, `generateStaticParams` en los detalles y metadatos Open Graph.
+- **Seguridad web:** HSTS, `Permissions-Policy`, `Content-Security-Policy-Report-Only` y sin cabecera `X-Powered-By`. La CSP pasa a modo bloqueante cuando el informe salga limpio.
+- **Calidad continua:** el flujo de GitHub Actions ejecuta typecheck, lint, pruebas, build y una auditoría informativa de dependencias; Dependabot propone actualizaciones semanales (npm) y mensuales (Actions).
 
 El contenido Markdown de `contenido/` continúa como respaldo de lectura si Supabase no está configurado o no responde. Las mutaciones del panel requieren la configuración completa y nunca escriben directamente desde componentes de cliente.
 
@@ -56,6 +63,8 @@ Las tablas tienen RLS habilitado. `usuarios_autorizados` permite a cada cuenta a
 
 ## Pendiente de validación humana
 
+- Revisar con la Universidad el aviso de privacidad (`/privacidad`), en especial el plazo de conservación.
+- Cuando el informe de `Content-Security-Policy-Report-Only` salga limpio en consola, pasar la cabecera a `Content-Security-Policy`.
 - Configurar el proyecto real y sus secretos en cada entorno.
 - Probar inicio con un usuario sin registro, uno inactivo, un editor y una empresa activa en `usuarios_autorizados`.
 - Confirmar una carga real a Storage y la publicación de un proyecto.
@@ -76,14 +85,14 @@ El procedimiento para trasladar el control de Supabase, Vercel, Google OAuth, DN
 La versión actual incorpora:
 
 - Correo institucional centralizado: `isia_man@unal.edu.co`.
-- Formulario de manifestación de interés con validación Zod en cliente y servidor, consentimiento, campo trampa y límite temporal por correo.
+- Formulario de manifestación de interés con validación Zod en cliente y servidor, consentimiento, campo trampa, límite temporal por correo y tope por hora.
 - Persistencia privada en `solicitudes_participacion` y gestión de estados desde el panel.
-- Aviso opcional mediante Resend, sin almacenar la contraseña del correo institucional.
+- Aviso opcional mediante Resend (`lib/correo.ts`), sin almacenar la contraseña del correo institucional. Los fallos de envío se registran en los logs del servidor; el estado del envío aún no se guarda en la base de datos.
 - Estados editoriales Borrador, Publicado y Programado para el contenido administrable.
 - Registro de auditoría para cambios del panel.
 - Eliminación de imágenes editoriales reemplazadas o asociadas a contenido eliminado.
 - Biblioteca multimedia con conteo de referencias y eliminación administrativa de archivos sin uso.
-- Exportación JSON de contenido, configuración, grupos y prácticas para respaldos institucionales.
+- Exportación JSON de contenido, configuración, grupos y prácticas para respaldos institucionales; el correo de contacto de las organizaciones solo se incluye cuando exporta un administrador.
 - Procedimiento documentado para solicitar una dirección bajo `unal.edu.co`.
 
 Para habilitar estas funciones en un entorno existente se debe aplicar `supabase/migrations/202610050001_solicitudes_auditoria_editorial.sql` antes de probar el formulario o la auditoría.

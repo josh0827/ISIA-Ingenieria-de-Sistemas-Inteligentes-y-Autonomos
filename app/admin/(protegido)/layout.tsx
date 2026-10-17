@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { supabaseServidorListo } from '@/lib/supabase/config'
 import { usuarioSesion } from '@/lib/sesion'
 import { obtenerUsuarioAutorizado } from '@/lib/usuarios-autorizados'
+import { contarPendientes } from '@/lib/admin/bandeja'
 import PanelAdminShell from '@/componentes/admin/PanelAdminShell'
 import estilos from '../admin.module.css'
 
@@ -29,10 +30,13 @@ export default async function LayoutProtegido({ children }: { children: React.Re
     redirect('/admin/acceso-denegado?motivo=editor')
   }
 
+  const pendientes = autorizado.rol === 'empresa' ? undefined : await contarPendientes()
+
   return (
     <PanelAdminShell
       usuario={usuario.correo ?? usuario.nombre}
       rol={autorizado.rol}
+      pendientes={pendientes}
     >
       {children}
     </PanelAdminShell>

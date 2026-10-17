@@ -8,8 +8,13 @@ Esta guía describe cómo editar la demo académica. El contenido publicado debe
 git branch --show-current
 npm run lint
 npm run typecheck
+npm test
 npm run build
 ```
+
+La integración continua de GitHub ejecuta las mismas comprobaciones en cada pull request.
+
+Las pruebas (`tests/*.test.ts`) se ejecutan con `node:test` sin resolver el alias `@/`. Por eso la lógica que se quiera probar debe vivir en archivos sin importaciones `@/...` (por ejemplo `lib/limite-regla.ts`, separado de `lib/limite-solicitudes.ts`) y los tests la importan con rutas relativas terminadas en `.ts`.
 
 Trabaja en una rama de cambio y valida su Preview antes de integrarla a la rama de producción. Revisa los cambios con `git diff` y prueba la navegación antes de dar por terminada una edición. No publiques cambios sin completar la revisión funcional y editorial.
 
@@ -182,11 +187,11 @@ Las manifestaciones de interés se gestionan desde `/admin/solicitudes`. No expo
 - `Revelar` es un envoltorio sin efectos; no reintroduzcas observadores para ocultar contenido.
 - Usa encabezados jerárquicos, foco visible, enlaces descriptivos y alternativas textuales.
 - Revisa escritorio, tableta y móvil, incluyendo teclado y menú móvil.
-- Mantén `noindex` en modo DEMO y evita datos ficticios en metadatos o datos estructurados.
+- Mantén `noindex` en modo DEMO y evita datos ficticios en metadatos o datos estructurados. La indexación solo se habilita con `NEXT_PUBLIC_SITIO_INDEXABLE=true` y siguiendo `SALIR_DE_DEMO.md`; no la actives desde el código.
 
 ## Comprobación antes de entregar
 
-Ejecuta lint, TypeScript y compilación. Después revisa en navegador la portada, el menú, los CTA **Ver los proyectos** y **Quiero participar**, todos los listados y detalles, y los estados pendientes.
+Ejecuta lint, TypeScript, pruebas y compilación. Después revisa en navegador la portada, el menú, los CTA **Ver los proyectos** y **Quiero participar**, todos los listados y detalles, y los estados pendientes.
 
 Comprueba que no existan desbordamientos horizontales, errores relevantes de consola ni destinos ficticios activos. Todo el contenido debe ser visible desde el renderizado, incluso antes de desplazarse.
 

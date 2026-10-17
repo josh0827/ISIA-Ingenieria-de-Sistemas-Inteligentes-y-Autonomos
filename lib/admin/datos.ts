@@ -4,8 +4,8 @@ import { listarResumenesContenido, obtenerFilaContenido } from '@/lib/supabase/c
 import { usuarioSesion } from '@/lib/sesion'
 import {
   obtenerUsuarioAutorizado,
+  puedeAdministrar,
   puedeEditarContenido,
-  puedeEliminarPracticas,
   puedeGestionarPracticas,
 } from '@/lib/usuarios-autorizados'
 import { ESTADOS_EDITORIALES, ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
@@ -38,8 +38,8 @@ export async function requerirAdministrador() {
   const usuario = await usuarioSesion()
   if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
   const autorizado = await obtenerUsuarioAutorizado(usuario.id)
-  if (!puedeEliminarPracticas(autorizado)) {
-    throw new ErrorAcceso('Solo una cuenta administradora puede eliminar prácticas.', 403, 'editor')
+  if (!puedeAdministrar(autorizado)) {
+    throw new ErrorAcceso('Esta acción requiere una cuenta administradora.', 403, 'editor')
   }
   return { ...usuario, autorizado }
 }
