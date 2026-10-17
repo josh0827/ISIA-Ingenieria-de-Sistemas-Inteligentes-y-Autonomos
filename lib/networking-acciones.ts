@@ -3,12 +3,13 @@
 import { revalidatePath } from 'next/cache'
 import { obtenerIdea, obtenerProyecto, obtenerServicio } from '@/lib/contenido'
 import { notificarSolicitudNetworking } from '@/lib/correo'
-import { esquemaColaboracion, esquemaRetoPrototipado } from '@/lib/networking-esquemas'
+import {
+  esquemaColaboracion,
+  esquemaRetoPrototipado,
+  type EstadoNetworking,
+} from '@/lib/networking-esquemas'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { supabaseServidorListo } from '@/lib/supabase/config'
-
-export type EstadoNetworking = { ok: boolean; mensaje?: string; error?: string }
-export const ESTADO_NETWORKING_INICIAL: EstadoNetworking = { ok: false }
 
 function trampa(formData: FormData): boolean {
   return typeof formData.get('sitioWeb') === 'string' && String(formData.get('sitioWeb')).length > 0

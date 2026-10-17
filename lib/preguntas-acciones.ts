@@ -1,12 +1,9 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { esquemaPreguntaPublica } from '@/lib/preguntas-esquemas'
+import { esquemaPreguntaPublica, type EstadoFormularioPregunta } from '@/lib/preguntas-esquemas'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { supabaseServidorListo } from '@/lib/supabase/config'
-
-export type EstadoFormularioPregunta = { ok: boolean; mensaje?: string; error?: string }
-export const ESTADO_PREGUNTA_INICIAL: EstadoFormularioPregunta = { ok: false }
 
 function trampa(formData: FormData): boolean {
   return typeof formData.get('sitioWeb') === 'string' && String(formData.get('sitioWeb')).length > 0

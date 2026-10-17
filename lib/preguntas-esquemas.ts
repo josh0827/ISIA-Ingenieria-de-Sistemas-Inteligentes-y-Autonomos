@@ -1,5 +1,8 @@
 import { z } from 'zod'
 
+export type EstadoFormularioPregunta = { ok: boolean; mensaje?: string; error?: string }
+export const ESTADO_PREGUNTA_INICIAL: EstadoFormularioPregunta = { ok: false }
+
 export const CATEGORIAS_PREGUNTA = [
   'Participación',
   'Proyectos e ideas',

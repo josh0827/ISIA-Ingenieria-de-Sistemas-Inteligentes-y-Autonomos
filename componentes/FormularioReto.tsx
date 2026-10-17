@@ -1,8 +1,8 @@
 'use client'
 
 import { useActionState } from 'react'
-import { enviarRetoPrototipado, ESTADO_NETWORKING_INICIAL } from '@/lib/networking-acciones'
-import { AREAS_PROTOTIPADO } from '@/lib/networking-esquemas'
+import { enviarRetoPrototipado } from '@/lib/networking-acciones'
+import { AREAS_PROTOTIPADO, ESTADO_NETWORKING_INICIAL } from '@/lib/networking-esquemas'
 import estilos from './FormularioNetworking.module.css'
 
 export default function FormularioReto({ servicioSlug = '' }: { servicioSlug?: string }) {

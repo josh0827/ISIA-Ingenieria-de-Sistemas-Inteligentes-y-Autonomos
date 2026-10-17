@@ -1,5 +1,13 @@
 import { z } from 'zod'
 
+export type EstadoSolicitud = {
+  ok: boolean
+  mensaje?: string
+  error?: string
+}
+
+export const ESTADO_INICIAL_SOLICITUD: EstadoSolicitud = { ok: false }
+
 export const TEMAS_INTERES = [
   'Inteligencia Artificial en el Borde (Edge AI)',
   'TinyML',

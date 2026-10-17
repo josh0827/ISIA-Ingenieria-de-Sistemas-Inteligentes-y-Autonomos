@@ -1,5 +1,8 @@
 import { z } from 'zod'
 
+export type EstadoNetworking = { ok: boolean; mensaje?: string; error?: string }
+export const ESTADO_NETWORKING_INICIAL: EstadoNetworking = { ok: false }
+
 export const TIPOS_PARTICIPANTE = [
   'pregrado',
   'posgrado',

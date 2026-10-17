@@ -1,8 +1,8 @@
 'use client'
 
 import { useActionState } from 'react'
-import { enviarPregunta, ESTADO_PREGUNTA_INICIAL } from '@/lib/preguntas-acciones'
-import { CATEGORIAS_PREGUNTA } from '@/lib/preguntas-esquemas'
+import { enviarPregunta } from '@/lib/preguntas-acciones'
+import { CATEGORIAS_PREGUNTA, ESTADO_PREGUNTA_INICIAL } from '@/lib/preguntas-esquemas'
 import estilos from './FormularioNetworking.module.css'
 
 export default function FormularioPregunta() {

@@ -4,20 +4,13 @@ import { revalidatePath } from 'next/cache'
 import { notificarSolicitudParticipacion } from '@/lib/correo'
 import {
   esquemaSolicitudParticipacion,
+  type EstadoSolicitud,
   type SolicitudParticipacion,
 } from '@/lib/participacion-esquema'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { supabaseServidorListo } from '@/lib/supabase/config'
 
-export type EstadoSolicitud = {
-  ok: boolean
-  mensaje?: string
-  error?: string
-}
-
-const ESTADO_INICIAL: EstadoSolicitud = { ok: false }
 const LIMITE_SOLICITUDES_POR_HORA = 30
-export { ESTADO_INICIAL as ESTADO_INICIAL_SOLICITUD }
 
 function leerSolicitud(formData: FormData): SolicitudParticipacion | undefined {
   const resultado = esquemaSolicitudParticipacion.safeParse({

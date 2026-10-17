@@ -3,9 +3,9 @@
 import { useActionState, useEffect, useRef, useState, type FormEvent } from 'react'
 import {
   enviarSolicitudParticipacion,
-  ESTADO_INICIAL_SOLICITUD,
 } from '@/lib/participacion-acciones'
 import {
+  ESTADO_INICIAL_SOLICITUD,
   esquemaSolicitudParticipacion,
   TEMAS_INTERES,
 } from '@/lib/participacion-esquema'

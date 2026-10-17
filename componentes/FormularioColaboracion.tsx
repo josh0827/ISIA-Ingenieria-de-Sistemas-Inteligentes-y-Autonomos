@@ -1,7 +1,8 @@
 'use client'
 
 import { useActionState } from 'react'
-import { enviarColaboracion, ESTADO_NETWORKING_INICIAL } from '@/lib/networking-acciones'
+import { enviarColaboracion } from '@/lib/networking-acciones'
+import { ESTADO_NETWORKING_INICIAL } from '@/lib/networking-esquemas'
 import estilos from './FormularioNetworking.module.css'
 
 const PARTICIPANTES = [
