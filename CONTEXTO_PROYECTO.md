@@ -1,7 +1,7 @@
 # Contexto integral del proyecto web ISIA
 
 > Documento de transferencia para continuar el trabajo en otro chat o con otro desarrollador.
-> Estado verificado el **16 de octubre de 2026**. No contiene secretos.
+> Estado verificado el **16 de octubre de 2026** y actualizado el **21 de octubre de 2026** al integrar el fork en el repositorio principal. No contiene secretos.
 
 ## 1. Instrucción para el siguiente chat
 
@@ -34,26 +34,23 @@ El portal no procesa pagos, contratos, inversiones ni propiedad intelectual. Una
 
 ## 3. Repositorio y estado Git
 
-- Carpeta local: `C:\Users\USER\Desktop\Proyectos\ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos`
-- Repositorio: `https://github.com/sillHD/ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos.git`
-- Rama activa y de trabajo actual: `main`
-- Seguimiento: `main` → `origin/main`
-- Último commit publicado: `0d2736d` — `botones de tratamientos`.
-- Estado del árbol de trabajo: contiene una tanda amplia de mejoras **sin confirmar ni publicar** (ver sección 28). Ejecutar `git status --short --branch` antes de continuar.
+- Repositorio principal: `https://github.com/josh0827/ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos`. Su rama `main` es la que despliega Vercel.
+- Fork de trabajo de Ismael: `https://github.com/sillHD/ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos`. Los cambios del fork entran al repositorio principal mediante pull request, nunca empujando directamente a `main`.
+- `main` está protegida: cada cambio va en una rama propia, pasa la CI (typecheck, lint, pruebas y build) y se fusiona desde GitHub.
+- Antes de continuar, ejecutar `git status --short --branch` y sincronizar con `main` del repositorio principal.
 
 Ramas relevantes:
 
-- `main`: versión actual integrada.
-- `Prueba`: conserva una versión anterior del flujo editorial y permisos.
-- `feat/networking-fases-1-5`: rama histórica ya integrada.
-
-La instrucción inicial pedía trabajar en `Prueba`, pero posteriormente se autorizó continuar e incorporar el trabajo en `main`. El estado vigente está en `main`.
+- `main` (repositorio principal): versión integrada y desplegada.
+- `integracion/fork-ismael`: trae al repositorio principal el trabajo del fork hasta `fdf2307`.
+- `Prueba` y `feat/networking-fases-1-5` (fork): ramas históricas ya integradas.
 
 Últimos hitos:
 
 - `5842d97`: networking completado hasta la fase 9.
 - `ea75bbd`: corrección de Server Actions; los archivos con `"use server"` dejaron de exportar objetos no permitidos.
 - `0d2736d`: consentimiento de tratamiento de datos más visible y confirmaciones de estado en preguntas administrativas.
+- `fdf2307`: la tanda de mejoras descrita en la sección 28, ya confirmada. Es la versión que estaba en producción el 21 de octubre de 2026 (`/api/salud` → `"version":"fdf2307"`), desplegada desde el fork antes de pasar por `main`.
 
 ## 4. Estado general del proyecto
 
@@ -129,7 +126,8 @@ La instrucción inicial pedía trabajar en `Prueba`, pero posteriormente se auto
 ### Supabase
 
 - Backend actual: PostgreSQL, Auth y Storage.
-- El proyecto observado en los logs utiliza la referencia pública `exycbvbiqpzlxvsftfzl`; confirmar en Vercel antes de asumir que sigue vigente.
+- Producción usa todavía el proyecto antiguo `exycbvbiqpzlxvsftfzl` (comprobado el 21 de octubre de 2026 en la cabecera CSP), creado con una cuenta personal.
+- El proyecto oficial es `lwchrqsrllwpgeumupbk`, en la cuenta institucional `isia_man@unal.edu.co`. Tiene las cinco migraciones hasta `202610050001`; antes de apuntar Vercel hacia él hay que aplicar `202610140001` y `202610140002` (sección 20) y decidir qué contenido del proyecto antiguo se conserva.
 - Supabase fue validado por el usuario.
 - El bucket público se llama `imagenes`.
 - Las escrituras privilegiadas usan un cliente administrativo exclusivo del servidor.
@@ -541,7 +539,7 @@ La compilación posterior fue correcta. Si el error reaparece, verificar que Ver
 
 ### Prioridad 0 — Verificación del último deployment
 
-1. Confirmar SHA `0d2736d` en Vercel.
+1. Confirmar en `/api/salud` que producción sirve el commit de `main` que integra este trabajo.
 2. Probar `/unete`, una colaboración, un reto y una pregunta.
 3. Revisar que cada registro aparezca en Supabase y en el panel.
 4. Probar publicar, guardar pendiente, archivar y eliminar una pregunta.
@@ -643,13 +641,13 @@ Pendiente:
 
 ## 27. Resumen para iniciar la siguiente tarea
 
-El proyecto está funcionalmente avanzado, conectado a Supabase y desplegado en Vercel (el último commit publicado es `0d2736d`; las mejoras de la sección 28 siguen sin confirmar). Las nueve fases de networking están implementadas en código. La autenticación y Supabase fueron validadas por el usuario; las comprobaciones automatizadas pasan. Los últimos cambios corrigieron las Server Actions que fallaban en Vercel y mejoraron consentimiento y confirmaciones administrativas.
+El proyecto está funcionalmente avanzado, conectado a Supabase y desplegado en Vercel (producción sirve `fdf2307`, que ya incluye las mejoras de la sección 28). Las nueve fases de networking están implementadas en código. La autenticación y Supabase fueron validadas por el usuario; las comprobaciones automatizadas pasan. Los últimos cambios corrigieron las Server Actions que fallaban en Vercel y mejoraron consentimiento y confirmaciones administrativas.
 
-El siguiente trabajo debería comenzar por revisar y confirmar los cambios pendientes (sección 28), verificar el deployment y luego resolver las notificaciones a responsables de proyectos. Los ajustes visuales de mayor presencia del verde siguen siendo una mejora solicitada, no una implementación confirmada. El sitio debe permanecer en modo DEMO y `noindex` hasta completar contenido, avales y dominio institucional.
+El siguiente trabajo debería comenzar por pasar producción al Supabase oficial (sección 5), verificar el deployment y luego resolver las notificaciones a responsables de proyectos. Los ajustes visuales de mayor presencia del verde siguen siendo una mejora solicitada, no una implementación confirmada. El sitio debe permanecer en modo DEMO y `noindex` hasta completar contenido, avales y dominio institucional.
 
-## 28. Cambios sin confirmar en el árbol de trabajo
+## 28. Mejoras posteriores a `0d2736d`
 
-Tras el commit `0d2736d` se realizó una tanda de mejoras que **no se ha confirmado ni publicado**. Revisar con `git diff` antes de confirmar. Resumen:
+Confirmadas en `fdf2307` y publicadas en producción. Resumen:
 
 - Seguridad y operación: HSTS, Permissions-Policy, CSP en modo informe, `/api/salud` ampliado, fallo del webhook de GitHub devuelve 500 y permite reintento, correo con registro de errores, exportación sin correos de contacto para editores.
 - Anti-abuso: límite por correo y por hora (`lib/limite-solicitudes.ts`, `lib/limite-regla.ts`, con pruebas).
@@ -660,4 +658,4 @@ Tras el commit `0d2736d` se realizó una tanda de mejoras que **no se ha confirm
 - Marca: logos WebP recortados y `scripts/optimizar-logos.mjs`.
 - Calidad: CI ampliada, `.github/dependabot.yml`, script de pruebas sin advertencia.
 
-Decisiones que siguen abiertas: repositorio de origen (`sillHD` frente a otra cuenta), límite por IP, ajustes de paleta, persistencia del estado de envío de correos (requiere migración) y cualquier cambio de textos institucionales.
+Decisiones que siguen abiertas: límite por IP, ajustes de paleta, persistencia del estado de envío de correos (requiere migración) y cualquier cambio de textos institucionales.

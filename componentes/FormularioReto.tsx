@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useActionState } from 'react'
 import { enviarRetoPrototipado } from '@/lib/networking-acciones'
 import { AREAS_PROTOTIPADO, ESTADO_NETWORKING_INICIAL } from '@/lib/networking-esquemas'
@@ -22,7 +23,7 @@ export default function FormularioReto({ servicioSlug = '' }: { servicioSlug?: s
     <label>Resultado esperado *<textarea name="resultadoEsperado" minLength={10} maxLength={1200} required /></label>
     <fieldset><legend>Áreas relacionadas *</legend><div className={estilos.opciones}>{AREAS_PROTOTIPADO.map((area) => <label key={area} className={estilos.casilla}><input type="checkbox" name="areas" value={area} /><span>{area}</span></label>)}</div></fieldset>
     <label className={estilos.consentimiento}><input type="checkbox" name="requiereConfidencialidad" /><span>El reto puede requerir una conversación de confidencialidad antes de compartir detalles adicionales.</span></label>
-    <label className={`${estilos.consentimiento} ${estilos.privacidad}`}><input type="checkbox" name="consentimiento" required /><span><strong>Tratamiento de datos.</strong> Autorizo el uso de estos datos para evaluar y responder el reto. Entiendo que el envío no garantiza ejecución ni crea una relación contractual. *</span></label>
+    <label className={`${estilos.consentimiento} ${estilos.privacidad}`}><input type="checkbox" name="consentimiento" required /><span><strong>Tratamiento de datos.</strong> Autorizo el uso de estos datos para evaluar y responder el reto. Entiendo que el envío no garantiza ejecución ni crea una relación contractual. Más detalles en el <Link href="/privacidad">aviso de privacidad</Link>. *</span></label>
     <div className={estilos.trampa} aria-hidden><label>Sitio web<input name="sitioWeb" tabIndex={-1} autoComplete="off" /></label></div>
     {estado.error && <p className={estilos.error} role="alert">{estado.error}</p>}
     {estado.ok && <p className={estilos.exito} role="status">{estado.mensaje}</p>}
