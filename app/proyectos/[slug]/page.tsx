@@ -3,11 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { AvisoDemo, Boton, Etiqueta, Seccion } from '@/componentes/Base'
-import {
-  listarIntegrantes,
-  markdownAHtml,
-  obtenerProyecto,
-} from '@/lib/contenido'
+import { listarIntegrantes, listarProyectos, markdownAHtml, obtenerProyecto } from '@/lib/contenido'
 import { seccionVisible } from '@/lib/configuracion'
 import { LINEAS } from '@/lib/sitio'
 import FormularioColaboracion from '@/componentes/FormularioColaboracion'
@@ -15,6 +11,9 @@ import estilos from '../../detalle.module.css'
 import red from '../../networking.module.css'
 type Props = { params: Promise<{ slug: string }> }
 export const revalidate = 300
+export async function generateStaticParams() {
+  return (await listarProyectos()).map(({ slug }) => ({ slug }))
+}
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await obtenerProyecto((await params).slug)
   if (!p) return { title: 'Proyecto no encontrado' }
@@ -81,6 +80,12 @@ export default async function PaginaProyecto({ params }: Props) {
               )}
             </dd>
           </div>
+          {proyecto.repositorio && (
+            <div className={estilos.fichaDato}>
+              <dt>Repositorio</dt>
+              <dd><a href={proyecto.repositorio} target="_blank" rel="noreferrer">Consultar código ↗<span className="solo-lectores"> (se abre en una pestaña nueva)</span></a></dd>
+            </div>
+          )}
           <div className={estilos.fichaDato}>
             <dt>Estado</dt>
             <dd>

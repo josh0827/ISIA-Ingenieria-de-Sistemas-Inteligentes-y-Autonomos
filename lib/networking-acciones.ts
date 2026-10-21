@@ -3,30 +3,24 @@
 import { revalidatePath } from 'next/cache'
 import { obtenerIdea, obtenerProyecto, obtenerServicio } from '@/lib/contenido'
 import { notificarSolicitudNetworking } from '@/lib/correo'
-import { esquemaColaboracion, esquemaRetoPrototipado } from '@/lib/networking-esquemas'
+import {
+  esquemaColaboracion,
+  esquemaRetoPrototipado,
+  type EstadoNetworking,
+} from '@/lib/networking-esquemas'
+import { comprobarLimiteSolicitudes } from '@/lib/limite-solicitudes'
 import { crearClienteAdmin } from '@/lib/supabase/server'
 import { supabaseServidorListo } from '@/lib/supabase/config'
-
-export type EstadoNetworking = { ok: boolean; mensaje?: string; error?: string }
-export const ESTADO_NETWORKING_INICIAL: EstadoNetworking = { ok: false }
 
 function trampa(formData: FormData): boolean {
   return typeof formData.get('sitioWeb') === 'string' && String(formData.get('sitioWeb')).length > 0
 }
 
-async function comprobarLimite(tabla: string, correo: string): Promise<'ok' | 'duplicada' | 'limite'> {
-  const desde = new Date(Date.now() - 15 * 60 * 1000).toISOString()
-  const haceUnaHora = new Date(Date.now() - 60 * 60 * 1000).toISOString()
-  const cliente = crearClienteAdmin()
-  const [{ data, error }, { count, error: errorCupo }] = await Promise.all([
-    cliente.from(tabla).select('id').eq('correo', correo).gte('creado_en', desde).limit(1),
-    cliente.from(tabla).select('id', { count: 'exact', head: true }).gte('creado_en', haceUnaHora),
-  ])
-  if (error || errorCupo) throw new Error(error?.message ?? errorCupo?.message)
-  if ((data ?? []).length > 0) return 'duplicada'
-  if ((count ?? 0) >= 30) return 'limite'
-  return 'ok'
-}
+const MENSAJES_LIMITE = {
+  duplicada: 'Ya recibimos una solicitud reciente con este correo.',
+  limite: 'El formulario recibió muchas solicitudes. Intenta de nuevo en una hora.',
+  error: 'No pudimos comprobar la solicitud. Intenta nuevamente.',
+} as const
 
 export async function enviarColaboracion(_estado: EstadoNetworking, formData: FormData): Promise<EstadoNetworking> {
   if (trampa(formData)) return { ok: true, mensaje: 'Recibimos tu mensaje.' }
@@ -50,15 +44,8 @@ export async function enviarColaboracion(_estado: EstadoNetworking, formData: Fo
     : await obtenerIdea(solicitud.destinoSlug)
   if (!destino || destino.ilustrativo) return { ok: false, error: 'Este contenido aún no está habilitado para recibir colaboraciones.' }
 
-  try {
-    const limite = await comprobarLimite('solicitudes_colaboracion', solicitud.correo)
-    if (limite === 'duplicada') {
-      return { ok: false, error: 'Ya recibimos una solicitud reciente con este correo.' }
-    }
-    if (limite === 'limite') return { ok: false, error: 'El formulario recibió muchas solicitudes. Intenta de nuevo en una hora.' }
-  } catch {
-    return { ok: false, error: 'No pudimos comprobar la solicitud. Intenta nuevamente.' }
-  }
+  const limite = await comprobarLimiteSolicitudes('solicitudes_colaboracion', solicitud.correo)
+  if (limite !== 'ok') return { ok: false, error: MENSAJES_LIMITE[limite] }
 
   const { data, error } = await crearClienteAdmin().from('solicitudes_colaboracion').insert({
     destino_tipo: solicitud.destinoTipo,
@@ -107,15 +94,8 @@ export async function enviarRetoPrototipado(_estado: EstadoNetworking, formData:
   if (solicitud.servicioSlug && !(await obtenerServicio(solicitud.servicioSlug))) {
     return { ok: false, error: 'La capacidad seleccionada ya no está disponible.' }
   }
-  try {
-    const limite = await comprobarLimite('solicitudes_prototipado', solicitud.correo)
-    if (limite === 'duplicada') {
-      return { ok: false, error: 'Ya recibimos una solicitud reciente con este correo.' }
-    }
-    if (limite === 'limite') return { ok: false, error: 'El formulario recibió muchas solicitudes. Intenta de nuevo en una hora.' }
-  } catch {
-    return { ok: false, error: 'No pudimos comprobar la solicitud. Intenta nuevamente.' }
-  }
+  const limite = await comprobarLimiteSolicitudes('solicitudes_prototipado', solicitud.correo)
+  if (limite !== 'ok') return { ok: false, error: MENSAJES_LIMITE[limite] }
   const { data, error } = await crearClienteAdmin().from('solicitudes_prototipado').insert({
     servicio_slug: solicitud.servicioSlug || null,
     nombre: solicitud.nombre,

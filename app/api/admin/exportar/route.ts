@@ -4,8 +4,9 @@ import { crearClienteAdmin } from '@/lib/supabase/server'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
+  let sesion
   try {
-    await requerirEditor()
+    sesion = await requerirEditor()
   } catch {
     return Response.json({ error: 'No autorizado.' }, { status: 403 })
   }
@@ -20,8 +21,17 @@ export async function GET() {
   const error = contenido.error ?? configuracion.error ?? grupos.error ?? practicas.error
   if (error) return Response.json({ error: 'No se pudo preparar la exportación.' }, { status: 500 })
 
+  // El correo de contacto de las organizaciones solo se exporta a administradores.
+  const practicasExportables = sesion.autorizado.rol === 'admin'
+    ? practicas.data
+    : (practicas.data ?? []).map((fila) => {
+        const resto: Record<string, unknown> = { ...(fila as Record<string, unknown>) }
+        delete resto.contacto_email
+        return resto
+      })
+
   const fecha = new Date().toISOString()
-  return new Response(JSON.stringify({ version: 1, generado_en: fecha, contenido: contenido.data, configuracion: configuracion.data, grupos: grupos.data, practicas: practicas.data }, null, 2), {
+  return new Response(JSON.stringify({ version: 1, generado_en: fecha, contenido: contenido.data, configuracion: configuracion.data, grupos: grupos.data, practicas: practicasExportables }, null, 2), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Content-Disposition': `attachment; filename="isia-respaldo-${fecha.slice(0, 10)}.json"`,

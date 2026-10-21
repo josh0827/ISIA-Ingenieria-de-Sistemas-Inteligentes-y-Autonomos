@@ -27,6 +27,9 @@ npm start
 | `npm run dev` | Servidor local con recarga de cambios |
 | `npm run lint` | ESLint sobre `app`, `componentes` y `lib` |
 | `npm run typecheck` | Comprobación TypeScript con `tsc --noEmit` |
+| `npm test` | Pruebas con `node:test` (esquemas, roles, imágenes, límites de envío, webhook) |
+| `npm run migrar-contenido` | Importa `contenido/**/*.md` a PostgreSQL (requiere `.env.local`) |
+| `node scripts/optimizar-logos.mjs` | Regenera los logos WebP recortados a partir de los PNG originales |
 | `npm run build` | Compilación de Next.js y generación de páginas |
 | `npm start` | Vista previa local de la compilación |
 
@@ -36,10 +39,12 @@ npm start
 - **Semillero**: acceso agrupado a líneas, grupos de trabajo y publicaciones.
 - **Líneas**: seis áreas de referencia, con carácter provisional.
 - **Proyectos**: fichas de proyecto, contacto mediado e ingreso a Ideas y Prototipado.
+- **Innovación y apoyo**: rutas para explorar ideas, proponer pruebas de concepto y apoyar proyectos sin transacciones dentro del portal.
 - **Ideas y retos**: catálogo visual filtrable, fichas detalladas y necesidades de colaboración.
 - **Prototipado y colaboración**: capacidades administrables y recepción privada de retos externos.
 - **Oportunidades**: prácticas abiertas e histórico de ofertas cerradas o archivadas.
 - **Comunidad**: integrantes, grupos y participación de pregrado, posgrado y aliados.
+- **Preguntas y respuestas**: consultas moderadas; solo se publican la pregunta y la respuesta aprobada.
 - **Actividades**: acceso agrupado a reuniones, novedades y galería.
 - **Novedades**: tres notas ilustrativas, ordenadas por fechas de ejemplo, con detalle.
 - **Reuniones**: agenda e historial confirmados separados de las sesiones ilustrativas.
@@ -47,8 +52,9 @@ npm start
 - **Publicaciones y recursos**: estado vacío hasta incorporar referencias confirmadas.
 - **Galería**: estado pendiente hasta incorporar fotografías reales y autorizadas.
 - **Únete**: intereses investigativos, correo institucional y formulario de manifestación de interés.
+- **Aviso de privacidad** (`/privacidad`): responsable, datos tratados, finalidad, derechos y plazo de conservación (pendiente de confirmar por la Universidad).
 
-El aviso DEMO permanece visible y la demo configura `noindex`. El formulario de Únete registra manifestaciones de interés; no constituye una inscripción ni confirma una convocatoria. Los avisos por correo son opcionales y dependen de la configuración privada de Resend.
+El aviso DEMO permanece visible y la demo configura `noindex` (metadatos y cabecera `X-Robots-Tag`). La indexación solo se activa con la variable `NEXT_PUBLIC_SITIO_INDEXABLE=true` junto a `NEXT_PUBLIC_SITE_URL`; antes de hacerlo hay que completar [SALIR_DE_DEMO.md](SALIR_DE_DEMO.md). El formulario de Únete registra manifestaciones de interés; no constituye una inscripción ni confirma una convocatoria. Los avisos por correo son opcionales y dependen de la configuración privada de Resend.
 
 ## Organización del proyecto
 
@@ -58,6 +64,8 @@ componentes/              navegación, pie, tarjetas y patrones reutilizables
 lib/sitio.ts              identidad, modo, navegación y textos propuestos
 lib/contenido.ts          lectura, clasificación y publicación editorial
 lib/participacion-*       validación y registro de solicitudes
+lib/limite-*              límite de envíos por correo y por hora (lógica pura en limite-regla.ts)
+lib/indexacion.ts         interruptor DEMO/indexable del sitio
 lib/storage/              carga y limpieza de multimedia en Supabase Storage
 contenido/
   proyectos/              fichas con detalle
@@ -67,12 +75,17 @@ contenido/
   publicaciones/          referencias reales; incluye _plantilla.md
   galeria/                fotografías reales; incluye _plantilla.md
 public/imagenes/           recursos gráficos locales
+scripts/                  migración de contenido y optimización de logos
+tests/                    pruebas automáticas (node:test)
+.github/                  CI (typecheck, lint, pruebas, build, auditoría) y Dependabot
 supabase/migrations/       esquema PostgreSQL, seguridad y cambios versionados
 ```
 
 El contenido se edita en Markdown. Las instrucciones y formatos completos están en [CONTRIBUTING.md](CONTRIBUTING.md).
 
-La información pendiente que debe solicitarse al semillero está organizada en [PLANTILLA_INFORMACION_SEMILLERO.md](PLANTILLA_INFORMACION_SEMILLERO.md). El uso del panel y la matriz de permisos se describen en [MANUAL_ADMIN.md](MANUAL_ADMIN.md). Las decisiones de producto y alcance de networking están en [PLAN_NETWORKING_FASES_0_5.md](PLAN_NETWORKING_FASES_0_5.md).
+La información pendiente que debe solicitarse al semillero está organizada en [PLANTILLA_INFORMACION_SEMILLERO.md](PLANTILLA_INFORMACION_SEMILLERO.md). El uso del panel y la matriz de permisos se describen en [MANUAL_ADMIN.md](MANUAL_ADMIN.md). Las decisiones de producto y alcance de networking están en [PLAN_NETWORKING_FASES_0_5.md](PLAN_NETWORKING_FASES_0_5.md) y [PLAN_NETWORKING_FASES_6_9.md](PLAN_NETWORKING_FASES_6_9.md); la aceptación completa se encuentra en [VERIFICACION_FASES_1_9.md](VERIFICACION_FASES_1_9.md).
+
+La lista para retirar el modo DEMO está en [SALIR_DE_DEMO.md](SALIR_DE_DEMO.md).
 
 La entrega de Supabase, Vercel y Google OAuth a una cuenta institucional está documentada en [TRANSFERENCIA_INSTITUCIONAL.md](TRANSFERENCIA_INSTITUCIONAL.md). La guía incluye inventario, permisos, pruebas de aceptación y reversión; no contiene secretos reales.
 
@@ -84,7 +97,7 @@ El trámite institucional para obtener una dirección `unal.edu.co` se encuentra
 
 La paleta está centralizada en `app/globals.css`. El verde provisional `#456A3E` y el verde de apoyo `#35522F` se coordinan con la identidad visual disponible. Estos valores **no constituyen un manual institucional oficial**. La tipografía principal es Geist.
 
-La marca de ISIA utiliza dos variantes PNG transparentes en `public/imagenes/logos`: la versión horizontal en el encabezado y como icono, y la versión con texto en la portada y el pie. Sus rutas y recortes están centralizados en `lib/marca.ts`, de modo que puedan reemplazarse sin modificar los componentes de navegación.
+La marca de ISIA utiliza dos variantes WebP recortadas en `public/imagenes/logos` (`isia-simbolo-recortado.webp` y `isia-con-texto-recortado.webp`), generadas desde los PNG originales con `scripts/optimizar-logos.mjs`. Sus rutas y dimensiones están centralizadas en `lib/marca.ts`, de modo que puedan reemplazarse sin modificar los componentes de navegación; también se usan en las tarjetas Open Graph.
 
 No se utilizan apariciones, fade-in, desplazamientos, zoom ni parallax asociados al scroll. El contenido es visible desde el renderizado. El componente `Revelar` se conserva únicamente como envoltorio compatible, sin ocultamiento ni animaciones de entrada. Las transiciones de interacción respetan movimiento reducido.
 

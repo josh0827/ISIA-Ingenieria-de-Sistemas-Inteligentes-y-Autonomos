@@ -68,7 +68,12 @@
   color: var(--verde);
   margin-top: 1rem;
 }
+/* Bloque propio: el texto legal y el enlace conviven en una fila que envuelve en móvil. */
 .cierre {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
   border-top: 1px solid var(--linea);
   padding-block: 1.5rem;
   color: var(--texto-tenue);

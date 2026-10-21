@@ -1,6 +1,8 @@
 // Página 404.
 
+import Link from 'next/link'
 import { Boton, Seccion } from '@/componentes/Base'
+import { SITIO } from '@/lib/sitio'
 import estilos from './listados.module.css'
 
 export default function NoEncontrada() {
@@ -18,6 +20,10 @@ export default function NoEncontrada() {
           movido.
         </p>
         <Boton href="/">Volver al inicio</Boton>
+        <p style={{ marginTop: '1.5rem' }}>
+          <Link href="/unete">Participar</Link> ·{' '}
+          <a href={SITIO.correoHref}>{SITIO.correo}</a>
+        </p>
       </div>
     </Seccion>
   )

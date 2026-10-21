@@ -1,8 +1,6 @@
 # Logos de ISIA
 
-- `isia-simbolo.png`: versión horizontal sin texto complementario. Se usa en el encabezado y como icono del sitio.
-- `isia-con-texto.png`: versión completa con nombre y referencia a UNAL Manizales. Se usa en la portada y el pie de página.
+- `isia-simbolo.png` y `isia-con-texto.png`: originales, sin modificar.
+- `isia-simbolo-recortado.webp` y `isia-con-texto-recortado.webp`: versiones sin márgenes transparentes y ligeras (unos 100 KB). Son las que usa el sitio.
 
-Las rutas, dimensiones originales y proporciones visibles están centralizadas en `lib/marca.ts`. Para sustituir las imágenes en el futuro se pueden reemplazar estos archivos conservando sus nombres y proporciones aproximadas. Si las dimensiones o los márgenes cambian, solo debe ajustarse `lib/marca.ts`.
-
-Los componentes recortan visualmente los márgenes transparentes y no modifican los archivos originales.
+Las rutas y dimensiones están centralizadas en `lib/marca.ts`. Para sustituir los logos, reemplaza los originales y ejecuta `node scripts/optimizar-logos.mjs`; si cambian los márgenes, ajusta los recortes del script y las dimensiones de `lib/marca.ts`.

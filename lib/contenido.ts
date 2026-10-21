@@ -61,6 +61,8 @@ export type Proyecto = EstadoEditorial & {
   portada?: string
   portadaAlt?: string
   integrantes: string[]
+  repositorio?: string
+  origen: 'Manual' | 'GitHub'
   cuerpo: string
 }
 
@@ -219,7 +221,7 @@ export function enlaceSeguro(valor: unknown): string | undefined {
     if (ruta.includes('..') || ruta.includes('%')) return undefined
     const segmentos = ruta.split('/').filter(Boolean)
     if (segmentos.length === 0) return s
-    if (segmentos.length === 1 && ['semillero', 'lineas', 'proyectos', 'ideas', 'prototipado', 'oportunidades', 'comunidad', 'actividades', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'grupos', 'practicas', 'unete'].includes(segmentos[0])) return s
+    if (segmentos.length === 1 && ['semillero', 'lineas', 'proyectos', 'ideas', 'prototipado', 'innovacion', 'oportunidades', 'comunidad', 'preguntas', 'actividades', 'novedades', 'reuniones', 'integrantes', 'publicaciones', 'galeria', 'grupos', 'practicas', 'unete'].includes(segmentos[0])) return s
     if (segmentos.length === 2 && ['proyectos', 'ideas', 'prototipado', 'novedades', 'grupos'].includes(segmentos[0]) && /^[a-z0-9-]+$/.test(segmentos[1])) return s
     if (/^\/recursos\/[a-zA-Z0-9/_-]+\.pdf$/i.test(ruta)) {
       const archivo = path.resolve(PUBLICO, `.${ruta}`)
@@ -391,6 +393,8 @@ export async function listarProyectos(limite?: number): Promise<Proyecto[]> {
       portada: ilustrativo ? undefined : imagenSegura(datos.portada),
       portadaAlt: ilustrativo ? undefined : texto(datos.portadaAlt) || undefined,
       integrantes: !ilustrativo && Array.isArray(datos.integrantes) ? datos.integrantes.map(texto).filter((s) => perfilesConfirmados.has(s)) : [],
+      repositorio: enlaceSeguro(datos.repositorio),
+      origen: texto(datos.origen) === 'GitHub' ? 'GitHub' : 'Manual',
     })
   }
   proyectos.sort((a, b) => ORDEN_ESTADO[a.estado] - ORDEN_ESTADO[b.estado] || a.titulo.localeCompare(b.titulo, 'es'))

@@ -25,6 +25,28 @@ export default async function Inicio() {
     configuracion.novedades ? listarNovedades(3) : Promise.resolve([]),
     configuracion.integrantes ? listarIntegrantes() : Promise.resolve([]),
   ])
+  const conexiones = [
+    configuracion.practicas && {
+      href: '/oportunidades',
+      titulo: 'Oportunidades',
+      texto: 'Prácticas, convocatorias y retos compartidos por organizaciones.',
+    },
+    configuracion.proyectos && {
+      href: '/prototipado',
+      titulo: 'Retos de prototipado',
+      texto: 'Si representas a una organización, propón un reto para explorarlo como prototipo.',
+    },
+    configuracion.proyectos && {
+      href: '/ideas',
+      titulo: 'Ideas y retos abiertos',
+      texto: 'Preguntas por explorar que puedes tomar, discutir o ampliar.',
+    },
+    (configuracion.integrantes || configuracion.grupos) && {
+      href: '/preguntas',
+      titulo: 'Preguntas de la comunidad',
+      texto: 'Resuelve dudas sobre participación, proyectos y colaboración.',
+    },
+  ].filter((conexion) => conexion !== false)
   const perfilesResumen = integrantes
     .filter(
       (p, i, lista) => lista.findIndex((item) => item.rol === p.rol) === i,
@@ -157,7 +179,25 @@ export default async function Inicio() {
           ))}
         </div>
       </Seccion>}
-      {configuracion.novedades && <Seccion alterna id="novedades">
+      {conexiones.length > 0 && <Seccion alterna id="colabora">
+        <TituloSeccion
+          indice="NETWORKING"
+          titulo="Colabora con el semillero"
+          descripcion="Si eres estudiante, egresado u organización, estas son las puertas para conectar con ISIA."
+        />
+        <div className={estilos.lineas}>
+          {conexiones.map((conexion) => (
+            <Link href={conexion.href} key={conexion.href} className={estilos.linea}>
+              <div>
+                <h3>{conexion.titulo}</h3>
+                <p>{conexion.texto}</p>
+              </div>
+              <Flecha size={18} />
+            </Link>
+          ))}
+        </div>
+      </Seccion>}
+      {configuracion.novedades && <Seccion id="novedades" alterna={conexiones.length === 0}>
         <div className={estilos.cabeceraSeccion}>
           <TituloSeccion
             indice="VIDA ACADÉMICA"

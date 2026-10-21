@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint app componentes lib",
-    "test": "node --conditions=react-server --experimental-strip-types --test tests/*.test.ts",
+    "test": "node --conditions=react-server --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test tests/*.test.ts",
     "typecheck": "tsc --noEmit",
     "migrar-contenido": "node --env-file=.env.local scripts/migrar-contenido.mjs"
   },

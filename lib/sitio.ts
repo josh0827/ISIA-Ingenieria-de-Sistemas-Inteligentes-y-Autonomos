@@ -12,6 +12,8 @@ export const SITIO = {
   locale: 'es_CO',
   correo: 'isia_man@unal.edu.co',
   correoHref: 'mailto:isia_man@unal.edu.co',
+  politicaDatos: 'https://legal.unal.edu.co/rlunal/home/doc.jsp?d_i=97992',
+  correoDatos: 'protecdatos_na@unal.edu.co',
   repositorio: 'https://github.com/josh0827/ISIA-Ingenieria-de-Sistemas-Inteligentes-y-Autonomos',
 } as const
 

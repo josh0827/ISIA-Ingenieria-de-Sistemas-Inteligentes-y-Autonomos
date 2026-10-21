@@ -8,12 +8,14 @@ import { Menu, Cerrar } from './Iconos'
 import MarcaIsia from './MarcaIsia'
 import estilos from './Nav.module.css'
 
-const RUTAS_AGRUPADAS: Record<string, string[]> = {
-  '/semillero': ['/semillero', '/lineas', '/grupos', '/publicaciones'],
-  '/proyectos': ['/proyectos', '/ideas', '/prototipado'],
-  '/oportunidades': ['/oportunidades', '/practicas'],
-  '/comunidad': ['/comunidad', '/integrantes'],
-  '/actividades': ['/actividades', '/novedades', '/reuniones', '/galeria'],
+// Subpáginas que resaltan su sección en el menú. Las claves coinciden con NAVEGACION
+// (lib/sitio.ts); solo se declaran aquí las rutas hijas de cada una.
+const SUBRUTAS: Record<string, string[]> = {
+  '/semillero': ['/lineas', '/grupos', '/publicaciones'],
+  '/proyectos': ['/ideas', '/prototipado', '/innovacion'],
+  '/oportunidades': ['/practicas'],
+  '/comunidad': ['/integrantes', '/preguntas'],
+  '/actividades': ['/novedades', '/reuniones', '/galeria'],
 }
 
 export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) {
@@ -29,7 +31,7 @@ export default function Nav({ items: navegacion }: { items: ItemNavegacion[] }) 
   const abierto = rutaAbierta === ruta
   const esAdmin = ruta.startsWith('/admin')
   const activa = (href: string) => {
-    const rutas = RUTAS_AGRUPADAS[href] ?? [href]
+    const rutas = [href, ...(SUBRUTAS[href] ?? [])]
     return rutas.some((base) => ruta === base || (base !== '/' && ruta.startsWith(base + '/')))
   }
   const items = useMemo(() => [

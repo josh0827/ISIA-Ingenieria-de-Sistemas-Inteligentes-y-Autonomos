@@ -77,6 +77,11 @@
 .aviso {
   display: grid;
   gap: 0.4rem;
+  padding: 1rem;
+  border: 1px solid var(--verde);
+  border-left: 4px solid var(--verde-oscuro);
+  border-radius: var(--r-sm);
+  background: var(--verde-vel);
 }
 
 .aviso .ayuda {
@@ -87,6 +92,15 @@
   color: var(--verde-oscuro);
   text-decoration: underline;
   text-underline-offset: 0.15em;
+}
+
+.aviso .consentimiento {
+  color: var(--texto);
+}
+
+.consentimiento strong {
+  color: var(--verde-oscuro);
+  font-weight: 750;
 }
 
 .enviar {

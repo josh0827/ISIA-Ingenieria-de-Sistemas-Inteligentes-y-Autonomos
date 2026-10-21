@@ -3,11 +3,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { AvisoDemo, Boton, Etiqueta, Fecha, Seccion } from '@/componentes/Base'
-import { markdownAHtml, obtenerNovedad } from '@/lib/contenido'
+import { listarNovedades, markdownAHtml, obtenerNovedad } from '@/lib/contenido'
 import { seccionVisible } from '@/lib/configuracion'
 import estilos from '../../detalle.module.css'
 type Props = { params: Promise<{ slug: string }> }
 export const revalidate = 300
+export async function generateStaticParams() {
+  return (await listarNovedades()).map(({ slug }) => ({ slug }))
+}
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const n = await obtenerNovedad((await params).slug)
   if (!n) return { title: 'Novedad no encontrada' }

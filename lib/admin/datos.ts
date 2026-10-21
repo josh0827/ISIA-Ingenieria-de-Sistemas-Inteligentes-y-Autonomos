@@ -4,8 +4,8 @@ import { listarResumenesContenido, obtenerFilaContenido } from '@/lib/supabase/c
 import { usuarioSesion } from '@/lib/sesion'
 import {
   obtenerUsuarioAutorizado,
+  puedeAdministrar,
   puedeEditarContenido,
-  puedeEliminarPracticas,
   puedeGestionarPracticas,
 } from '@/lib/usuarios-autorizados'
 import { ESTADOS_EDITORIALES, ESTADOS_PROYECTO, esquemaDe, type EsquemaColeccion } from '@/lib/admin/esquemas'
@@ -38,8 +38,8 @@ export async function requerirAdministrador() {
   const usuario = await usuarioSesion()
   if (!usuario) throw new ErrorAcceso('No hay una sesión activa.', 401, 'sesion')
   const autorizado = await obtenerUsuarioAutorizado(usuario.id)
-  if (!puedeEliminarPracticas(autorizado)) {
-    throw new ErrorAcceso('Solo una cuenta administradora puede eliminar prácticas.', 403, 'editor')
+  if (!puedeAdministrar(autorizado)) {
+    throw new ErrorAcceso('Esta acción requiere una cuenta administradora.', 403, 'editor')
   }
   return { ...usuario, autorizado }
 }
@@ -72,8 +72,11 @@ function normalizarDatosAdmin(
     ? datos
     : { ...datos, estadoEditorial: 'Publicado' }
   if (coleccion !== 'proyectos') return normalizados
-  if (ESTADOS_PROYECTO.includes(normalizados.estado as (typeof ESTADOS_PROYECTO)[number])) return normalizados
-  return { ...normalizados, estado: 'En formulación' }
+  const conOrigen = normalizados.origen === 'GitHub' || normalizados.origen === 'Manual'
+    ? normalizados
+    : { ...normalizados, origen: 'Manual' }
+  if (ESTADOS_PROYECTO.includes(conOrigen.estado as (typeof ESTADOS_PROYECTO)[number])) return conOrigen
+  return { ...conOrigen, estado: 'En formulación' }
 }
 
 /** Lectura sin filtrar (a diferencia de lib/contenido.ts) para poblar tablas y formularios de edición. */

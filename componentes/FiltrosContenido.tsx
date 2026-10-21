@@ -1,13 +1,38 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Novedad, Proyecto } from '@/lib/contenido'
 import { TarjetaNovedad, TarjetaProyecto } from './Tarjetas'
 import estilos from './FiltrosContenido.module.css'
 
+const ESTADOS_FILTRO = ['En formulación', 'Prototipado', 'Fase inicial'] as const
+const TIPOS_FILTRO = ['divulgacion', 'evento', 'convocatoria', 'logro', 'publicacion'] as const
+
+/**
+ * Estado de un filtro reflejado en la URL (?clave=valor) para poder compartir el
+ * resultado. Se lee tras montar, sin useSearchParams, para que la página siga
+ * siendo estática y el primer render coincida con el HTML del servidor.
+ */
+function useFiltroUrl(clave: string, porDefecto: string, permitidos?: readonly string[]) {
+  const [valor, setValor] = useState(porDefecto)
+
+  useEffect(() => {
+    const inicial = new URLSearchParams(window.location.search).get(clave)
+    if (inicial && (!permitidos || permitidos.includes(inicial))) setValor(inicial)
+  }, [clave, permitidos])
+
+  const cambiar = useCallback((nuevo: string) => {
+    setValor(nuevo)
+    const url = new URL(window.location.href)
+    if (nuevo === porDefecto) url.searchParams.delete(clave)
+    else url.searchParams.set(clave, nuevo)
+    window.history.replaceState(null, '', url)
+  }, [clave, porDefecto])
+
+  return [valor, cambiar] as const
+}
+
 export function FiltrosProyectos({ proyectos }: { proyectos: Proyecto[] }) {
-  const [estado, setEstado] = useState('todos')
-  const [linea, setLinea] = useState('todas')
   const lineas = useMemo(
     () =>
       Array.from(new Set(proyectos.map((proyecto) => proyecto.linea).filter(Boolean))).sort(
@@ -15,6 +40,8 @@ export function FiltrosProyectos({ proyectos }: { proyectos: Proyecto[] }) {
       ),
     [proyectos],
   )
+  const [estado, setEstado] = useFiltroUrl('estado', 'todos', ESTADOS_FILTRO)
+  const [linea, setLinea] = useFiltroUrl('linea', 'todas', lineas)
   const filtrados = proyectos.filter(
     (proyecto) =>
       (estado === 'todos' || proyecto.estado === estado) &&
@@ -55,14 +82,19 @@ export function FiltrosProyectos({ proyectos }: { proyectos: Proyecto[] }) {
           ))}
         </div>
       ) : (
-        <p className={estilos.sinResultados}>No hay proyectos con estos filtros.</p>
+        <p className={estilos.sinResultados}>
+          No hay proyectos con estos filtros.{' '}
+          <button type="button" className={estilos.limpiar} onClick={() => { setEstado('todos'); setLinea('todas') }}>
+            Quitar filtros
+          </button>
+        </p>
       )}
     </div>
   )
 }
 
 export function FiltrosNovedades({ novedades }: { novedades: Novedad[] }) {
-  const [tipo, setTipo] = useState('todos')
+  const [tipo, setTipo] = useFiltroUrl('tipo', 'todos', TIPOS_FILTRO)
   const filtradas = novedades.filter((novedad) => tipo === 'todos' || novedad.tipo === tipo)
 
   return (
@@ -90,7 +122,12 @@ export function FiltrosNovedades({ novedades }: { novedades: Novedad[] }) {
           ))}
         </div>
       ) : (
-        <p className={estilos.sinResultados}>No hay novedades con este filtro.</p>
+        <p className={estilos.sinResultados}>
+          No hay novedades con este filtro.{' '}
+          <button type="button" className={estilos.limpiar} onClick={() => setTipo('todos')}>
+            Quitar filtro
+          </button>
+        </p>
       )}
     </div>
   )

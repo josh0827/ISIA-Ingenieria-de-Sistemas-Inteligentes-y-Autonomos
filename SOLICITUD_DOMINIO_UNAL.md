@@ -78,7 +78,8 @@ Después de la activación se deben actualizar:
 - `NEXT_PUBLIC_SITE_URL` en Vercel.
 - **Site URL** y **Redirect URLs** en Supabase Auth.
 - Orígenes autorizados del cliente OAuth en Google Cloud, si aplican.
-- Metadatos, sitemap y política de indexación cuando el sitio deje de ser una demo.
+- Metadatos, sitemap y política de indexación cuando el sitio deje de ser una demo: se activan definiendo `NEXT_PUBLIC_SITIO_INDEXABLE=true` junto con la nueva `NEXT_PUBLIC_SITE_URL`, tras completar `SALIR_DE_DEMO.md`.
+- Aviso de privacidad (`/privacidad`) con el responsable y el plazo de conservación confirmados por la Universidad.
 - Enlaces canónicos y documentación operativa.
 
 Crear un nuevo despliegue después de modificar variables. Probar inicio de sesión, callback, carga de imágenes, formulario, rutas públicas y HTTPS.

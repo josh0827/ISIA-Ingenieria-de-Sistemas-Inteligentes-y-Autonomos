@@ -2,7 +2,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Novedad, Proyecto, Integrante } from '@/lib/contenido'
 import { Etiqueta, Fecha } from './Base'
-import { Flecha, Persona, Antena, Ojo, Brujula, Onda } from './Iconos'
+import { LINEAS } from '@/lib/sitio'
+import { Flecha, Persona, Antena, Ojo, Brujula, Onda, Red, Brazo } from './Iconos'
 import estilos from './Tarjetas.module.css'
 
 export function TarjetaNovedad({
@@ -44,6 +45,20 @@ export function TarjetaNovedad({
   )
 }
 
+const ICONOS_LINEA: Record<string, typeof Ojo> = {
+  ojo: Ojo,
+  brujula: Brujula,
+  antena: Antena,
+  red: Red,
+  brazo: Brazo,
+  onda: Onda,
+}
+
+function iconoDeLinea(linea: string) {
+  const referencia = LINEAS.find((item) => item.titulo === linea)
+  return (referencia && ICONOS_LINEA[referencia.icono]) || Antena
+}
+
 export function TarjetaProyecto({
   proyecto,
   nivelTitulo = 3,
@@ -52,13 +67,7 @@ export function TarjetaProyecto({
   nivelTitulo?: 2 | 3
 }) {
   const Titulo = nivelTitulo === 2 ? 'h2' : 'h3'
-  const Icono = proyecto.linea.includes('Percepción')
-    ? Ojo
-    : proyecto.linea.includes('Control')
-      ? Brujula
-      : proyecto.linea.includes('Instrumentación')
-        ? Onda
-        : Antena
+  const Icono = iconoDeLinea(proyecto.linea)
   return (
     <article className={estilos.proyecto}>
       <Link
@@ -147,6 +156,7 @@ export function TarjetaIntegrante({ integrante }: { integrante: Integrante }) {
                 rel="noreferrer noopener"
               >
                 GitHub ↗
+                <span className="solo-lectores"> (se abre en una pestaña nueva)</span>
               </a>
             )}
             {integrante.enlaces.linkedin && (
@@ -156,6 +166,7 @@ export function TarjetaIntegrante({ integrante }: { integrante: Integrante }) {
                 rel="noreferrer noopener"
               >
                 LinkedIn ↗
+                <span className="solo-lectores"> (se abre en una pestaña nueva)</span>
               </a>
             )}
             {integrante.enlaces.correo && (

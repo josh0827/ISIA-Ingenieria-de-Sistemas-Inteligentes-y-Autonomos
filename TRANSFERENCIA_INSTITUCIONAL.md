@@ -107,6 +107,8 @@ Este proyecto no guarda secretos en `vercel.json`. Las variables requeridas debe
 | `SUPABASE_SECRET_KEY` | Solo servidor | Operaciones administrativas (`sb_secret_...`) |
 | `RESEND_API_KEY` | Solo servidor | Avisos opcionales de nuevas solicitudes |
 | `RESEND_FROM_EMAIL` | Solo servidor | Remitente de un dominio verificado en Resend |
+| `GITHUB_WEBHOOK_SECRET` | Solo servidor | Verificación HMAC del webhook de forks |
+| `GITHUB_ALLOWED_OWNER` | Solo servidor | Cuenta u organización institucional autorizada |
 
 La clave `SUPABASE_SECRET_KEY` nunca debe llevar el prefijo `NEXT_PUBLIC_`. Después de modificar variables, crea un nuevo despliegue; los despliegues anteriores no reciben cambios retroactivos.
 
@@ -175,7 +177,9 @@ La transferencia se considera terminada cuando la cuenta institucional puede rea
 - [ ] Descargar un respaldo JSON y guardarlo en el Drive institucional.
 - [ ] Cerrar sesión y confirmar que las rutas administrativas quedan bloqueadas.
 - [ ] Revisar errores de funciones y compilación en el nuevo equipo Vercel.
-- [ ] Confirmar dominio, HTTPS, callback OAuth y política `noindex` de la demo.
+- [ ] Confirmar dominio, HTTPS, callback OAuth y política `noindex` de la demo (`NEXT_PUBLIC_SITIO_INDEXABLE` sin definir).
+- [ ] Comprobar `/api/salud`: `estado` operativo, `version` esperada y `correo` acorde con Resend.
+- [ ] Recrear en el nuevo equipo las variables de `DESPLIEGUE_VERCEL.md`, incluida `NEXT_PUBLIC_SITIO_INDEXABLE` solo cuando corresponda.
 
 Registra la fecha, responsables, resultados y cualquier excepción. El propietario anterior puede retirarse únicamente después de que el responsable institucional apruebe esta lista.
 

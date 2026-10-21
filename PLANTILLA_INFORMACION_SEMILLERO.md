@@ -139,7 +139,7 @@ Completar una ficha por oportunidad vigente:
 - [x] Canal institucional de contacto: `isia_man@unal.edu.co`.
 - [ ] Persona o rol responsable de responder.
 - [ ] Temas de interés que se desean destacar.
-- [ ] Texto de privacidad si se incorpora un formulario en el futuro.
+- [ ] Revisión institucional del aviso de privacidad publicado en `/privacidad` y del texto de autorización de los formularios.
 - [ ] Responsable y plazo de conservación de las manifestaciones de interés recibidas por el formulario.
 
 ## 12. Dominio y publicación institucional
@@ -173,3 +173,6 @@ Para completar las nuevas secciones, el semillero debe entregar o validar:
 - Oportunidades: organización, título, modalidad, ubicación, descripción, fecha de cierre, canal de postulación y autorización para conservar contacto histórico.
 - Política de conservación y eliminación de solicitudes recibidas.
 - Personas que tendrán rol `admin`, `editor` o `empresa`.
+- Cuenta u organización de GitHub autorizada para originar borradores y persona responsable de revisar cada importación.
+- Categorías de preguntas públicas, responsables de moderación y plazo de conservación de nombres y correos.
+- Criterios institucionales para recibir mentoría, equipos, alianzas o apoyo material sin tramitar pagos desde el portal.

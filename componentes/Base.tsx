@@ -115,6 +115,7 @@ export function Boton({
         rel="noreferrer noopener"
       >
         {contenido}
+        {href.startsWith('http') && <span className="solo-lectores"> (se abre en una pestaña nueva)</span>}
       </a>
     )
   }
